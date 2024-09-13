@@ -13,6 +13,7 @@ function PVSettings() {
             <Typography variant="h5">PV Settings</Typography>
             <Typography variant="body1">PV Peak Size: </Typography>
             <NumberInput />
+            <Typography variant="body1">Number of inverters: 16</Typography>
         </Box>
     );
 }

@@ -6,6 +6,7 @@ function Simulation() {
     return (
         <Box>
             <Typography variant="h1">Simulation</Typography>
+            <img src="./simulation.png" alt="Simulation placeholder" />
         </Box>
     );
 }
