@@ -4,6 +4,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import Stack from '@mui/material/Stack';
 import GeneratorSettings from './settings/GeneratorSettings';
+import PVSettings from './settings/PVSettings';
 
 function Settings() {
     return (
@@ -12,7 +13,7 @@ function Settings() {
                 <Typography variant="h4">Settings</Typography>
                 <Stack spacing={2}>
                     <GeneratorSettings />
-                    <Typography variant="h2">PV Settings</Typography>
+                    <PVSettings />
                     <Typography variant="h2">ESS Settings</Typography>
                     <Typography variant="h2">Load Settings</Typography>
                     <Typography variant="h2">Site Settings</Typography>
