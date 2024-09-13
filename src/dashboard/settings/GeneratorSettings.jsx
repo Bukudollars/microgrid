@@ -23,7 +23,7 @@ function GeneratorSettings() {
         <Select
           labelId="generator-count-label"
           id="generator-count"
-          value={1}
+          value={generatorCount}
           label="Generator Count"
           onChange={handleChangeGenCount}
         >
@@ -39,7 +39,7 @@ function GeneratorSettings() {
         <Select
           labelId="generator-size-label"
           id="generator-size"
-          value={400}
+          value={generatorSize}
           label="Generator Size"
           onChange={handleChangeGenSize}
         >

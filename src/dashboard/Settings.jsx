@@ -3,7 +3,7 @@ import { Box } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import Stack from '@mui/material/Stack';
-import GeneratorSettings from './config/GeneratorSettings';
+import GeneratorSettings from './settings/GeneratorSettings';
 
 function Settings() {
     return (
