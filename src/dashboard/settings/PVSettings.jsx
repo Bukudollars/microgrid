@@ -5,7 +5,7 @@ import Select from '@mui/material/Select';
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 import MenuItem from '@mui/material/MenuItem';
-import NumberInput from '../../dashboard/components/NumberInput';
+import NumberInput from '../components/NumberInput';
 
 function PVSettings() {
     return (

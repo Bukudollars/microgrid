@@ -5,6 +5,7 @@ import Container from '@mui/material/Container';
 import Stack from '@mui/material/Stack';
 import GeneratorSettings from './settings/GeneratorSettings';
 import PVSettings from './settings/PVSettings';
+import ESSSettings from './settings/ESSSettings';
 
 function Settings() {
     return (
@@ -14,7 +15,7 @@ function Settings() {
                 <Stack spacing={2}>
                     <GeneratorSettings />
                     <PVSettings />
-                    <Typography variant="h2">ESS Settings</Typography>
+                    <ESSSettings />
                     <Typography variant="h2">Load Settings</Typography>
                     <Typography variant="h2">Site Settings</Typography>
                     <Typography variant="h2">Utility Settings</Typography>
