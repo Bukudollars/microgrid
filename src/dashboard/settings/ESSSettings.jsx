@@ -8,7 +8,7 @@ import FormControl from '@mui/material/FormControl';
 import MenuItem from '@mui/material/MenuItem';
 
 function ESSSettings() {
-    const [moduleType, setModuleType] = React.useState(1);
+    const [moduleType, setModuleType] = React.useState("Grid Stability: 250kW, 144 kW-hr");
     const handleChangeModuleType = (event) => {
         setModuleType(event.target.value);
     }
