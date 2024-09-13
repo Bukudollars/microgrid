@@ -5,6 +5,7 @@ import Typography from '@mui/material/Typography';
 import { createTheme } from '@mui/material/styles';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import SettingsIcon from '@mui/icons-material/Settings';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import DescriptionIcon from '@mui/icons-material/Description';
 import LayersIcon from '@mui/icons-material/Layers';
@@ -13,49 +14,49 @@ import { DashboardLayout } from '@toolpad/core/DashboardLayout';
 import theme from '../theme';
 
 const NAVIGATION = [
-  {
-    kind: 'header',
-    title: 'Main items',
-  },
-  {
-    segment: 'dashboard',
-    title: 'Dashboard',
-    icon: <DashboardIcon />,
-  },
+//   {
+//     kind: 'header',
+//     title: 'Main items',
+//   },
+//   {
+//     segment: 'dashboard',
+//     title: 'Dashboard',
+//     icon: <DashboardIcon />,
+//   },
   {
     segment: 'orders',
-    title: 'Orders',
-    icon: <ShoppingCartIcon />,
+    title: 'Config',
+    icon: <SettingsIcon />,
   },
   {
     kind: 'divider',
   },
-  {
-    kind: 'header',
-    title: 'Analytics',
-  },
-  {
-    segment: 'reports',
-    title: 'Reports',
-    icon: <BarChartIcon />,
-    children: [
-      {
-        segment: 'sales',
-        title: 'Sales',
-        icon: <DescriptionIcon />,
-      },
-      {
-        segment: 'traffic',
-        title: 'Traffic',
-        icon: <DescriptionIcon />,
-      },
-    ],
-  },
-  {
-    segment: 'integrations',
-    title: 'Integrations',
-    icon: <LayersIcon />,
-  },
+//   {
+//     kind: 'header',
+//     title: 'Analytics',
+//   },
+//   {
+//     segment: 'reports',
+//     title: 'Reports',
+//     icon: <BarChartIcon />,
+//     children: [
+//       {
+//         segment: 'sales',
+//         title: 'Sales',
+//         icon: <DescriptionIcon />,
+//       },
+//       {
+//         segment: 'traffic',
+//         title: 'Traffic',
+//         icon: <DescriptionIcon />,
+//       },
+//     ],
+//   },
+//   {
+//     segment: 'integrations',
+//     title: 'Integrations',
+//     icon: <LayersIcon />,
+//   },
 ];
 
 
@@ -99,6 +100,10 @@ function DashboardLayoutBasic(props) {
     // preview-start
     <AppProvider
       navigation={NAVIGATION}
+      branding={{
+        logo: <img src="./catlogo.png" alt="Caterpillar logo" />,
+        title: 'CATERPILLAR',
+      }}
       router={router}
       theme={theme}
       window={demoWindow}
