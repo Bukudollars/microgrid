@@ -1,8 +1,11 @@
 {
+  "homepage" : "https:bukudollars.github.io/microgrid",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "serve": "vite preview"
+    "serve": "vite preview",
+    "predeploy" : "npm run build",
+    "deploy": "gh-pages -d dist"
   },
   "dependencies": {
     "@emotion/react": "^11.13.3",
@@ -18,6 +21,7 @@
     "react-router-dom": "^6.26.2"
   },
   "devDependencies": {
+    "gh-pages": "^6.1.1",
     "vite": "^5.4.4"
   }
 }
