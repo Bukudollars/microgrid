@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-
 import { createTheme } from '@mui/material/styles';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { AppProvider } from '@toolpad/core/AppProvider';

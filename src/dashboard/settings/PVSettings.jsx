@@ -1,10 +1,6 @@
 import * as React from 'react';
 import { Box } from '@mui/material';
 import Typography from '@mui/material/Typography';
-import Select from '@mui/material/Select';
-import InputLabel from '@mui/material/InputLabel';
-import FormControl from '@mui/material/FormControl';
-import MenuItem from '@mui/material/MenuItem';
 import NumberInput from '../components/NumberInput';
 
 function PVSettings() {
