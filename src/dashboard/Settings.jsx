@@ -8,6 +8,7 @@ import PVSettings from './settings/PVSettings';
 import ESSSettings from './settings/ESSSettings';
 import LoadSettings from './settings/LoadSettings';
 import SiteSettings from './settings/SiteSettings';
+import UtilitySettings from './settings/UtilitySettings';
 
 function Settings() {
     return (
@@ -20,7 +21,7 @@ function Settings() {
                     <ESSSettings />
                     <LoadSettings />
                     <SiteSettings />
-                    <Typography variant="h2">Utility Settings</Typography>
+                    <UtilitySettings />
                     <Typography variant="h2">Environment Settings</Typography>
                 </Stack>
 
