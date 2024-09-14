@@ -1,10 +1,10 @@
 {
-  "homepage" : "https:bukudollars.github.io/microgrid",
+  "homepage": "https:bukudollars.github.io/microgrid",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "serve": "vite preview",
-    "predeploy" : "npm run build",
+    "predeploy": "npm run build",
     "deploy": "gh-pages -d dist"
   },
   "dependencies": {
@@ -15,7 +15,6 @@
     "@mui/material": "^6.1.0",
     "@toolpad/core": "^0.5.2",
     "@vitejs/plugin-react": "^4.3.1",
-    "@xyflow/react": "^12.3.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.26.2"
