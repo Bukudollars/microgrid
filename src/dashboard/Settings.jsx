@@ -7,6 +7,7 @@ import GeneratorSettings from './settings/GeneratorSettings';
 import PVSettings from './settings/PVSettings';
 import ESSSettings from './settings/ESSSettings';
 import LoadSettings from './settings/LoadSettings';
+import SiteSettings from './settings/SiteSettings';
 
 function Settings() {
     return (
@@ -18,7 +19,7 @@ function Settings() {
                     <PVSettings />
                     <ESSSettings />
                     <LoadSettings />
-                    <Typography variant="h2">Site Settings</Typography>
+                    <SiteSettings />
                     <Typography variant="h2">Utility Settings</Typography>
                     <Typography variant="h2">Environment Settings</Typography>
                 </Stack>
