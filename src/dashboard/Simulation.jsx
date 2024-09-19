@@ -1,22 +1,36 @@
 import * as React from 'react';
 import { Box } from '@mui/material';
-import Typography from '@mui/material/Typography';
 import YieldDistribution from './simulation/YieldDistribution';
 import Load from './simulation/Load';
 import Utility from './simulation/Utility';
 import Gen from './simulation/Gen';
+import PV from './simulation/PV';
+import ESS from './simulation/ESS';
+import Grid from '@mui/material/Grid2';
 
 function Simulation() {
     return (
         <Box>
-            <Typography variant="h1">Simulation</Typography>
-            <img src="./simulation.png" alt="Simulation placeholder" />
-            <YieldDistribution />
-            <Load />
-            <Utility />
-            <Gen />
-            <Typography variant="h5">PV</Typography>
-            <Typography variant="h5">ESS</Typography>
+            <Grid container spacing={2}>
+                <Grid size={12}>
+                    <YieldDistribution />
+                </Grid>
+                <Grid item xs={6}>
+                    <Load />
+                </Grid>
+                <Grid item xs={6}>
+                    <Utility />
+                </Grid>
+                <Grid item xs={6}>
+                    <Gen />
+                </Grid>
+                <Grid item xs={6}>
+                    <PV />
+                </Grid>
+                <Grid item xs={6}>
+                    <ESS />
+                </Grid>
+            </Grid>
         </Box>
     );
 }
