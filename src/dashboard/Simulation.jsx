@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Box } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import YieldDistribution from './simulation/YieldDistribution';
+import Load from './simulation/Load';
 
 function Simulation() {
     return (
@@ -9,7 +10,7 @@ function Simulation() {
             <Typography variant="h1">Simulation</Typography>
             <img src="./simulation.png" alt="Simulation placeholder" />
             <YieldDistribution />
-            <Typography variant="h5">Load</Typography>
+            <Load />
             <Typography variant="h5">Utility</Typography>
             <Typography variant="h5">Gen</Typography>
             <Typography variant="h5">PV</Typography>
