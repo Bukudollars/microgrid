@@ -5,6 +5,7 @@ import Select from '@mui/material/Select';
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 import MenuItem from '@mui/material/MenuItem';
+import Paper from '@mui/material/Paper';
 
 function GeneratorSettings() {
   const [generatorCount, setGeneratorCount] = React.useState(1);
@@ -17,6 +18,7 @@ function GeneratorSettings() {
   }
   return (
     <Box>
+      <Paper elevation={4}>
       <Typography variant="h5">Generator Settings</Typography>
       <FormControl sx={{ m: 1, minWidth: 150 }} size = "small">
         <InputLabel id="generator-count-label">Generator Count</InputLabel>
@@ -52,7 +54,7 @@ function GeneratorSettings() {
       </FormControl>
       <Typography variant="body1">Minimum Generator Set Load: 120 kW</Typography>
       <Typography variant="body1">Spinning Reserve Target: 280 kW</Typography>
-
+      </Paper>
     </Box>
   );
 }

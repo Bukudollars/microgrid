@@ -15,7 +15,6 @@ function Settings() {
     return (
         <Box>
             <Container maxWidth="sm">
-                <Typography variant="h4">Settings</Typography>
                 <Stack spacing={2}>
                     <GeneratorSettings />
                     <PVSettings />

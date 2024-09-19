@@ -63,7 +63,7 @@ DemoPageContent.propTypes = {
 function DashboardLayoutBasic(props) {
   const { window } = props;
 
-  const [pathname, setPathname] = React.useState('/dashboard');
+  const [pathname, setPathname] = React.useState('/');
 
   const router = React.useMemo(() => {
     return {
@@ -74,7 +74,7 @@ function DashboardLayoutBasic(props) {
   }, [pathname]);
 
   // Remove this const when copying and pasting into your project.
-  const demoWindow = window !== undefined ? window() : undefined;
+  // const demoWindow = window !== undefined ? window() : undefined;
 
   return (
     // preview-start
@@ -86,7 +86,7 @@ function DashboardLayoutBasic(props) {
       }}
       router={router}
       theme={demoTheme}
-      window={demoWindow}
+      // window={demoWindow}
     >
       <DashboardLayout>
         <DemoPageContent pathname={pathname} />
@@ -101,7 +101,7 @@ DashboardLayoutBasic.propTypes = {
    * Injected by the documentation to work in an iframe.
    * Remove this when copying and pasting into your project.
    */
-  window: PropTypes.func,
+  // window: PropTypes.func,
 };
 
 export default DashboardLayoutBasic;
