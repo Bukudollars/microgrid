@@ -14,8 +14,8 @@ function SiteSettings() {
         setFrequency(event.target.value);
     }
     return (
-        <Paper elevation={4}>
-            <Box sx={{padding : 2}}>
+        //<Paper elevation={4}>
+            <Box sx={{textAlign: 'left', padding : 2}}>
                 <Typography variant="h5">Site Settings</Typography>
                 <FormControl sx={{ m: 1, minWidth: 150 }} size = "small">
                     <InputLabel id="frequency-label">Frequency</InputLabel>
@@ -34,7 +34,7 @@ function SiteSettings() {
                 <NumberInput />
             
             </Box>
-        </Paper>
+        //</Paper>
     );
 }
 export default SiteSettings;

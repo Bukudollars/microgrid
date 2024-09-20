@@ -10,8 +10,8 @@ import Paper from '@mui/material/Paper';
 function UtilitySettings() {
     const label = { inputProps: { 'aria-label': 'Switch demo' } };
     return (
-        <Paper elevation={4}>
-            <Box sx={{padding : 2}}>
+        //<Paper elevation={4}>
+            <Box sx={{textAlign: 'left', padding : 2}}>
                 <Typography variant="h5">Utility Settings</Typography>
                 <Typography variant="body1">Export Limit: </Typography>
                 <NumberInput />
@@ -19,7 +19,7 @@ function UtilitySettings() {
                     <FormControlLabel control={<Switch />} label="Is Present" />
                 </FormGroup>
             </Box>
-        </Paper>
+        //</Paper>
     );
 }
 export default UtilitySettings;

@@ -15,25 +15,25 @@ function Settings() {
         <Box>
             <Typography variant="h4">Settings</Typography>
             <Grid container spacing={2}>
-                <Grid size="auto">
+                <Grid size="auto" display="flex" justifyContent="center" alignItems="center">
                     <GeneratorSettings />
                 </Grid>
-                <Grid size="auto">
+                <Grid size="auto" display="flex" justifyContent="center" alignItems="center">
                     <PVSettings />
                 </Grid>
-                <Grid size="auto">
+                <Grid size="auto" display="flex" justifyContent="center" alignItems="center">
                     <ESSSettings />
                 </Grid>
-                <Grid size="auto">
+                <Grid size="auto" display="flex" justifyContent="center" alignItems="center">
                     <LoadSettings />
                 </Grid>
-                <Grid size="auto">
+                <Grid size="auto" display="flex" justifyContent="center" alignItems="center">
                     <SiteSettings />
                 </Grid>
-                <Grid size="auto">
+                <Grid size="auto" display="flex" justifyContent="center" alignItems="center">
                     <UtilitySettings />
                 </Grid>
-                <Grid size="auto">
+                <Grid size="auto" display="flex" justifyContent="center" alignItems="center">
                     <EnvironmentSettings />
                 </Grid>
             </Grid>

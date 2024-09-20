@@ -14,8 +14,8 @@ function LoadSettings() {
         setLoadProfile(event.target.value);
     }
     return (
-        <Paper elevation={4}>
-            <Box sx={{padding : 2}}>
+        //<Paper elevation={4}>
+            <Box sx={{textAlign: 'left',  padding : 2}}>
                 <Typography variant="h5">Load Settings</Typography>
                 <Typography variant="body1">Load Peak Level: </Typography>
                 <NumberInput />
@@ -35,7 +35,7 @@ function LoadSettings() {
                     </Select>
                 </FormControl>
             </Box>
-        </Paper>
+        //</Paper>
     );
 }
 export default LoadSettings;

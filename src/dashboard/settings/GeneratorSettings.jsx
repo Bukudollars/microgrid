@@ -17,9 +17,8 @@ function GeneratorSettings() {
     setGeneratorSize(event.target.value);
   }
   return (
-    <Paper elevation={4}>
-    <Box sx={{padding : 2}}>
-      
+    //<Paper elevation={4}>
+      <Box sx={{textAlign: 'left', padding : 2}}>
         <Typography variant="h5">Generator Settings</Typography>
         <FormControl sx={{ m: 1, minWidth: 150 }} size = "small">
           <InputLabel id="generator-count-label">Generator Count</InputLabel>
@@ -55,9 +54,8 @@ function GeneratorSettings() {
         </FormControl>
         <Typography variant="body1">Minimum Generator Set Load: 120 kW</Typography>
         <Typography variant="body1">Spinning Reserve Target: 280 kW</Typography>
-      
-    </Box>
-    </Paper>
+      </Box>
+    //</Paper>
   );
 }
 export default GeneratorSettings;

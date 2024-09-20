@@ -14,9 +14,8 @@ function ESSSettings() {
         setModuleType(event.target.value);
     }
     return (
-        <Paper elevation={4}>
-            <Box sx={{padding : 2}}>
-            
+        //<Paper elevation={4}>
+            <Box sx={{textAlign: 'left', padding : 2}}>
                 <Typography variant="h5">ESS Settings</Typography>
                 <Typography variant="body1">Module Count: </Typography>
                 <NumberInputBasic />
@@ -36,10 +35,8 @@ function ESSSettings() {
                     <MenuItem value={"Energy Time Shift: 1000kW, 1152 kW-hr"}>Energy Time Shift: 1000kW, 1152 kW-hr</MenuItem>
                     </Select>
                 </FormControl>
-            
-
             </Box>
-        </Paper>
+        //</Paper>
     );
 }
 export default ESSSettings;
