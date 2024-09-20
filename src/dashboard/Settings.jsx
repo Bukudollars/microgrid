@@ -12,7 +12,7 @@ import Grid from '@mui/material/Grid2';
 
 function Settings() {
     return (
-        <Box>
+        <Box sx={{margin: 2, padding: 2}}>
             <Typography variant="h4">Settings</Typography>
             <Grid container spacing={2}>
                 <Grid size="auto" display="flex" justifyContent="center" alignItems="center">

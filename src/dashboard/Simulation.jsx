@@ -10,7 +10,7 @@ import Grid from '@mui/material/Grid2';
 
 function Simulation() {
     return (
-        <Box>
+        <Box sx={{margin: 2}}>
             <Grid container spacing={2}>
                 <Grid size={12}>
                     <YieldDistribution />
