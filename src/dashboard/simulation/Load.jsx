@@ -12,7 +12,7 @@ function Load() {
                 <Typography variant="body1">(P) 776 kW</Typography>
             </Tooltip>
             <Tooltip title="Reactive Load" arrow>
-                <Typography variant="body1">(Q) 444 kVAR 4/4</Typography>
+                <Typography variant="body1">(Q) 444 kVAr 4/4</Typography>
             </Tooltip>
             <Tooltip title="Power Factor" arrow>
                 <Typography variant="body1">(PF) 0.87</Typography>
