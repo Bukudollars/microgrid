@@ -6,6 +6,7 @@ import Select from '@mui/material/Select';
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 import MenuItem from '@mui/material/MenuItem';
+import Paper from '@mui/material/Paper';
 
 function LoadSettings() {
     const [loadProfile, setLoadProfile] = React.useState("Commercial");
@@ -13,26 +14,28 @@ function LoadSettings() {
         setLoadProfile(event.target.value);
     }
     return (
-        <Box>
-            <Typography variant="h5">Load Settings</Typography>
-            <Typography variant="body1">Load Peak Level: </Typography>
-            <NumberInput />
-            <FormControl sx={{ m: 1, minWidth: 150 }} size = "small">
-                <InputLabel id="load-profile-label">Load Profile</InputLabel>
-                <Select
-                    labelId="load-profile-label"
-                    id="load-profile"
-                    value={loadProfile}
-                    label="Load Profile"
-                    onChange={handleChangeLoadProfile}
-                >
-                <MenuItem value={"Commercial"}>Commercial</MenuItem>
-                <MenuItem value={"Residential"}>Residential</MenuItem>
-                <MenuItem value={"Industrial"}>Industrial</MenuItem>
-                <MenuItem value={"Community"}>Community</MenuItem>
-                </Select>
-            </FormControl>
-        </Box>
+        <Paper elevation={4}>
+            <Box sx={{padding : 2}}>
+                <Typography variant="h5">Load Settings</Typography>
+                <Typography variant="body1">Load Peak Level: </Typography>
+                <NumberInput />
+                <FormControl sx={{ m: 1, minWidth: 150 }} size = "small">
+                    <InputLabel id="load-profile-label">Load Profile</InputLabel>
+                    <Select
+                        labelId="load-profile-label"
+                        id="load-profile"
+                        value={loadProfile}
+                        label="Load Profile"
+                        onChange={handleChangeLoadProfile}
+                    >
+                    <MenuItem value={"Commercial"}>Commercial</MenuItem>
+                    <MenuItem value={"Residential"}>Residential</MenuItem>
+                    <MenuItem value={"Industrial"}>Industrial</MenuItem>
+                    <MenuItem value={"Community"}>Community</MenuItem>
+                    </Select>
+                </FormControl>
+            </Box>
+        </Paper>
     );
 }
 export default LoadSettings;

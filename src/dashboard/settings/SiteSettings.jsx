@@ -6,6 +6,7 @@ import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 import MenuItem from '@mui/material/MenuItem';
 import NumberInput from '../components/NumberInput';
+import Paper from '@mui/material/Paper';
 
 function SiteSettings() {
     const [frequency, setFrequency] = React.useState(60);
@@ -13,24 +14,27 @@ function SiteSettings() {
         setFrequency(event.target.value);
     }
     return (
-        <Box>
-            <Typography variant="h5">Site Settings</Typography>
-            <FormControl sx={{ m: 1, minWidth: 150 }} size = "small">
-                <InputLabel id="frequency-label">Frequency</InputLabel>
-                <Select
-                    labelId="frequency-label"
-                    id="frequency"
-                    value={frequency}
-                    label="Frequency"
-                    onChange={handleChangeFrequency}
-                >
-                <MenuItem value={60}>60 Hz</MenuItem>
-                <MenuItem value={50}>50 Hz</MenuItem>
-                </Select>
-            </FormControl>
-            <Typography variant="body1">VAC: </Typography>
-            <NumberInput />
-        </Box>
+        <Paper elevation={4}>
+            <Box sx={{padding : 2}}>
+                <Typography variant="h5">Site Settings</Typography>
+                <FormControl sx={{ m: 1, minWidth: 150 }} size = "small">
+                    <InputLabel id="frequency-label">Frequency</InputLabel>
+                    <Select
+                        labelId="frequency-label"
+                        id="frequency"
+                        value={frequency}
+                        label="Frequency"
+                        onChange={handleChangeFrequency}
+                    >
+                    <MenuItem value={60}>60 Hz</MenuItem>
+                    <MenuItem value={50}>50 Hz</MenuItem>
+                    </Select>
+                </FormControl>
+                <Typography variant="body1">VAC: </Typography>
+                <NumberInput />
+            
+            </Box>
+        </Paper>
     );
 }
 export default SiteSettings;
