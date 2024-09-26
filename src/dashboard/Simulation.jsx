@@ -15,19 +15,19 @@ function Simulation() {
                 <Grid size={12}>
                     <YieldDistribution />
                 </Grid>
-                <Grid item xs={6}>
+                <Grid size='auto'>
                     <Load />
                 </Grid>
-                <Grid item xs={6}>
+                <Grid size='auto'>
                     <Utility />
                 </Grid>
-                <Grid item xs={6}>
+                <Grid size='auto'>
                     <Gen />
                 </Grid>
-                <Grid item xs={6}>
+                <Grid size='auto'>
                     <PV />
                 </Grid>
-                <Grid item xs={6}>
+                <Grid size='auto'>
                     <ESS />
                 </Grid>
             </Grid>

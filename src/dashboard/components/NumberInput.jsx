@@ -1,13 +1,17 @@
 import * as React from 'react';
+import PropTypes from 'prop-types'
 import {
   Unstable_NumberInput as BaseNumberInput,
   numberInputClasses,
 } from '@mui/base/Unstable_NumberInput';
 import { styled } from '@mui/system';
 
+
 const NumberInput = React.forwardRef(function CustomNumberInput(props, ref) {
+  const {min, ...otherProps} = props;
   return (
     <BaseNumberInput
+      min={min}
       slots={{
         root: StyledInputRoot,
         input: StyledInputElement,
@@ -22,20 +26,26 @@ const NumberInput = React.forwardRef(function CustomNumberInput(props, ref) {
           children: '▾',
         },
       }}
-      {...props}
+      {...otherProps}
       ref={ref}
     />
   );
 });
 
-export default function NumberInputBasic() {
-  const [value, setValue] = React.useState(null);
+NumberInput.propTypes = {
+  min: PropTypes.number,
+  'aria-label': PropTypes.string,
+};
+
+export default function NumberInputBasic({min, 'aria-label': ariaLabel, placeHolder, onChange, value}) {
+
   return (
     <NumberInput
-      aria-label="Demo number input"
-      placeholder="Type a number…"
+      aria-label={ariaLabel}
+      placeholder={placeHolder}
       value={value}
-      onChange={(event, val) => setValue(val)}
+      onChange={onChange}
+      min={min}
     />
   );
 }

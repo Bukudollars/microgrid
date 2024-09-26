@@ -6,11 +6,17 @@ import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 import MenuItem from '@mui/material/MenuItem';
 import Paper from '@mui/material/Paper';
+import NumberInput from '../components/NumberInput';
+//import {Unstable_NumberInput as NumberInput} from '@mui/base/Unstable_NumberInput' 
+import PropTypes from 'prop-types';
+import { useSettings, useSettingsDispatch } from '../../SettingsContext';
 
 function GeneratorSettings() {
-  const [generatorCount, setGeneratorCount] = React.useState(1);
-  const handleChangeGenCount = (event) => {
-    setGeneratorCount(event.target.value);
+  const { generatorCount } = useSettings();
+  const dispatch = useSettingsDispatch();
+  const handleChangeGenCount = (event, value) => {
+    console.log("Generator Count: ", value);
+    dispatch({type: 'SET_GENERATOR_COUNT', payload: value});
   }
   const [generatorSize, setGeneratorSize] = React.useState(400);
   const handleChangeGenSize = (event) => {
@@ -20,22 +26,13 @@ function GeneratorSettings() {
     //<Paper elevation={4}>
       <Box sx={{textAlign: 'left', padding : 2}}>
         <Typography variant="h5">Generator Settings</Typography>
-        <FormControl sx={{ m: 1, minWidth: 150 }} size = "small">
-          <InputLabel id="generator-count-label">Generator Count</InputLabel>
-          <Select
-            labelId="generator-count-label"
-            id="generator-count"
-            value={generatorCount}
-            label="Generator Count"
-            onChange={handleChangeGenCount}
-          >
-            <MenuItem value={1}>1</MenuItem>
-            <MenuItem value={2}>2</MenuItem>
-            <MenuItem value={3}>3</MenuItem>
-            <MenuItem value={4}>4</MenuItem>
-            <MenuItem value={5}>5</MenuItem>
-          </Select>
-        </FormControl>
+        <Typography variant="body1">Number of Generators: </Typography>
+        <NumberInput min={0}
+          aria-label="Number of Generators"
+          placeholder="Number of Generators"
+          value={generatorCount}
+          onChange={handleChangeGenCount}
+         />
         <FormControl sx={{ m: 1, minWidth: 150 }} size = "small">
           <InputLabel id="generator-size-label">Generator Size</InputLabel>
           <Select
@@ -58,4 +55,5 @@ function GeneratorSettings() {
     //</Paper>
   );
 }
+
 export default GeneratorSettings;
