@@ -1,14 +1,21 @@
 import * as React from 'react';
 import { Box } from '@mui/material';
 import Typography from '@mui/material/Typography';
-import NumberInputBasic from '../components/NumberInput';
+import NumberInput from '../components/NumberInput';
 import Select from '@mui/material/Select';
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 import MenuItem from '@mui/material/MenuItem';
-import Paper from '@mui/material/Paper';
+//import Paper from '@mui/material/Paper';
+import { useSettings, useSettingsDispatch } from '../../SettingsContext';
 
 function ESSSettings() {
+    const { essModuleCount } = useSettings();
+    const dispatch = useSettingsDispatch();
+    const handleChangeESSModuleCount = (event, value) => {
+        console.log("ESS Module Count: ", value);
+        dispatch({type: 'SET_ESS_MODULE_COUNT', payload: value});
+    }
     const [moduleType, setModuleType] = React.useState("Grid Stability: 250kW, 144 kW-hr");
     const handleChangeModuleType = (event) => {
         setModuleType(event.target.value);
@@ -18,7 +25,12 @@ function ESSSettings() {
             <Box sx={{textAlign: 'left', padding : 2}}>
                 <Typography variant="h5">ESS Settings</Typography>
                 <Typography variant="body1">Module Count: </Typography>
-                <NumberInputBasic />
+                <NumberInput 
+                    aria-label="ESS Module Count"
+                    placeHolder="ESS Module Count"
+                    value={essModuleCount}
+                    onChange={handleChangeESSModuleCount}
+                />
                 <FormControl sx={{ m: 1, minWidth: 150 }} size = "small">
                     <InputLabel id="module-type-label">Module Type</InputLabel>
                     <Select

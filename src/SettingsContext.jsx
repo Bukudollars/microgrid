@@ -7,6 +7,7 @@ const SettingsDispatchContext = createContext();
 const initialState = {
     generatorCount: 1,
     pvPeakSize: 1,
+    essModuleCount: 1,
 };
 
 function settingsReducer(state, action) {
@@ -15,6 +16,8 @@ function settingsReducer(state, action) {
             return {...state, generatorCount: action.payload};
         case 'SET_PV_PEAK_SIZE':
             return {...state, pvPeakSize: action.payload};
+        case 'SET_ESS_MODULE_COUNT':
+            return {...state, essModuleCount: action.payload};
         default:
             throw new Error(`Unhandled action type: ${action.type}`);
     }
