@@ -1,26 +1,27 @@
 import * as React from 'react';
-import { Box } from '@mui/material';
-import Typography from '@mui/material/Typography';
-import Select from '@mui/material/Select';
-import InputLabel from '@mui/material/InputLabel';
-import FormControl from '@mui/material/FormControl';
-import MenuItem from '@mui/material/MenuItem';
-import Paper from '@mui/material/Paper';
+import { Box, Typography, Select, InputLabel, FormControl, MenuItem } from '@mui/material';
+//import Paper from '@mui/material/Paper';
 import NumberInput from '../components/NumberInput';
 //import {Unstable_NumberInput as NumberInput} from '@mui/base/Unstable_NumberInput' 
-import PropTypes from 'prop-types';
+//import PropTypes from 'prop-types';
 import { useSettings, useSettingsDispatch } from '../../SettingsContext';
+import { GENERATOR_SIZES } from '../../constants';
 
 function GeneratorSettings() {
-  const { generatorCount } = useSettings();
+  const { generatorCount, generatorSize } = useSettings();
   const dispatch = useSettingsDispatch();
   const handleChangeGenCount = (event, value) => {
     console.log("Generator Count: ", value);
     dispatch({type: 'SET_GENERATOR_COUNT', payload: value});
   }
-  const [generatorSize, setGeneratorSize] = React.useState(400);
   const handleChangeGenSize = (event) => {
-    setGeneratorSize(event.target.value);
+    const value = parseInt(event.target.value, 10);
+    if (GENERATOR_SIZES.includes(value)) {
+      console.log("Generator Size: ", value);
+      dispatch({type: 'SET_GENERATOR_SIZE', payload: value});
+    } else {
+      console.error("Invalid generator size: ", value);
+    }
   }
   return (
     //<Paper elevation={4}>
@@ -42,11 +43,12 @@ function GeneratorSettings() {
             label="Generator Size"
             onChange={handleChangeGenSize}
           >
-            <MenuItem value={100}>100</MenuItem>
-            <MenuItem value={200}>200</MenuItem>
-            <MenuItem value={300}>300</MenuItem>
-            <MenuItem value={400}>400</MenuItem>
-            <MenuItem value={500}>500</MenuItem>
+            {GENERATOR_SIZES.map((size) => (
+              <MenuItem key={size} value={size}>
+                {size}
+                </MenuItem>
+            ))}
+            
           </Select>
         </FormControl>
         <Typography variant="body1">Minimum Generator Set Load: 120 kW</Typography>

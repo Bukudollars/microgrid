@@ -1,23 +1,47 @@
 import React, {createContext, useReducer, useContext} from 'react';
 import PropTypes from 'prop-types';
+import { GENERATOR_SIZES } from './constants';
 
 const SettingsContext = createContext();
 const SettingsDispatchContext = createContext();
 
 const initialState = {
-    generatorCount: 1,
-    pvPeakSize: 1,
-    essModuleCount: 1,
+    //generator settings
+    generatorCount: 5,
+    generatorSize: 450,
+    //pv settings
+    pvPeakSize: 400,
+    //ess settings
+    essModuleCount: 2,
+    //load settings
+    loadPeakLevel: 800,
+    //site settings
+    siteVAC: 480,
+    //utility settings
+    exportLimit: 200,
 };
 
 function settingsReducer(state, action) {
     switch (action.type) {
         case 'SET_GENERATOR_COUNT':
             return {...state, generatorCount: action.payload};
+        case 'SET_GENERATOR_SIZE':
+            if (GENERATOR_SIZES.includes(action.payload)) {
+                return {...state, generatorSize: action.payload};
+            } else {
+                console.error("Invalid generator size: ", action.payload);
+                return state;
+            }
         case 'SET_PV_PEAK_SIZE':
             return {...state, pvPeakSize: action.payload};
         case 'SET_ESS_MODULE_COUNT':
             return {...state, essModuleCount: action.payload};
+        case 'SET_LOAD_PEAK_LEVEL':
+            return {...state, loadPeakLevel: action.payload};
+        case 'SET_SITE_VAC':
+            return {...state, siteVAC: action.payload};
+        case 'SET_EXPORT_LIMIT':
+            return {...state, exportLimit: action.payload};
         default:
             throw new Error(`Unhandled action type: ${action.type}`);
     }

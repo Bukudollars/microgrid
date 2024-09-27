@@ -6,12 +6,19 @@ import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 import MenuItem from '@mui/material/MenuItem';
 import NumberInput from '../components/NumberInput';
-import Paper from '@mui/material/Paper';
+//import Paper from '@mui/material/Paper';
+import { useSettings, useSettingsDispatch } from '../../SettingsContext';
 
 function SiteSettings() {
     const [frequency, setFrequency] = React.useState(60);
     const handleChangeFrequency = (event) => {
         setFrequency(event.target.value);
+    }
+    const { siteVAC } = useSettings();
+    const dispatch = useSettingsDispatch();
+    const handleChangeSiteVAC = (event, value) => {
+        console.log("Site VAC: ", value);
+        dispatch({type: 'SET_SITE_VAC', payload: value});
     }
     return (
         //<Paper elevation={4}>
@@ -31,7 +38,12 @@ function SiteSettings() {
                     </Select>
                 </FormControl>
                 <Typography variant="body1">VAC: </Typography>
-                <NumberInput />
+                <NumberInput 
+                    aria-label="Site VAC"
+                    placeholder="Site VAC"
+                    value={siteVAC}
+                    onChange={handleChangeSiteVAC}
+                />
             
             </Box>
         //</Paper>
