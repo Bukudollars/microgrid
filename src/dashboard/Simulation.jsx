@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { Box } from '@mui/material';
+import { Box, ButtonGroup, Button } from '@mui/material';
+import { PlayArrow, Pause, Replay } from '@mui/icons-material';
 import YieldDistribution from './simulation/YieldDistribution';
 import Load from './simulation/Load';
 import Utility from './simulation/Utility';
@@ -11,6 +12,13 @@ import Grid from '@mui/material/Grid2';
 function Simulation() {
     return (
         <Box sx={{margin: 2}}>
+            <Box>
+                <ButtonGroup>
+                    <Button><PlayArrow /></Button>
+                    <Button><Pause /></Button>
+                    <Button><Replay /></Button>
+                </ButtonGroup>
+            </Box>
             <Grid container spacing={2}>
                 <Grid size={12}>
                     <YieldDistribution />
