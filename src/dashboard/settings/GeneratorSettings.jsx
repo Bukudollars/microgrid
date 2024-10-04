@@ -53,6 +53,7 @@ function GeneratorSettings() {
         </FormControl>
         <Typography variant="body1">Minimum Generator Set Load: {generatorSize * 0.3} kW</Typography>
         <Typography variant="body1">Spinning Reserve Target: 280 kW</Typography>
+        {/* 70-% of generator size */}
       </Box>
     //</Paper>
   );
