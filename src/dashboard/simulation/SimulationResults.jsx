@@ -13,7 +13,7 @@ const SimulationResults = ({data}) => {
                         <TableHead>
                             <TableRow>
                                 <TableCell>Time</TableCell>
-                                <TableCell>Active Feeder Breakers</TableCell>
+                                {/* <TableCell>Active Feeder Breakers</TableCell> */}
                                 <TableCell>Remaining ESS Energy</TableCell>
                                 <TableCell>Total ESS Energy</TableCell>
                                 <TableCell>Total Genset Power</TableCell>
@@ -23,22 +23,36 @@ const SimulationResults = ({data}) => {
                                 <TableCell>Reactive Load</TableCell>
                                 <TableCell>Available PV Power</TableCell>
                                 <TableCell>ESS Reactive Power Contribution</TableCell>
+                                <TableCell>ESS Real Power Contribution</TableCell>
+                                <TableCell>ESS Power Factor</TableCell>
+                                <TableCell>Utility Real Power Contribution</TableCell>
+                                <TableCell>Utility Reactive Power Contribution</TableCell>
+                                <TableCell>Utility Power Factor</TableCell>
+                                <TableCell>Provided PV Power</TableCell>
+                                <TableCell>Active Feeder Breakers</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
                             {data.map((value, index) => (
                                 <TableRow key={index}>
                                     <TableCell>{index}</TableCell>
-                                    <TableCell>{value.activeFeederBreakers}</TableCell>
+                                    {/* <TableCell>{value.activeFeederBreakers}</TableCell> */}
                                     <TableCell>{value.remainingESSEnergy.toFixed(0)}</TableCell>
                                     <TableCell>{value.totalESSEnergy}</TableCell>
                                     <TableCell>{value.totalGensetPower}</TableCell>
                                     <TableCell>{value.essChargeState}</TableCell>
                                     <TableCell>{value.realLoad.toFixed(0)}</TableCell>
-                                    <TableCell>{value.powerFactor.toFixed(2)}</TableCell>
+                                    <TableCell>{value.loadPowerFactor.toFixed(2)}</TableCell>
                                     <TableCell>{value.reactiveLoad.toFixed(0)}</TableCell>
                                     <TableCell>{value.availablePVPower.toFixed(0)}</TableCell>
                                     <TableCell>{value.essReactivePowerContribution.toFixed(0)}</TableCell>
+                                    <TableCell>{value.essRealPowerContribution.toFixed(0)}</TableCell>
+                                    <TableCell>{value.essPowerFactor.toFixed(2)}</TableCell>
+                                    <TableCell>{value.utilityRealPowerContribution.toFixed(0)}</TableCell>
+                                    <TableCell>{value.utilityReactivePowerContribution.toFixed(0)}</TableCell>
+                                    <TableCell>{value.utilityPowerFactor.toFixed(2)}</TableCell>
+                                    <TableCell>{value.providedPVPower.toFixed(0)}</TableCell>
+                                    <TableCell>{value.activeFeederBreakers}</TableCell>
                                 </TableRow>
                             ))}
                         </TableBody>

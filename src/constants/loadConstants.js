@@ -1,4 +1,5 @@
 export const LOAD_PROFILE = [
+    {hour: 0, residential: 0.12, commercial: 0.15, Industrial: 1.0, Community: 0.43},
     {hour: 1, residential: 0.08, commercial: 0.15, Industrial: 1.0, Community: 0.15},
     {hour: 2, residential: 0.08, commercial: 0.15, Industrial: 1.0, Community: 0.15},
     {hour: 3, residential: 0.12, commercial: 0.15, Industrial: 1.0, Community: 0.15},
@@ -22,7 +23,7 @@ export const LOAD_PROFILE = [
     {hour: 21, residential: 0.55, commercial: 0.15, Industrial: 1.0, Community: 1.0},
     {hour: 22, residential: 0.48, commercial: 0.15, Industrial: 1.0, Community: 1.0},
     {hour: 23, residential: 0.22, commercial: 0.15, Industrial: 1.0, Community: 0.75},
-    {hour: 24, residential: 0.12, commercial: 0.15, Industrial: 1.0, Community: 0.43},
+    
 ];
 
 export const POWER_FACTOR_MIN = {residential: 0.9, commercial: 0.8, industrial: 0.75, community: 0.85};
