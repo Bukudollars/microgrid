@@ -1,7 +1,7 @@
 import { 
     LOAD_PROFILE, POWER_FACTOR_MIN, POWER_FACTOR_MAX, 
     MIN_POWER_THRESHOLD, NEXT_ONLINE_THRESHOLD ,
-    CHARGE_STATE_LIMIT
+    CHARGE_STATE_MIN, CHARGE_STATE_MAX
 } from "../constants";
 import Logger from "./logger";
 self.onmessage = function (e) {
@@ -375,7 +375,7 @@ function computeValue({
             if (gensetRealPowerRequirement <= 0) {
                 Logger.log("more PV than the load requires, run on PV and ESS");
                 gensetsRequired = 0;
-                if (remainingESSEnergy < variables.totalESSEnergy) {
+                if (remainingESSEnergy < totalESSEnergy) {
                     //ESS provides reactive power to load
                     essReactivePowerContribution = reactiveLoad;
                     //flows into ESS with a maximum value of the Peak ESS Real Power value.   
@@ -391,7 +391,7 @@ function computeValue({
                     gensetReactivePowerContribution = 0;
                     gensetPowerFactor = 0;
                     //Check to see if the ESS has exceeded the charge state limit and is ready to discharge.
-                    if (remainingESSEnergy / variables.totalESSEnergy > CHARGE_STATE_LIMIT) {
+                    if (remainingESSEnergy / totalESSEnergy > CHARGE_STATE_MAX) {
                         newEssChargeState = 1;
                     }
                 }
@@ -418,7 +418,112 @@ function computeValue({
                 // ESS will attempt to pick up load before the next generator set will start (if above 30% load).   
                 // When on gen + PV, ESS will recharge up to a max. of 70% genset load.  
                 if (essChargeState === 1) {
+                    //ESS can cover the load
+                    if (gensetRealPowerRequirement < remainingESSEnergy) {
+                        Logger.log("ESS can cover the load");
+                        gensetsRequired = 0;
+                        //ESS provides reactive power to load
+                        essReactivePowerContribution = reactiveLoad;
+                        //flows out of the ESS 
+                        essRealPowerContribution = gensetRealPowerRequirement;
+                        essPowerFactor = powerFactor(essRealPowerContribution, essReactivePowerContribution);
+                        newRemainingESSEnergy = remainingESSEnergy - (1 / variables.granularity * essRealPowerContribution);
+                        providedPVPower = realLoad - essRealPowerContribution;
+                        gensetRealPowerContribution = 0;
+                        gensetReactivePowerContribution = 0;
+                        gensetPowerFactor = 0;
+                        //Check to see if the ESS has fallen below the charge state limit and is ready to recharge.
+                        if (remainingESSEnergy / totalESSEnergy < CHARGE_STATE_MIN) {
+                            newEssChargeState = 0;
+                        }
+                    }
+                     
+                    //ESS can’t cover complete load; Use genset and/or ESS
+                    else {
+                        Logger.log("ESS can't cover complete load, use genset and/or ESS");
+                        //First check is to determine if there is enough power between the gensets and ESS to power the load; if not, shed load.
+                        if (gensetRealPowerRequirement > totalGensetPower + peakESSRealPower && gensetRealPowerRequirement > totalGensetPower + remainingESSEnergy) {
+                            // Number of active feeder breakers equals the total PV power available plus total genset power plus total ESS power, 
+                            // divided by the load requirement per circuit breaker (real load / active breakers).   
+                            // This should be rounded down to the nearest whole number.  The Active Feeder Breaker value can be zero.
+                            newActiveFeederBreakers = Math.floor((availablePVPower + totalGensetPower + peakESSRealPower) / loadPerBreaker);
+                        }
+                        //Number of gensets required is the lesser of genset power requirement / next genset online and the total number of generator sets.  
+                        gensetsRequired = Math.min(variables.gensetCount, Math.ceil(gensetRealPowerRequirement / nextGensetOnlinePower));
+                        // Check to see how much load each genset is required to have; 
+                        // if the ESS can offset one genset, then decrease number of gensets by one.  
+                        // ESS runs at full capacity, or up to 30% genset load, whichever is less
+                        if (gensetRealPowerRequirement / gensetsRequired < peakESSRealPower && gensetRealPowerRequirement / gensetsRequired < remainingESSEnergy) {
+                            Logger.log("ESS can offset one genset");
+                            gensetsRequired--;
+                            gensetRealPowerContribution = Math.max(
+                                minGensetLoad, 
+                                gensetRealPowerRequirement - peakESSRealPower, 
+                                gensetRealPowerRequirement - remainingESSEnergy
+                            );
+                            gensetReactivePowerContribution = reactiveLoad - reactiveLoad / gensetsRequired;
+                            gensetPowerFactor = powerFactor(gensetRealPowerContribution, gensetReactivePowerContribution);
+                            essRealPowerContribution = gensetRealPowerRequirement - gensetRealPowerContribution;
+                            essReactivePowerContribution = reactiveLoad - gensetReactivePowerContribution;
+                            essPowerFactor = powerFactor(essRealPowerContribution, essReactivePowerContribution);
+                            remainingESSEnergy = remainingESSEnergy - (1 / variables.granularity * essRealPowerContribution);
+                            //gensetReactivePowerContribution = reactiveLoad - reactiveLoad / gensetsRequired;
+                            if (remainingESSEnergy / totalESSEnergy < CHARGE_STATE_MIN) {
+                                newEssChargeState = 0;
+                            }
+                            providedPVPower = realLoad - gensetRealPowerContribution - essRealPowerContribution;
+                        }
+                        //There is more power than the gensets can support; run ESS 
+                        else if(gensetRealPowerRequirement > totalGensetPower) {
+                            Logger.log("more power than the gensets can support, run ESS");
+                            //sets the number of required gensets equal to the total number of gensets
+                            gensetsRequired = variables.gensetCount;
+                            gensetRealPowerContribution = realLoad - availablePVPower - peakESSRealPower;
+                            gensetReactivePowerContribution = reactiveLoad * gensetRealPowerContribution / realLoad;
+                            gensetPowerFactor = powerFactor(gensetRealPowerContribution, gensetReactivePowerContribution);
+                            essRealPowerContribution = Math.min(peakESSRealPower, remainingESSEnergy);
+                            essReactivePowerContribution = reactiveLoad - gensetReactivePowerContribution;
+                            essPowerFactor = powerFactor(essRealPowerContribution, essReactivePowerContribution);
+                            remainingESSEnergy = remainingESSEnergy - (1 / variables.granularity * essRealPowerContribution);
+                            //Check to see if the ESS has fallen below the charge state limit and is ready to recharge.
+                            if (remainingESSEnergy / totalESSEnergy < CHARGE_STATE_MIN) {
+                                newEssChargeState = 0;
+                            }
+                            providedPVPower = realLoad - gensetRealPowerContribution - essRealPowerContribution;
 
+                        } 
+                        //run on genset only and recharge the ESS
+                        else {
+                            Logger.log("run on genset only and recharge the ESS");
+                            //Number of gensets required is the lesser of genset power requirement / next genset online and the total number of generator sets.  
+                            gensetsRequired = Math.min(variables.gensetCount, Math.ceil(gensetRealPowerRequirement / nextGensetOnlinePower));
+                            //Excess genset power flows into the ESS
+                            essRealPowerContribution = -Math.min(peakESSRealPower, totalESSEnergy - remainingESSEnergy, gensetsRequired * variables.singleGensetPower - gensetRealPowerRequirement);
+                            essReactivePowerContribution = 0;
+                            essPowerFactor = powerFactor(essRealPowerContribution, essReactivePowerContribution);
+                            //Genset power provided is the larger of either the generator set minimum load or the generator set power requirement.  Add to this the ESS recharge power.
+                            gensetRealPowerContribution = Math.max(gensetsRequired * minGensetLoad, gensetRealPowerRequirement) - essRealPowerContribution;
+                            providedPVPower = Math.max(realLoad - gensetRealPowerContribution, 0);
+                            gensetReactivePowerContribution = reactiveLoad;
+                            gensetPowerFactor = powerFactor(gensetRealPowerContribution, gensetReactivePowerContribution);
+                            newRemainingESSEnergy = remainingESSEnergy - (1 / variables.granularity * essRealPowerContribution);
+                            //remaining ESS energy should not be greater than total ESS energy.  
+                            if (newRemainingESSEnergy > totalESSEnergy) {
+                                newRemainingESSEnergy = totalESSEnergy;
+                            }
+                            if (remainingESSEnergy / totalESSEnergy > CHARGE_STATE_MAX) {
+                                newEssChargeState = 1;
+                            }
+                        }
+                        
+                        
+                    }
+                }
+                // This is where the ESS Charge State = 0, 
+                // indicating that the ESS should re-charge up to a minimum of 70% before it starts discharging again.  
+                // In this state, run on PV + Gensets.
+                else {
+                    Logger.log("ESS Charge State = 0, run on PV + Gensets");
                 }
             }
 
