@@ -320,7 +320,7 @@ function computeValue({
             //there is enough PV to power load; run one generator set at 30% load, PV makes up the balance
             if (gensetRealPowerRequirement <=0) {
                 gensetsRequired = 1;
-                providedPVPower = realLoad - minGensetLoad;
+                providedPVPower = Math.max(realLoad - minGensetLoad, 0);
                 gensetRealPowerContribution = minGensetLoad;
                 gensetReactivePowerContribution = reactiveLoad;
                 gensetPowerFactor = powerFactor(gensetRealPowerContribution, gensetReactivePowerContribution);
@@ -340,7 +340,7 @@ function computeValue({
                 gensetsRequired = Math.min(variables.gensetCount, Math.ceil(gensetRealPowerRequirement / nextGensetOnlinePower));
                 //Genset power provided is the larger of either the generator set minimum load or the generator set power requirement.  
                 gensetRealPowerContribution = Math.max(gensetsRequired * minGensetLoad, gensetRealPowerRequirement);
-                providedPVPower = realLoad - gensetRealPowerContribution;
+                providedPVPower = Math.max(realLoad - gensetRealPowerContribution, 0);
                 gensetReactivePowerContribution = reactiveLoad;
                 gensetPowerFactor = powerFactor(gensetRealPowerContribution, gensetReactivePowerContribution);
             }
