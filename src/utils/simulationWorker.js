@@ -391,7 +391,7 @@ function computeValue({
                     gensetReactivePowerContribution = 0;
                     gensetPowerFactor = 0;
                     //Check to see if the ESS has exceeded the charge state limit and is ready to discharge.
-                    if (remainingESSEnergy / totalESSEnergy > CHARGE_STATE_MAX) {
+                    if (newRemainingESSEnergy / totalESSEnergy > CHARGE_STATE_MAX) {
                         newEssChargeState = 1;
                     }
                 }
@@ -433,7 +433,7 @@ function computeValue({
                         gensetReactivePowerContribution = 0;
                         gensetPowerFactor = 0;
                         //Check to see if the ESS has fallen below the charge state limit and is ready to recharge.
-                        if (remainingESSEnergy / totalESSEnergy < CHARGE_STATE_MIN) {
+                        if (newRemainingESSEnergy / totalESSEnergy < CHARGE_STATE_MIN) {
                             newEssChargeState = 0;
                         }
                     }
@@ -466,9 +466,9 @@ function computeValue({
                             essRealPowerContribution = gensetRealPowerRequirement - gensetRealPowerContribution;
                             essReactivePowerContribution = reactiveLoad - gensetReactivePowerContribution;
                             essPowerFactor = powerFactor(essRealPowerContribution, essReactivePowerContribution);
-                            remainingESSEnergy = remainingESSEnergy - (1 / variables.granularity * essRealPowerContribution);
+                            newRemainingESSEnergy = remainingESSEnergy - (1 / variables.granularity * essRealPowerContribution);
                             //gensetReactivePowerContribution = reactiveLoad - reactiveLoad / gensetsRequired;
-                            if (remainingESSEnergy / totalESSEnergy < CHARGE_STATE_MIN) {
+                            if (newRemainingESSEnergy / totalESSEnergy < CHARGE_STATE_MIN) {
                                 newEssChargeState = 0;
                             }
                             providedPVPower = realLoad - gensetRealPowerContribution - essRealPowerContribution;
@@ -484,9 +484,9 @@ function computeValue({
                             essRealPowerContribution = Math.min(peakESSRealPower, remainingESSEnergy);
                             essReactivePowerContribution = reactiveLoad - gensetReactivePowerContribution;
                             essPowerFactor = powerFactor(essRealPowerContribution, essReactivePowerContribution);
-                            remainingESSEnergy = remainingESSEnergy - (1 / variables.granularity * essRealPowerContribution);
+                            newRemainingESSEnergy = remainingESSEnergy - (1 / variables.granularity * essRealPowerContribution);
                             //Check to see if the ESS has fallen below the charge state limit and is ready to recharge.
-                            if (remainingESSEnergy / totalESSEnergy < CHARGE_STATE_MIN) {
+                            if (newRemainingESSEnergy / totalESSEnergy < CHARGE_STATE_MIN) {
                                 newEssChargeState = 0;
                             }
                             providedPVPower = realLoad - gensetRealPowerContribution - essRealPowerContribution;
@@ -524,6 +524,60 @@ function computeValue({
                 // In this state, run on PV + Gensets.
                 else {
                     Logger.log("ESS Charge State = 0, run on PV + Gensets");
+                    //Check to see if there is enough genset power to cover the load
+                    if (gensetRealPowerRequirement > totalGensetPower) {
+                        //Check to see if any ESS capacity is left.  Even if in the “don’t discharge” state, will discharge first rather than shedding load.
+                        if (remainingESSEnergy > 0) {
+                            if (gensetRealPowerRequirement > totalGensetPower + Math.min(peakESSRealPower, remainingESSEnergy)) {
+                                // Number of active feeder breakers equals the total PV power available plus total genset power plus total ESS power, 
+                                // divided by the load requirement per circuit breaker (real load / active breakers).   
+                                // This should be rounded down to the nearest whole number.  The Active Feeder Breaker value can be zero.
+                                newActiveFeederBreakers = Math.floor(availablePVPower + totalGensetPower + Math.min(peakESSRealPower, remainingESSEnergy) / loadPerBreaker);
+                            }
+                            //sets the number of required gensets equal to the total number of gensets
+                            gensetsRequired = variables.gensetCount;
+                            gensetRealPowerContribution = realLoad - availablePVPower - Math.min(peakESSRealPower, remainingESSEnergy);
+                            gensetReactivePowerContribution = reactiveLoad * gensetRealPowerContribution / realLoad;
+                            gensetPowerFactor = powerFactor(gensetRealPowerContribution, gensetReactivePowerContribution);
+                            essRealPowerContribution = Math.min(peakESSRealPower, remainingESSEnergy);
+                            essReactivePowerContribution = reactiveLoad - gensetReactivePowerContribution;
+                            essPowerFactor = powerFactor(essRealPowerContribution, essReactivePowerContribution);
+                            newRemainingESSEnergy = remainingESSEnergy - (1 / variables.granularity * essRealPowerContribution);
+                            if (newRemainingESSEnergy / totalESSEnergy < CHARGE_STATE_MIN) {
+                                newEssChargeState = 0;
+                            }
+                        }
+                        else {
+                            // Number of active feeder breakers equals the total PV power available plus total genset power, 
+                            // divided by the load requirement per circuit breaker (real load / active breakers).   
+                            // This should be rounded down to the nearest whole number.  The Active Feeder Breaker value can be zero
+                            newActiveFeederBreakers = Math.floor(availablePVPower + totalGensetPower / loadPerBreaker);
+                        }
+                    }
+                    // Number of gensets required is the lesser of genset power requirement / next genset online and the total number of generator sets.  
+                    gensetsRequired = Math.min(variables.gensetCount, Math.ceil(gensetRealPowerRequirement / nextGensetOnlinePower));
+                    //Excess genset power flows into the ESS
+                    essRealPowerContribution = -Math.min(
+                        peakESSRealPower, 
+                        totalESSEnergy - remainingESSEnergy, 
+                        gensetsRequired * variables.singleGensetPower - gensetRealPowerRequirement
+                    );
+                    essReactivePowerContribution = 0;
+                    essPowerFactor = powerFactor(essRealPowerContribution, essReactivePowerContribution);
+                    //Genset power provided is the larger of either the generator set minimum load or the generator set power requirement.  Add to this the ESS recharge power.
+                    gensetRealPowerContribution = Math.max(gensetsRequired * minGensetLoad, gensetRealPowerRequirement) - essRealPowerContribution;
+                    providedPVPower = realLoad - gensetRealPowerRequirement;
+                    gensetReactivePowerContribution = reactiveLoad;
+                    gensetPowerFactor = powerFactor(gensetRealPowerContribution, gensetReactivePowerContribution);
+                    newRemainingESSEnergy = remainingESSEnergy - (1 / variables.granularity * essRealPowerContribution);
+                    //remaining ESS energy should not be greater than total ESS energy.  
+                    if (newRemainingESSEnergy > totalESSEnergy) {
+                        newRemainingESSEnergy = totalESSEnergy;
+                    }
+                    //Check to see if the ESS has exceeded the charge state limit and is ready to discharge.
+                    if (newRemainingESSEnergy / totalESSEnergy > CHARGE_STATE_MAX) {
+                        newEssChargeState = 1;
+                    }
                 }
             }
 
