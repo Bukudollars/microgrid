@@ -1,0 +1,1 @@
+export const CHARGE_STATE_LIMIT = 0.7;
