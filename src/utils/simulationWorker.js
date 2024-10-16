@@ -1,4 +1,6 @@
-import { LOAD_PROFILE, POWER_FACTOR_MIN, POWER_FACTOR_MAX, MIN_POWER_THRESHOLD, NEXT_ONLINE_THRESHOLD } from "../constants";
+import { LOAD_PROFILE, POWER_FACTOR_MIN, POWER_FACTOR_MAX, 
+    MIN_POWER_THRESHOLD, NEXT_ONLINE_THRESHOLD 
+} from "../constants";
 import Logger from "./logger";
 self.onmessage = function (e) {
     try {
@@ -105,8 +107,8 @@ function computeValue({
 
     //Constant values for gensets
     const totalGensetPower = variables.singleGensetPower * variables.gensetCount;
-    const minGensetLoad = variables.singleGensetPower * 0.3;
-    const nextGensetOnlinePower = variables.singleGensetPower * 0.7;
+    const minGensetLoad = variables.singleGensetPower * MIN_POWER_THRESHOLD;
+    const nextGensetOnlinePower = variables.singleGensetPower * NEXT_ONLINE_THRESHOLD;
     let gensetRealPowerRequirement = 0;
     let gensetsRequired = 0;
     let gensetRealPowerContribution = 0;
@@ -382,9 +384,7 @@ function computeValue({
     Logger.log("gensetRealPowerRequirement: ", gensetRealPowerRequirement);
     Logger.log("gensetsRequired: ", gensetsRequired);
     Logger.log("nextGensetOnlinePower: ", nextGensetOnlinePower);
-    // if (newRemainingESSEnergy < 0) {
-    //     newRemainingESSEnergy = 0;
-    // }
+
 
     return {
         index,
