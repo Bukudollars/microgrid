@@ -30,6 +30,9 @@ const SimulationResults = ({data}) => {
                                 <TableCell>Utility Power Factor</TableCell>
                                 <TableCell>Provided PV Power</TableCell>
                                 <TableCell>Active Feeder Breakers</TableCell>
+                                <TableCell>Genset Real Power Contribution</TableCell>
+                                <TableCell>Gensets Reactive Power Contribution</TableCell>
+                                <TableCell>Gensets Required</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -53,6 +56,9 @@ const SimulationResults = ({data}) => {
                                     <TableCell>{value.utilityPowerFactor.toFixed(2)}</TableCell>
                                     <TableCell>{value.providedPVPower.toFixed(0)}</TableCell>
                                     <TableCell>{value.activeFeederBreakers}</TableCell>
+                                    <TableCell>{value.gensetRealPowerContribution.toFixed(0)}</TableCell>
+                                    <TableCell>{value.gensetReactivePowerContribution.toFixed(0)}</TableCell>
+                                    <TableCell>{value.gensetsRequired}</TableCell>
                                 </TableRow>
                             ))}
                         </TableBody>

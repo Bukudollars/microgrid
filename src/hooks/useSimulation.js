@@ -1,9 +1,12 @@
+import { SettingsPowerRounded } from '@mui/icons-material';
 import { useState, useEffect, useRef } from 'react';
+import Logger from '../utils/logger';
 
 const useSimulation = () => {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(false);
     const workerRef = useRef(null);
+    const [error, setError] = useState(null);
 
     // Cleanup worker on unmount
     useEffect(() => {
@@ -17,6 +20,7 @@ const useSimulation = () => {
 
     const startSimulation = (variables) => {
         setLoading(true);
+        setError(null);
 
         if(workerRef.current) {
             workerRef.current.terminate();
@@ -26,7 +30,13 @@ const useSimulation = () => {
 
         workerRef.current.onmessage = function (e) {
             const result = e.data;
-            setData(result);
+            if (result.error) {
+                setError(result.error);
+                Logger.error("Worker error: ", result.error);
+            } else {
+                setData(result);
+            }
+            
             setLoading(false);
             workerRef.current.terminate();
             workerRef.current = null;
@@ -34,12 +44,13 @@ const useSimulation = () => {
 
         workerRef.current.onerror = function (error) {
             console.error("Worker error: ", error);
+            setError(error.message);
             setLoading(false);
             workerRef.current.terminate();
             workerRef.current = null;
         };
     };
-    return { data, loading, startSimulation };
+    return { data, loading, error, startSimulation };
 };
 
 export default useSimulation;
