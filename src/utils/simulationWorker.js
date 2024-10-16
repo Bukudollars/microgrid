@@ -1,7 +1,9 @@
 import { 
     LOAD_PROFILE, POWER_FACTOR_MIN, POWER_FACTOR_MAX, 
     MIN_POWER_THRESHOLD, NEXT_ONLINE_THRESHOLD ,
-    CHARGE_STATE_MIN, CHARGE_STATE_MAX
+    CHARGE_STATE_MIN, CHARGE_STATE_MAX,
+    MINUTES_PER_HOUR, HOURS_PER_HOUR, HOURS_PER_DAY,
+    VARIATION_PER_MINUTE
 } from "../constants";
 import Logger from "./logger";
 self.onmessage = function (e) {
@@ -15,12 +17,12 @@ self.onmessage = function (e) {
             essModuleCount: 2,
             peakLoad: 800,
             totalFeederBreakers: 4,
-            utility: false,
+            utility: true,
             peakPVPower: 1000,
             cloudingFactor: 1,
             singleGensetPower: 500,
             gensetCount: 4,
-            granularity: 1,
+            granularity: HOURS_PER_HOUR,
             
         });
 
@@ -29,9 +31,10 @@ self.onmessage = function (e) {
             activeFeederBreakers: variables.totalFeederBreakers,
             remainingESSEnergy: variables.singleESSEnergy * variables.essModuleCount,
             essChargeState: 1,
+            loadPowerFactor: Math.random() * (POWER_FACTOR_MAX.commercial - POWER_FACTOR_MIN.commercial) + POWER_FACTOR_MIN.commercial
         });
 
-        const dataset = Array.from({ length: 24 }, (_, index) => {
+        const dataset = Array.from({ length: 60 }, (_, index) => {
             try {
                 const result = computeValue({ ...state, variables, index });
                 state = Object.freeze({ 
@@ -39,6 +42,7 @@ self.onmessage = function (e) {
                     remainingESSEnergy: result.remainingESSEnergy, 
                     activeFeederBreakers: result.activeFeederBreakers,
                     essChargeState: result.essChargeState,
+                    loadPowerFactor: result.loadPowerFactor
                 });
                 return result;
             } catch (error) {
@@ -69,6 +73,7 @@ function computeValue({
     activeFeederBreakers,
     remainingESSEnergy,
     essChargeState,
+    loadPowerFactor,
     variables,
     index
 }) {
@@ -78,17 +83,24 @@ function computeValue({
     Logger.log("Peak Load: ", variables.peakLoad); 
     Logger.log("Active Feeder Breakers: ", activeFeederBreakers);
     Logger.log("Total Feeder Breakers: ", variables.totalFeederBreakers);
-    const loadPerBreaker = LOAD_PROFILE[index % 24].commercial * variables.peakLoad * 0.95 / variables.totalFeederBreakers;
+    const newLoadPowerFactor = Math.max(
+        POWER_FACTOR_MIN.commercial, 
+        Math.min((1 - Math.random() * 2) * VARIATION_PER_MINUTE.commercial + loadPowerFactor, POWER_FACTOR_MAX.commercial)
+    );
+    const loadPerBreaker = LOAD_PROFILE[Math.floor(index / variables.granularity) % HOURS_PER_DAY].commercial * variables.peakLoad 
+    * newLoadPowerFactor / variables.totalFeederBreakers;
     const realLoad = loadPerBreaker * activeFeederBreakers;
     Logger.log("Real Load: ", realLoad);
 
     //Power Factor (PF) = random value based on table in load section 
-    const loadPowerFactor = Math.random() * (POWER_FACTOR_MAX.commercial - POWER_FACTOR_MIN.commercial) + POWER_FACTOR_MIN.commercial;
+
     const reactiveLoad = Math.sqrt((realLoad / loadPowerFactor) ** 2 - realLoad ** 2);
 
     //Determine available PV power
-    //Hourly PV Power
-    const pvTimeOfDayFactor = Math.max(Math.sin(((index % 24) - 6) * 15 * Math.PI / 180), 0);
+    const pvTimeOfDayFactor = Math.max(Math.sin(
+        ((index % (HOURS_PER_DAY * variables.granularity)) - 6 * variables.granularity) * 15 * Math.PI / (180 * variables.granularity)
+    ), 0) 
+
     //Available PV Power (P) = (PV Power) * (PV Time of Day Factor) * (Clouding Factor)
     const availablePVPower = variables.peakPVPower * pvTimeOfDayFactor * variables.cloudingFactor;
 
@@ -138,20 +150,20 @@ function computeValue({
                 //ESS provides reactive power to load
                 essReactivePowerContribution = reactiveLoad;
                 //flows into ESS with a maximum value of the Peak ESS Real Power value.
-                essRealPowerContribution = Math.min(availablePVPower - realLoad, peakESSRealPower);
-                newRemainingESSEnergy = remainingESSEnergy + ( 1 / variables.granularity * essRealPowerContribution);
+                essRealPowerContribution = -Math.min(availablePVPower - realLoad, peakESSRealPower);
+                newRemainingESSEnergy = remainingESSEnergy - ( 1 / variables.granularity * essRealPowerContribution);
                 essPowerFactor = powerFactor(essRealPowerContribution, essReactivePowerContribution);
                 
                 if (newRemainingESSEnergy > totalESSEnergy) {
                     newRemainingESSEnergy = totalESSEnergy;
                 }
                 //check to see if there is still extra power for utility, if yes, then export power up to the Utility Export Limit
-                if (availablePVPower - realLoad - essRealPowerContribution > 0) {
-                    utilityRealPowerContribution = Math.min(availablePVPower - realLoad - essRealPowerContribution, variables.utilityExportLimit);
+                if (availablePVPower - realLoad + essRealPowerContribution > 0) {
+                    utilityRealPowerContribution = -Math.min(availablePVPower - realLoad + essRealPowerContribution, variables.utilityExportLimit);
                     utilityReactivePowerContribution = 0;
                     utilityPowerFactor = powerFactor(utilityRealPowerContribution, utilityReactivePowerContribution);
                 }
-                providedPVPower = realLoad + essRealPowerContribution + utilityRealPowerContribution;
+                providedPVPower = realLoad - essRealPowerContribution - utilityRealPowerContribution;
             } else {
                 //ESS is recharged, excess power flows out to utility up to the Utility Export Limit
                 utilityRealPowerContribution = -Math.min(availablePVPower - realLoad, variables.utilityExportLimit);
@@ -195,7 +207,7 @@ function computeValue({
             else {
                 Logger.log("PV and utility both available");
                 //If the delta between the real load and available PV power is less than the peak ESS real power, discharge the ESS if it is above 30% remaining energy.
-                if (realLoad - availablePVPower < peakESSRealPower && remainingESSEnergy / totalESSEnergy > 0.3) {
+                if (realLoad - availablePVPower < peakESSRealPower && remainingESSEnergy / totalESSEnergy > CHARGE_STATE_MIN) {
                     providedPVPower = availablePVPower;
                     essRealPowerContribution = Math.min(realLoad - availablePVPower, remainingESSEnergy);
                     essReactivePowerContribution = reactiveLoad;
@@ -601,7 +613,7 @@ function computeValue({
         totalGensetPower,
         essChargeState,
         realLoad: realLoad,
-        loadPowerFactor: loadPowerFactor,
+        loadPowerFactor: newLoadPowerFactor,
         reactiveLoad: reactiveLoad,
         availablePVPower: availablePVPower,
         essReactivePowerContribution,
