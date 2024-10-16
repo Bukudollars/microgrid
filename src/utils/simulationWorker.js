@@ -10,14 +10,14 @@ self.onmessage = function (e) {
             utilityExportLimit: 200,
             singleESSEnergy: 144,
             singleESSPeakPower: 250,
-            essModuleCount: 2,
+            essModuleCount: 0,
             peakLoad: 800,
             totalFeederBreakers: 4,
             utility: false,
             peakPVPower: 1000,
             cloudingFactor: 1,
             singleGensetPower: 500,
-            gensetCount: 0,
+            gensetCount: 4,
             granularity: 1,
             
         });
@@ -223,27 +223,13 @@ function computeValue({
             if (activeFeederBreakers < variables.totalFeederBreakers) {
                 Logger.log("activeFeederBreakers < variables.totalFeederBreakers");
                 //if there is enough excess PV capacity to cover the addition of one feeder breaker, add one to the number of active feeder breakers.
-                if (activeFeederBreakers > 0) {
-                    if (availablePVPower - realLoad >= loadPerBreaker) {
-                        newActiveFeederBreakers++;  
-                    } 
-                    //If the PV alone cannot support an additional load breaker, check to see if the PV and energy storage can support an additional load breaker.
-                    else if(remainingESSEnergy > 0) {
-                        if (availablePVPower + peakESSRealPower - realLoad >= loadPerBreaker) {
-                            newActiveFeederBreakers++;
-                        }
-                    }
-                } else {
-                    if (availablePVPower - realLoad >= loadPerBreaker) {
-                        newActiveFeederBreakers++;  
-                    } 
-                    else if(remainingESSEnergy > 0) {
-                        if (availablePVPower + peakESSRealPower - realLoad >= loadPerBreaker) {
-                            newActiveFeederBreakers++;
-                        }
-                    }
+                if (availablePVPower - realLoad >= loadPerBreaker) {
+                    newActiveFeederBreakers++;  
+                } 
+                //If the PV alone cannot support an additional load breaker, check to see if the PV and energy storage can support an additional load breaker.
+                else if(remainingESSEnergy > 0 && availablePVPower + peakESSRealPower - realLoad >= loadPerBreaker) {
+                    newActiveFeederBreakers++;
                 }
-                  
             }
             // more PV than the load requires run on PV. 
             if (realLoad < availablePVPower) {
@@ -279,13 +265,7 @@ function computeValue({
                     // Number of active feeder breakers equals the total PV power available divided by the load requirement per circuit 
                     // breaker (real load / active breakers).   
                     // This should be rounded down to the nearest whole number.  The Active Feeder Breaker value can be zero.  
-                    if (realLoad !== 0) {
-                        newActiveFeederBreakers = Math.floor(availablePVPower / loadPerBreaker);
-                    } else {
-                        newActiveFeederBreakers = 0;
-                    }
-                    
-                    
+                    newActiveFeederBreakers = Math.floor(availablePVPower / loadPerBreaker);
                     providedPVPower = realLoad;
                     essRealPowerContribution = 0;
                     essReactivePowerContribution = reactiveLoad;
@@ -299,12 +279,7 @@ function computeValue({
                         // Number of active feeder breakers equals the total PV power available plus the peak ESS real power, 
                         // divided by the load requirement per circuit breaker (real load / active breakers).   
                         // This should be rounded down to the nearest whole number.  The Active Feeder Breaker value can be zero.
-                        if (realLoad !== 0) {
-                            newActiveFeederBreakers = Math.floor(Math.min(availablePVPower + peakESSRealPower, availablePVPower + remainingESSEnergy) / loadPerBreaker);
-                        } else {
-                            newActiveFeederBreakers = 0;
-                        }
-                        
+                        newActiveFeederBreakers = Math.floor(Math.min(availablePVPower + peakESSRealPower, availablePVPower + remainingESSEnergy) / loadPerBreaker);
                         providedPVPower = availablePVPower;
                         //Power flows out of the ESS
                         essRealPowerContribution = Math.min(realLoad - availablePVPower, remainingESSEnergy);
