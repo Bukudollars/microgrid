@@ -224,21 +224,21 @@ function computeValue({
                 Logger.log("activeFeederBreakers < variables.totalFeederBreakers");
                 //if there is enough excess PV capacity to cover the addition of one feeder breaker, add one to the number of active feeder breakers.
                 if (activeFeederBreakers > 0) {
-                    if (availablePVPower - realLoad >= realLoad * (1 / activeFeederBreakers)) {
+                    if (availablePVPower - realLoad >= loadPerBreaker) {
                         newActiveFeederBreakers++;  
                     } 
                     //If the PV alone cannot support an additional load breaker, check to see if the PV and energy storage can support an additional load breaker.
                     else if(remainingESSEnergy > 0) {
-                        if (availablePVPower + peakESSRealPower - realLoad >= realLoad * (1 / activeFeederBreakers)) {
+                        if (availablePVPower + peakESSRealPower - realLoad >= loadPerBreaker) {
                             newActiveFeederBreakers++;
                         }
                     }
                 } else {
-                    if (availablePVPower - realLoad >= realLoad * (1 / variables.totalFeederBreakers)) {
+                    if (availablePVPower - realLoad >= loadPerBreaker) {
                         newActiveFeederBreakers++;  
                     } 
                     else if(remainingESSEnergy > 0) {
-                        if (availablePVPower + peakESSRealPower - realLoad >= realLoad * (1 / variables.totalFeederBreakers)) {
+                        if (availablePVPower + peakESSRealPower - realLoad >= loadPerBreaker) {
                             newActiveFeederBreakers++;
                         }
                     }
@@ -280,7 +280,7 @@ function computeValue({
                     // breaker (real load / active breakers).   
                     // This should be rounded down to the nearest whole number.  The Active Feeder Breaker value can be zero.  
                     if (realLoad !== 0) {
-                        newActiveFeederBreakers = Math.floor(availablePVPower * activeFeederBreakers / realLoad);
+                        newActiveFeederBreakers = Math.floor(availablePVPower / loadPerBreaker);
                     } else {
                         newActiveFeederBreakers = 0;
                     }
@@ -300,7 +300,7 @@ function computeValue({
                         // divided by the load requirement per circuit breaker (real load / active breakers).   
                         // This should be rounded down to the nearest whole number.  The Active Feeder Breaker value can be zero.
                         if (realLoad !== 0) {
-                            newActiveFeederBreakers = Math.floor(Math.min(availablePVPower + peakESSRealPower, availablePVPower + remainingESSEnergy) * activeFeederBreakers / realLoad);
+                            newActiveFeederBreakers = Math.floor(Math.min(availablePVPower + peakESSRealPower, availablePVPower + remainingESSEnergy) / loadPerBreaker);
                         } else {
                             newActiveFeederBreakers = 0;
                         }
