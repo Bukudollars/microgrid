@@ -9,11 +9,12 @@ import PV from './simulation/PV';
 import ESS from './simulation/ESS';
 import Grid from '@mui/material/Grid2';
 import SimulationResults from './simulation/SimulationResults';
-import { useSimulation } from '../contexts/SimulationContext';
+import { useSimulationDispatch, useSimulationState } from '../contexts/SimulationContext';
 import { HOURS_PER_HOUR, MINUTES_PER_HOUR } from '../constants';
 
 function Simulation() {
-    const { simulationData, loading, startSimulation } = useSimulation();
+    const { simulationData, loading } = useSimulationState();
+    const { startSimulation } = useSimulationDispatch();
 
     const [variables, setVariables] = React.useState({
         utilityExportLimit: 200,
@@ -64,14 +65,6 @@ function Simulation() {
                     <ESS />
                 </Grid>
             </Grid>
-            <Box>
-                {loading? (
-                    <Typography variant="body1">Loading...</Typography>
-                ) : (
-                    <SimulationResults data={simulationData} />
-                )}
-                
-            </Box>
         </Box>
     );
 }
