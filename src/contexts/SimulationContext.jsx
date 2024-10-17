@@ -24,9 +24,20 @@ const actionTypes = {
 
 };
 
+
+
 export const SimulationProvider = ({ children }) => {
     const [simulationData, setSimulationData] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [currentIndex, setCurrentIndex] = useState(0);
+
+    const safeSetCurrentIndex = (newIndex) => {
+        if (newIndex >= 0 && newIndex < simulationData.length) {
+            setCurrentIndex(newIndex);
+        } else {
+            console.warn("Index out of bounds: ${newIndex}");
+        }
+    };
 
     const startSimulation = (variables) => {
         setLoading(true);
@@ -47,8 +58,8 @@ export const SimulationProvider = ({ children }) => {
     };
 
     return(
-        <SimulationStateContext.Provider value={{ simulationData, loading}}>
-            <SimulationDispatchContext.Provider value={{ startSimulation }}>
+        <SimulationStateContext.Provider value={{ simulationData, loading, currentIndex}}>
+            <SimulationDispatchContext.Provider value={{ startSimulation, setCurrentIndex: safeSetCurrentIndex }}>
                 {children}
             </SimulationDispatchContext.Provider>
         </SimulationStateContext.Provider>

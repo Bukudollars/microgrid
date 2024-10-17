@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Box, ButtonGroup, Button, Typography } from '@mui/material';
+import { Box, ButtonGroup, Button, Typography, Slider } from '@mui/material';
 import { PlayArrow, Pause, Replay } from '@mui/icons-material';
 import YieldDistribution from './simulation/YieldDistribution';
 import Load from './simulation/Load';
@@ -13,8 +13,8 @@ import { useSimulationDispatch, useSimulationState } from '../contexts/Simulatio
 import { HOURS_PER_HOUR, MINUTES_PER_HOUR } from '../constants';
 
 function Simulation() {
-    const { simulationData, loading } = useSimulationState();
-    const { startSimulation } = useSimulationDispatch();
+    const { simulationData, loading, currentIndex } = useSimulationState();
+    const { startSimulation, setCurrentIndex } = useSimulationDispatch();
 
     const [variables, setVariables] = React.useState({
         utilityExportLimit: 200,
@@ -36,15 +36,31 @@ function Simulation() {
         startSimulation(variables);
     };
 
+    const handleSliderChange = (event, newValue) => {
+        setCurrentIndex(newValue);
+    }
+
     return (
         <Box sx={{margin: 2}}>
+            <Box>
+                <Slider 
+                    value={typeof currentIndex === 'number' ? currentIndex : 0}
+                    aria-labelledby='time-slider'
+                    valueLabelDisplay='on'
+                    min={0}
+                    max={simulationData.length - 1}
+                    onChange={handleSliderChange}
+                />
+            </Box>
             <Box>
                 <ButtonGroup>
                     <Button onClick={handleStart} disabled={loading}><PlayArrow /></Button>
                     <Button><Pause /></Button>
                     <Button><Replay /></Button>
                 </ButtonGroup>
+                
             </Box>
+            <Typography variant="body">Time:{currentIndex}</Typography>
             <Grid container spacing={2}>
                 <Grid size={12}>
                     <YieldDistribution />

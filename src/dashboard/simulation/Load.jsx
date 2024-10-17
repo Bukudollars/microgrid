@@ -2,10 +2,13 @@ import * as React from 'react';
 import { Box, Tooltip, Typography, Paper } from '@mui/material';
 import { useSettings } from '../../contexts/SettingsContext';
 import { LOAD_PROFILE, POWER_FACTOR_MIN, POWER_FACTOR_MAX } from '../../constants';
+import { useSimulationState } from '../../contexts/SimulationContext';
 
 function Load() {
     const { loadPeakLevel } = useSettings();
-    const realLoad = loadPeakLevel * LOAD_PROFILE.find(entry=> entry.hour === 1).residential;
+    //const realLoad = loadPeakLevel * LOAD_PROFILE.find(entry=> entry.hour === 1).residential;
+    const { simulationData, loading, currentIndex } = useSimulationState();
+    const realLoad = 0;
     const powerFactor = Math.random() * (POWER_FACTOR_MAX.residential - POWER_FACTOR_MIN.residential) + POWER_FACTOR_MIN.residential;
     const reactiveLoad = Math.sqrt((realLoad / powerFactor) ** 2 - realLoad ** 2);
     return (
