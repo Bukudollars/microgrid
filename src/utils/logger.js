@@ -1,5 +1,5 @@
 const Logger = {
-    isEnabled: true,
+    isEnabled: false,
     logLevel: 'debug',
 
     log: function (...args) {

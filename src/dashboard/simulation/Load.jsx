@@ -8,21 +8,34 @@ function Load() {
     const { loadPeakLevel } = useSettings();
     //const realLoad = loadPeakLevel * LOAD_PROFILE.find(entry=> entry.hour === 1).residential;
     const { simulationData, loading, currentIndex } = useSimulationState();
-    const realLoad = 0;
-    const powerFactor = Math.random() * (POWER_FACTOR_MAX.residential - POWER_FACTOR_MIN.residential) + POWER_FACTOR_MIN.residential;
-    const reactiveLoad = Math.sqrt((realLoad / powerFactor) ** 2 - realLoad ** 2);
+    const realLoad =  simulationData.length > 0 && currentIndex < simulationData.length && !loading
+    ? simulationData[currentIndex].realLoad
+    : 0;
+    const powerFactor = simulationData.length > 0 && currentIndex < simulationData.length && !loading
+    ? simulationData[currentIndex].loadPowerFactor
+    : 0;
+    const reactiveLoad = simulationData.length > 0 && currentIndex < simulationData.length && !loading
+    ? simulationData[currentIndex].reactiveLoad
+    : 0;
+    const activeFeederBreakers = simulationData.length > 0 && currentIndex < simulationData.length && !loading
+    ? simulationData[currentIndex].activeFeederBreakers
+    : 0;
+    const totalFeederBreakers = 4
     return (
         <Paper elevation={4}>
         <Box sx={{textAlign: 'left', margin: 2, padding: 2}}>
             <Typography variant="h5">Load</Typography>
             <Tooltip title="Real Load" arrow>
-                <Typography variant="body1">(P) {realLoad} kW</Typography>
+                <Typography variant="body1">(P) {realLoad.toFixed(0)} kW</Typography>
             </Tooltip>
             <Tooltip title="Reactive Load" arrow>
                 <Typography variant="body1">(Q) {reactiveLoad.toFixed(0)} kVAr 4/4</Typography>
             </Tooltip>
             <Tooltip title="Power Factor" arrow>
                 <Typography variant="body1">(PF) {powerFactor.toFixed(2)}</Typography>
+            </Tooltip>
+            <Tooltip title="Active Feeder Breakers" arrow>
+                <Typography variant="body1">Breakers: {activeFeederBreakers} / {totalFeederBreakers}</Typography>
             </Tooltip>
             {/* <img src="./load.png" alt="Load placeholder" /> */}
         </Box>

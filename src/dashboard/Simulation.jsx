@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Box, ButtonGroup, Button, Typography, Slider } from '@mui/material';
+import { Box, ButtonGroup, Button, Typography, Slider, Tooltip } from '@mui/material';
 import { PlayArrow, Pause, Replay } from '@mui/icons-material';
 import YieldDistribution from './simulation/YieldDistribution';
 import Load from './simulation/Load';
@@ -50,17 +50,20 @@ function Simulation() {
                     min={0}
                     max={simulationData.length - 1}
                     onChange={handleSliderChange}
+                    disabled={loading || simulationData.length === 0}
                 />
             </Box>
             <Box>
                 <ButtonGroup>
-                    <Button onClick={handleStart} disabled={loading}><PlayArrow /></Button>
-                    <Button><Pause /></Button>
-                    <Button><Replay /></Button>
+                    <Button disabled={loading || simulationData.length === 0}><PlayArrow /></Button>
+                    <Button disabled={loading || simulationData.length === 0}><Pause /></Button>
+                    <Tooltip title="Restart Simulation" arrow>
+                        <Button onClick={handleStart}><Replay /></Button>
+                    </Tooltip>
                 </ButtonGroup>
                 
             </Box>
-            <Typography variant="body">Time:{currentIndex}</Typography>
+            <Typography variant="body">Day: {Math.floor(currentIndex / (60 * 24))} Time: {String(Math.floor(currentIndex / 60) % 24).padStart(2, '0')}:{String(currentIndex % 60).padStart(2, '0')}</Typography>
             <Grid container spacing={2}>
                 <Grid size={12}>
                     <YieldDistribution />

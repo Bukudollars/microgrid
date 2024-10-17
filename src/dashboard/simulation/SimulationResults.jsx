@@ -1,5 +1,9 @@
 import * as React from 'react';
-import { Box, Typography, Table, TableContainer, TableHead, TableRow, TableCell, TableBody } from '@mui/material';
+import { Box, Typography, Table, TableContainer, TableHead, TableRow, TableCell, TableBody, TablePagination } from '@mui/material';
+
+function TablePaginationActions(props) {
+    const theme = useTheme();
+}
 
 const SimulationResults = ({data}) => {
     return (
