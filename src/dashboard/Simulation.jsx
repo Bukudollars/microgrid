@@ -10,7 +10,7 @@ import ESS from './simulation/ESS';
 import Grid from '@mui/material/Grid2';
 import SimulationResults from './simulation/SimulationResults';
 import { useSimulation } from '../contexts/SimulationContext';
-import { HOURS_PER_HOUR } from '../constants';
+import { HOURS_PER_HOUR, MINUTES_PER_HOUR } from '../constants';
 
 function Simulation() {
     const { simulationData, loading, startSimulation } = useSimulation();
@@ -27,7 +27,7 @@ function Simulation() {
         cloudingFactor: 1,
         singleGensetPower: 500,
         gensetCount: 4,
-        granularity: HOURS_PER_HOUR,
+        granularity: MINUTES_PER_HOUR,
         simulationTime: 60,
     });
 
