@@ -12,11 +12,11 @@ import TableView from './TableView';
 
 
 const NAVIGATION = [
-  {
-    segment: 'table',
-    title: 'Table',
-    icon: <TableChartIcon />,
-  },
+  // {
+  //   segment: 'table',
+  //   title: 'Table',
+  //   icon: <TableChartIcon />,
+  // },
   {
     kind: 'divider',
   },
@@ -58,7 +58,7 @@ function DemoPageContent({ pathname }) {
       {/* <Typography>Dashboard content for {pathname}</Typography> */}
       {pathname === '/' && <Simulation />}
       {pathname === '/settings' && <Config />}
-      {pathname === '/table' && <TableView />}
+      {/* {pathname === '/table' && <TableView />} */}
     </Box>
   );
 }

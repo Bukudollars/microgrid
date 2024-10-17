@@ -29,11 +29,12 @@ function Simulation() {
         singleGensetPower: 500,
         gensetCount: 4,
         granularity: MINUTES_PER_HOUR,
-        simulationTime: 60,
+        simulationTime: 60 * 24 * 7,
     });
 
     const handleStart = () => {
         startSimulation(variables);
+        setCurrentIndex(0);
     };
 
     const handleSliderChange = (event, newValue) => {

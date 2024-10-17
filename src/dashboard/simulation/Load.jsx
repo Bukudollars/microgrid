@@ -8,18 +8,11 @@ function Load() {
     const { loadPeakLevel } = useSettings();
     //const realLoad = loadPeakLevel * LOAD_PROFILE.find(entry=> entry.hour === 1).residential;
     const { simulationData, loading, currentIndex } = useSimulationState();
-    const realLoad =  simulationData.length > 0 && currentIndex < simulationData.length && !loading
-    ? simulationData[currentIndex].realLoad
-    : 0;
-    const powerFactor = simulationData.length > 0 && currentIndex < simulationData.length && !loading
-    ? simulationData[currentIndex].loadPowerFactor
-    : 0;
-    const reactiveLoad = simulationData.length > 0 && currentIndex < simulationData.length && !loading
-    ? simulationData[currentIndex].reactiveLoad
-    : 0;
-    const activeFeederBreakers = simulationData.length > 0 && currentIndex < simulationData.length && !loading
-    ? simulationData[currentIndex].activeFeederBreakers
-    : 0;
+    const validData = simulationData.length > 0 && currentIndex < simulationData.length && !loading;
+    const realLoad =  validData ? simulationData[currentIndex].realLoad : 0;
+    const powerFactor = validData ? simulationData[currentIndex].loadPowerFactor : 0;
+    const reactiveLoad = validData ? simulationData[currentIndex].reactiveLoad : 0;
+    const activeFeederBreakers = validData ? simulationData[currentIndex].activeFeederBreakers : 0;
     const totalFeederBreakers = 4
     return (
         <Paper elevation={4}>
