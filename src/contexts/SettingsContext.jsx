@@ -1,6 +1,6 @@
 import React, {createContext, useReducer, useContext} from 'react';
 import PropTypes from 'prop-types';
-import { GENERATOR_SIZES } from './constants';
+import { GENERATOR_SIZES } from '../constants';
 
 const SettingsContext = createContext();
 const SettingsDispatchContext = createContext();

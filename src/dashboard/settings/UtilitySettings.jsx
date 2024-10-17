@@ -6,7 +6,7 @@ import Switch from '@mui/material/Switch';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Paper from '@mui/material/Paper';
-import { useSettings, useSettingsDispatch } from '../../SettingsContext';
+import { useSettings, useSettingsDispatch } from '../../contexts/SettingsContext';
 
 function UtilitySettings() {
     const { exportLimit } = useSettings();

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Box, Tooltip, Typography, Paper } from '@mui/material';
-import { useSettings } from '../../SettingsContext';
+import { useSettings } from '../../contexts/SettingsContext';
 import { LOAD_PROFILE, POWER_FACTOR_MIN, POWER_FACTOR_MAX } from '../../constants';
 
 function Load() {

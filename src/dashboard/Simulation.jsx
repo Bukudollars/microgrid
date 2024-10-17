@@ -9,19 +9,37 @@ import PV from './simulation/PV';
 import ESS from './simulation/ESS';
 import Grid from '@mui/material/Grid2';
 import SimulationResults from './simulation/SimulationResults';
-import useSimulation from '../hooks/useSimulation';
+import { useSimulation } from '../contexts/SimulationContext';
+import { HOURS_PER_HOUR } from '../constants';
 
 function Simulation() {
-    const { data, loading, startSimulation } = useSimulation();
+    const { simulationData, loading, startSimulation } = useSimulation();
+
+    const [variables, setVariables] = React.useState({
+        utilityExportLimit: 200,
+        singleESSEnergy: 144,
+        singleESSPeakPower: 250,
+        essModuleCount: 2,
+        peakLoad: 800,
+        totalFeederBreakers: 4,
+        utility: true,
+        peakPVPower: 1000,
+        cloudingFactor: 1,
+        singleGensetPower: 500,
+        gensetCount: 4,
+        granularity: HOURS_PER_HOUR,
+        simulationTime: 60,
+    });
+
     const handleStart = () => {
-        const initialVariables = {};
-        startSimulation(initialVariables);
+        startSimulation(variables);
     };
+
     return (
         <Box sx={{margin: 2}}>
             <Box>
                 <ButtonGroup>
-                    <Button onClick={handleStart}><PlayArrow /></Button>
+                    <Button onClick={handleStart} disabled={loading}><PlayArrow /></Button>
                     <Button><Pause /></Button>
                     <Button><Replay /></Button>
                 </ButtonGroup>
@@ -50,7 +68,7 @@ function Simulation() {
                 {loading? (
                     <Typography variant="body1">Loading...</Typography>
                 ) : (
-                    <SimulationResults data={data} />
+                    <SimulationResults data={simulationData} />
                 )}
                 
             </Box>

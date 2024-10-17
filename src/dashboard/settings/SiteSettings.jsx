@@ -7,7 +7,7 @@ import FormControl from '@mui/material/FormControl';
 import MenuItem from '@mui/material/MenuItem';
 import NumberInput from '../components/NumberInput';
 //import Paper from '@mui/material/Paper';
-import { useSettings, useSettingsDispatch } from '../../SettingsContext';
+import { useSettings, useSettingsDispatch } from '../../contexts/SettingsContext';
 
 function SiteSettings() {
     const [frequency, setFrequency] = React.useState(60);

@@ -3,7 +3,7 @@ import { Box } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import NumberInput from '../components/NumberInput';
 //import Paper from '@mui/material/Paper';
-import { useSettings, useSettingsDispatch } from '../../SettingsContext';
+import { useSettings, useSettingsDispatch } from '../../contexts/SettingsContext';
 
 function PVSettings() {
     const { pvPeakSize } = useSettings();

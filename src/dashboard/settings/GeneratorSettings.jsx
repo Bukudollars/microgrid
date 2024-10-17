@@ -4,7 +4,7 @@ import { Box, Typography, Select, InputLabel, FormControl, MenuItem } from '@mui
 import NumberInput from '../components/NumberInput';
 //import {Unstable_NumberInput as NumberInput} from '@mui/base/Unstable_NumberInput' 
 //import PropTypes from 'prop-types';
-import { useSettings, useSettingsDispatch } from '../../SettingsContext';
+import { useSettings, useSettingsDispatch } from '../../contexts/SettingsContext';
 import { GENERATOR_SIZES } from '../../constants';
 
 function GeneratorSettings() {

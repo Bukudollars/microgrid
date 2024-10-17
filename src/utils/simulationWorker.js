@@ -9,22 +9,23 @@ import Logger from "./logger";
 self.onmessage = function (e) {
     try {
         console.log("Worker received message: ", e.data);
-        //const variables = e.data;
-        const variables = Object.freeze({
-            utilityExportLimit: 200,
-            singleESSEnergy: 144,
-            singleESSPeakPower: 250,
-            essModuleCount: 2,
-            peakLoad: 800,
-            totalFeederBreakers: 4,
-            utility: true,
-            peakPVPower: 1000,
-            cloudingFactor: 1,
-            singleGensetPower: 500,
-            gensetCount: 4,
-            granularity: HOURS_PER_HOUR,
+        const variables = e.data;
+        // const variables = Object.freeze({
+        //     utilityExportLimit: 200,
+        //     singleESSEnergy: 144,
+        //     singleESSPeakPower: 250,
+        //     essModuleCount: 2,
+        //     peakLoad: 800,
+        //     totalFeederBreakers: 4,
+        //     utility: true,
+        //     peakPVPower: 1000,
+        //     cloudingFactor: 1,
+        //     singleGensetPower: 500,
+        //     gensetCount: 4,
+        //     granularity: HOURS_PER_HOUR,
+        //     simulationTime: 60,
             
-        });
+        // });
 
         //initial state
         let state = Object.freeze({
@@ -34,7 +35,7 @@ self.onmessage = function (e) {
             loadPowerFactor: Math.random() * (POWER_FACTOR_MAX.commercial - POWER_FACTOR_MIN.commercial) + POWER_FACTOR_MIN.commercial
         });
 
-        const dataset = Array.from({ length: 60 }, (_, index) => {
+        const dataset = Array.from({ length: variables.simulationTime }, (_, index) => {
             try {
                 const result = computeValue({ ...state, variables, index });
                 state = Object.freeze({ 

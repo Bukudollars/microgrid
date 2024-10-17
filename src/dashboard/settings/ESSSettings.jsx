@@ -7,7 +7,7 @@ import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 import MenuItem from '@mui/material/MenuItem';
 //import Paper from '@mui/material/Paper';
-import { useSettings, useSettingsDispatch } from '../../SettingsContext';
+import { useSettings, useSettingsDispatch } from '../../contexts/SettingsContext';
 
 function ESSSettings() {
     const { essModuleCount } = useSettings();
