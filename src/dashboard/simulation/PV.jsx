@@ -1,8 +1,16 @@
 import * as React from 'react';
 import { Box, Paper, Tooltip } from '@mui/material';
 import Typography from '@mui/material/Typography';
+import { useSimulationState } from '../../contexts/SimulationContext';
 
 function PV() {
+    const { simulationData, loading, currentIndex } = useSimulationState();
+    const validData = simulationData.length > 0 && currentIndex < simulationData.length && !loading;
+    const realLoad =  validData ? simulationData[currentIndex].gensetRealPowerContribution : 0;
+    const reactiveLoad = validData ? simulationData[currentIndex].gensetReactivePowerContribution : 0;
+    const powerFactor = validData ? simulationData[currentIndex].gensetPowerFactor : 0;
+    const gensetsRequired = validData ? simulationData[currentIndex].gensetsRequired : 0;
+    
     return (
         <Paper elevation={4}>
             <Box sx={{margin: 2, padding: 2, textAlign: 'left'}}>
