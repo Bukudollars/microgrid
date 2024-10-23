@@ -1,9 +1,11 @@
 import { 
-    LOAD_PROFILE, POWER_FACTOR_MIN, POWER_FACTOR_MAX, 
+    LOAD_PROFILE, POWER_FACTOR_MIN, POWER_FACTOR_MAX,
+    LOAD_VARIATION_MIN, LOAD_VARIATION_MAX, 
+    LOAD_VARIATION_PER_MINUTE,
     MIN_POWER_THRESHOLD, NEXT_ONLINE_THRESHOLD ,
     CHARGE_STATE_MIN, CHARGE_STATE_MAX,
     MINUTES_PER_HOUR, HOURS_PER_HOUR, HOURS_PER_DAY,
-    VARIATION_PER_MINUTE
+    POWER_FACTOR_VARIATION_PER_MINUTE,
 } from "../constants";
 import Logger from "./logger";
 self.onmessage = function (e) {
@@ -32,7 +34,8 @@ self.onmessage = function (e) {
             activeFeederBreakers: variables.totalFeederBreakers,
             remainingESSEnergy: variables.singleESSEnergy * variables.essModuleCount,
             essChargeState: 1,
-            loadPowerFactor: Math.random() * (POWER_FACTOR_MAX.commercial - POWER_FACTOR_MIN.commercial) + POWER_FACTOR_MIN.commercial
+            loadPowerFactor: Math.random() * (POWER_FACTOR_MAX.commercial - POWER_FACTOR_MIN.commercial) + POWER_FACTOR_MIN.commercial,
+            loadVariation: 0.95
         });
 
         const dataset = Array.from({ length: variables.simulationTime }, (_, index) => {
@@ -43,7 +46,8 @@ self.onmessage = function (e) {
                     remainingESSEnergy: result.remainingESSEnergy, 
                     activeFeederBreakers: result.activeFeederBreakers,
                     essChargeState: result.essChargeState,
-                    loadPowerFactor: result.loadPowerFactor
+                    loadPowerFactor: result.loadPowerFactor,
+                    loadVariation: result.loadVariation
                 });
                 return result;
             } catch (error) {
@@ -75,6 +79,7 @@ function computeValue({
     remainingESSEnergy,
     essChargeState,
     loadPowerFactor,
+    loadVariation,
     variables,
     index
 }) {
@@ -86,10 +91,14 @@ function computeValue({
     Logger.log("Total Feeder Breakers: ", variables.totalFeederBreakers);
     const newLoadPowerFactor = Math.max(
         POWER_FACTOR_MIN.commercial, 
-        Math.min((1 - Math.random() * 2) * VARIATION_PER_MINUTE.commercial + loadPowerFactor, POWER_FACTOR_MAX.commercial)
+        Math.min((1 - Math.random() * 2) * POWER_FACTOR_VARIATION_PER_MINUTE.commercial + loadPowerFactor, POWER_FACTOR_MAX.commercial)
+    );
+    const newLoadVariation = Math.max(
+        LOAD_VARIATION_MIN, 
+        Math.min((1 - Math.random() * 2) * LOAD_VARIATION_PER_MINUTE + loadVariation, LOAD_VARIATION_MAX)
     );
     const loadPerBreaker = LOAD_PROFILE[Math.floor(index / variables.granularity) % HOURS_PER_DAY].commercial * variables.peakLoad 
-    * newLoadPowerFactor / variables.totalFeederBreakers;
+    * newLoadVariation / variables.totalFeederBreakers;
     const realLoad = loadPerBreaker * activeFeederBreakers;
     Logger.log("Real Load: ", realLoad);
 
@@ -616,6 +625,7 @@ function computeValue({
         essChargeState,
         realLoad: realLoad,
         loadPowerFactor: newLoadPowerFactor,
+        loadVariation: newLoadVariation,
         reactiveLoad: reactiveLoad,
         availablePVPower: availablePVPower,
         providedPVPower,
