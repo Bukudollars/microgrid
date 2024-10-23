@@ -17,6 +17,7 @@ function Simulation() {
     const { startSimulation, setCurrentIndex } = useSimulationDispatch();
     const [isPlaying, setIsPlaying] = React.useState(false);
     const [localIndex, setLocalIndex] = React.useState(currentIndex);
+    const [playbackSpeed, setPlaybackSpeed] = React.useState(1);
 
     const [variables, setVariables] = React.useState({
         utilityExportLimit: 200,
@@ -55,7 +56,7 @@ function Simulation() {
                         setIsPlaying(false);
                         return prevIndex;
                     }
-                    return prevIndex + 1;
+                    return prevIndex + 2 ** playbackSpeed;
                 });
                 
             }, 1000);
@@ -76,14 +77,22 @@ function Simulation() {
             setIsPlaying(!isPlaying);
         }
     };
+    function calculateValue(value) {
+        return 2 ** value;
+    }
+    const handlePlaybackSpeedChange = (event, newValue) => {
+        if (typeof newValue === 'number') {
+            setPlaybackSpeed(newValue);
+        }
+    }
 
     return (
         <Box sx={{margin: 2}}>
             <Box>
                 <Slider 
-                    value={typeof currentIndex === 'number' ? currentIndex : 0}
+                    value={typeof localIndex === 'number' ? localIndex : 0}
                     aria-labelledby='time-slider'
-                    valueLabelDisplay='on'
+                    valueLabelDisplay='auto'
                     min={0}
                     max={simulationData.length - 1}
                     onChange={handleSliderChange}
@@ -99,13 +108,35 @@ function Simulation() {
                         {!isPlaying? <PlayArrow /> : <Pause />}
                         </Button>
                     {/* <Button disabled={loading || simulationData.length === 0}><Pause /></Button> */}
-                    <Tooltip title="Restart Simulation" arrow>
+                    <Tooltip title="New Simulation" arrow>
                         <Button onClick={handleStart}><Replay /></Button>
                     </Tooltip>
                 </ButtonGroup>
+                <Box sx={{ 
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    margin:'auto',
+                    // height: '100vh',
+                    width: 250
+                    }}>
+                        <Tooltip title="Playback Speed" arrow>
+                            <Slider 
+                            value={playbackSpeed}
+                            min={0}
+                            step={1}
+                            max={10}
+                            scale={calculateValue}
+                            onChange={handlePlaybackSpeedChange}
+                            valueLabelDisplay='auto'
+                            aria-labelledby='playback-speed-slider'
+
+                            />
+                        </Tooltip>
+                </Box>
                 
             </Box>
-            <Typography variant="body">Day: {Math.floor(currentIndex / (60 * 24))} Time: {String(Math.floor(currentIndex / 60) % 24).padStart(2, '0')}:{String(currentIndex % 60).padStart(2, '0')}</Typography>
+            <Typography variant="body">Day: {Math.floor(localIndex / (60 * 24))} Time: {String(Math.floor(localIndex / 60) % 24).padStart(2, '0')}:{String(localIndex % 60).padStart(2, '0')}</Typography>
             <Grid container spacing={2}>
                 <Grid size={12}>
                     <YieldDistribution />
