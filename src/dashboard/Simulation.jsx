@@ -15,6 +15,8 @@ import { HOURS_PER_HOUR, MINUTES_PER_HOUR } from '../constants';
 function Simulation() {
     const { simulationData, loading, currentIndex } = useSimulationState();
     const { startSimulation, setCurrentIndex } = useSimulationDispatch();
+    const [isPlaying, setIsPlaying] = React.useState(false);
+    const [localIndex, setLocalIndex] = React.useState(currentIndex);
 
     const [variables, setVariables] = React.useState({
         utilityExportLimit: 200,
@@ -34,12 +36,46 @@ function Simulation() {
 
     const handleStart = () => {
         startSimulation(variables);
-        setCurrentIndex(0);
+        setLocalIndex(0);
+        setIsPlaying(false);
     };
 
     const handleSliderChange = (event, newValue) => {
+        setLocalIndex(newValue);
         setCurrentIndex(newValue);
+        setIsPlaying(false);
     }
+
+    React.useEffect(() => {
+        let intervalId;
+        if (isPlaying && simulationData.length > 0) {
+            intervalId = setInterval(() => {
+                setLocalIndex(prevIndex => {
+                    if (prevIndex >= simulationData.length - 1) {
+                        setIsPlaying(false);
+                        return prevIndex;
+                    }
+                    return prevIndex + 1;
+                });
+                
+            }, 1000);
+        }
+        return () => {
+            if (intervalId) {
+                clearInterval(intervalId);
+            }
+        };
+    }, [isPlaying, simulationData]);
+
+    React.useEffect(() => {
+        setCurrentIndex(localIndex);
+    }, [localIndex, setCurrentIndex]);
+
+    const handlePlayPauseClick = () => {
+        if(!loading && simulationData.length > 0) {
+            setIsPlaying(!isPlaying);
+        }
+    };
 
     return (
         <Box sx={{margin: 2}}>
@@ -56,8 +92,13 @@ function Simulation() {
             </Box>
             <Box>
                 <ButtonGroup>
-                    <Button disabled={loading || simulationData.length === 0}><PlayArrow /></Button>
-                    <Button disabled={loading || simulationData.length === 0}><Pause /></Button>
+                    <Button 
+                        disabled={loading || simulationData.length === 0}
+                        onClick={handlePlayPauseClick}
+                    >
+                        {!isPlaying? <PlayArrow /> : <Pause />}
+                        </Button>
+                    {/* <Button disabled={loading || simulationData.length === 0}><Pause /></Button> */}
                     <Tooltip title="Restart Simulation" arrow>
                         <Button onClick={handleStart}><Replay /></Button>
                     </Tooltip>
