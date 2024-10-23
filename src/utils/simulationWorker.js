@@ -104,6 +104,7 @@ function computeValue({
 
     //Available PV Power (P) = (PV Power) * (PV Time of Day Factor) * (Clouding Factor)
     const availablePVPower = variables.peakPVPower * pvTimeOfDayFactor * variables.cloudingFactor;
+    let providedPVPower = 0;
 
     //Placeholder logic for the simulation
     let newActiveFeederBreakers = activeFeederBreakers;
@@ -121,7 +122,7 @@ function computeValue({
     let utilityRealPowerContribution = 0;
     let utilityReactivePowerContribution = 0;
     let utilityPowerFactor = 0;
-    let providedPVPower = 0;
+    
 
     //Constant values for gensets
     const totalGensetPower = variables.singleGensetPower * variables.gensetCount;
@@ -617,6 +618,7 @@ function computeValue({
         loadPowerFactor: newLoadPowerFactor,
         reactiveLoad: reactiveLoad,
         availablePVPower: availablePVPower,
+        providedPVPower,
         essReactivePowerContribution,
         essRealPowerContribution,
         essPowerFactor,

@@ -29,7 +29,7 @@ function Simulation() {
         singleGensetPower: 500,
         gensetCount: 4,
         granularity: MINUTES_PER_HOUR,
-        simulationTime: 60 * 24 * 7,
+        simulationTime: 60 * 24 * 100,
     });
 
     const handleStart = () => {
