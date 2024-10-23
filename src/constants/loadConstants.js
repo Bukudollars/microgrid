@@ -26,6 +26,8 @@ export const LOAD_PROFILE = [
     
 ];
 
+export const LOAD_PROFILE_OPTIONS = ["Commercial", 'Residential', 'Industrial', 'Community']
+
 export const POWER_FACTOR_MIN = {residential: 0.9, commercial: 0.8, industrial: 0.75, community: 0.85};
 export const POWER_FACTOR_MAX = {residential: 1.0, commercial: 0.95, industrial: 0.9, community: 0.95};
 export const POWER_FACTOR_VARIATION_PER_MINUTE = {residential: 0.01, commercial: 0.02, industrial: 0.02, community: 0.01};

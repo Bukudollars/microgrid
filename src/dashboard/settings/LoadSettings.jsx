@@ -8,17 +8,24 @@ import FormControl from '@mui/material/FormControl';
 import MenuItem from '@mui/material/MenuItem';
 import Paper from '@mui/material/Paper';
 import { useSettings, useSettingsDispatch } from '../../contexts/SettingsContext';
+import { LOAD_PROFILE_OPTIONS } from '../../constants';
 
 function LoadSettings() {
-    const { loadPeakLevel } = useSettings();
+    const { loadPeakLevel, loadProfile } = useSettings();
     const dispatch = useSettingsDispatch();
     const handleChangeLoadPeakLevel = (event, value) => {
         console.log("Load Peak Level: ", value);
         dispatch({type: 'SET_LOAD_PEAK_LEVEL', payload: value});
     }
-    const [loadProfile, setLoadProfile] = React.useState("Commercial");
+
     const handleChangeLoadProfile = (event) => {
-        setLoadProfile(event.target.value);
+        const value = event.target.value;
+
+        if (LOAD_PROFILE_OPTIONS.includes(value)) {
+            dispatch({type: 'SET_LOAD_PROFILE', payload: value});
+        } else {
+            console.error("Invalid load profile: ", value);
+        }
     }
     return (
         //<Paper elevation={4}>
@@ -40,10 +47,16 @@ function LoadSettings() {
                         label="Load Profile"
                         onChange={handleChangeLoadProfile}
                     >
-                    <MenuItem value={"Commercial"}>Commercial</MenuItem>
+
+                    {LOAD_PROFILE_OPTIONS.map((load_profile_type) => (
+                        <MenuItem key={load_profile_type} value={load_profile_type}>{load_profile_type}</MenuItem>
+                    ))}
+
+                    {/* <MenuItem value={"Commercial"}>Commercial</MenuItem>
                     <MenuItem value={"Residential"}>Residential</MenuItem>
                     <MenuItem value={"Industrial"}>Industrial</MenuItem>
-                    <MenuItem value={"Community"}>Community</MenuItem>
+                    <MenuItem value={"Community"}>Community</MenuItem> */}
+
                     </Select>
                 </FormControl>
             </Box>
