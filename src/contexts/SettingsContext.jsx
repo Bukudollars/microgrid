@@ -1,6 +1,6 @@
 import React, {createContext, useReducer, useContext} from 'react';
 import PropTypes from 'prop-types';
-import { GENERATOR_SIZES } from '../constants';
+import { GENERATOR_SIZES, MODULE_TYPES, LOAD_PROFILE_OPTIONS } from '../constants';
 
 const SettingsContext = createContext();
 const SettingsDispatchContext = createContext();
@@ -13,8 +13,10 @@ const initialState = {
     pvPeakSize: 400,
     //ess settings
     essModuleCount: 2,
+    essModuleType: MODULE_TYPES[0],
     //load settings
     loadPeakLevel: 800,
+    loadProfile: LOAD_PROFILE_OPTIONS[0],
     //site settings
     siteVAC: 480,
     //utility settings
@@ -36,8 +38,22 @@ function settingsReducer(state, action) {
             return {...state, pvPeakSize: action.payload};
         case 'SET_ESS_MODULE_COUNT':
             return {...state, essModuleCount: action.payload};
+        case 'SET_ESS_MODULE_TYPE':
+            if (MODULE_TYPES.includes(action.payload)) {
+                return {...state, essModuleType: action.payload};
+            } else {
+                console.error("Invalid module type: ", action.payload);
+                return state;
+            }
         case 'SET_LOAD_PEAK_LEVEL':
             return {...state, loadPeakLevel: action.payload};
+        case 'SET_LOAD_PROFILE':
+            if (LOAD_PROFILE_OPTIONS.includes(action.payload)) {
+                return {...state, loadProfile: action.payload};
+            } else {
+                console.error("Invalid load profile: ", action.payload);
+                return state;
+            }
         case 'SET_SITE_VAC':
             return {...state, siteVAC: action.payload};
         case 'SET_EXPORT_LIMIT':
