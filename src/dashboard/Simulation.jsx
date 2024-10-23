@@ -17,7 +17,7 @@ function Simulation() {
     const { startSimulation, setCurrentIndex } = useSimulationDispatch();
     const [isPlaying, setIsPlaying] = React.useState(false);
     const [localIndex, setLocalIndex] = React.useState(currentIndex);
-    const [playbackSpeed, setPlaybackSpeed] = React.useState(1);
+    const [playbackSpeed, setPlaybackSpeed] = React.useState(0);
 
     const [variables, setVariables] = React.useState({
         utilityExportLimit: 200,
@@ -66,7 +66,7 @@ function Simulation() {
                 clearInterval(intervalId);
             }
         };
-    }, [isPlaying, simulationData]);
+    }, [isPlaying, simulationData, playbackSpeed]);
 
     React.useEffect(() => {
         setCurrentIndex(localIndex);
