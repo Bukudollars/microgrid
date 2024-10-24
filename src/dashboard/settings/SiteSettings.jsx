@@ -8,45 +8,49 @@ import MenuItem from '@mui/material/MenuItem';
 import NumberInput from '../components/NumberInput';
 //import Paper from '@mui/material/Paper';
 import { useSettings, useSettingsDispatch } from '../../contexts/SettingsContext';
+import { SITE_FREQUENCY_OPTIONS } from '../../constants/siteConstants';
 
 function SiteSettings() {
-    const [frequency, setFrequency] = React.useState(60);
-    const handleChangeFrequency = (event) => {
-        setFrequency(event.target.value);
-    }
-    const { siteVAC } = useSettings();
+    const { siteVAC, siteFrequency } = useSettings();
     const dispatch = useSettingsDispatch();
+    const handleChangeFrequency = (event) => {
+        const value = parseInt(event.target.value, 10);
+        if (SITE_FREQUENCY_OPTIONS.includes(value)) {
+            console.log("Site Frequency: ", value);
+            dispatch({type: 'SET_SITE_FREQUENCY', payload: value});
+        } else {
+            console.error("Invalid site frequency: ", value);
+        }
+    }
     const handleChangeSiteVAC = (event, value) => {
         console.log("Site VAC: ", value);
         dispatch({type: 'SET_SITE_VAC', payload: value});
     }
     return (
-        //<Paper elevation={4}>
-            <Box sx={{textAlign: 'left', padding : 2}}>
-                <Typography variant="h5">Site Settings</Typography>
-                <FormControl sx={{ m: 1, minWidth: 150 }} size = "small">
-                    <InputLabel id="frequency-label">Frequency</InputLabel>
-                    <Select
-                        labelId="frequency-label"
-                        id="frequency"
-                        value={frequency}
-                        label="Frequency"
-                        onChange={handleChangeFrequency}
-                    >
-                    <MenuItem value={60}>60 Hz</MenuItem>
-                    <MenuItem value={50}>50 Hz</MenuItem>
-                    </Select>
-                </FormControl>
-                <Typography variant="body1">VAC: </Typography>
-                <NumberInput 
-                    aria-label="Site VAC"
-                    placeholder="Site VAC"
-                    value={siteVAC}
-                    onChange={handleChangeSiteVAC}
-                />
-            
-            </Box>
-        //</Paper>
+        <Box sx={{textAlign: 'left', padding : 2}}>
+            <Typography variant="h5">Site Settings</Typography>
+            <FormControl sx={{ m: 1, minWidth: 150 }} size = "small">
+                <InputLabel id="frequency-label">Frequency</InputLabel>
+                <Select
+                    labelId="frequency-label"
+                    id="frequency"
+                    value={siteFrequency}
+                    label="Frequency"
+                    onChange={handleChangeFrequency}
+                >
+                    {SITE_FREQUENCY_OPTIONS.map((option) => (
+                        <MenuItem key={option} value={option}>{option} Hz</MenuItem>
+                    ))}
+                </Select>
+            </FormControl>
+            <Typography variant="body1">VAC: </Typography>
+            <NumberInput 
+                aria-label="Site VAC"
+                placeholder="Site VAC"
+                value={siteVAC}
+                onChange={handleChangeSiteVAC}
+            />
+        </Box>
     );
 }
 export default SiteSettings;
