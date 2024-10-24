@@ -1,6 +1,6 @@
 import React, {createContext, useReducer, useContext} from 'react';
 import PropTypes from 'prop-types';
-import { GENERATOR_SIZES, MODULE_TYPES, LOAD_PROFILE_OPTIONS } from '../constants';
+import { GENERATOR_SIZES, MODULE_TYPES, LOAD_PROFILE_OPTIONS, SITE_FREQUENCY_OPTIONS } from '../constants';
 
 const SettingsContext = createContext();
 const SettingsDispatchContext = createContext();
@@ -18,9 +18,12 @@ const initialState = {
     loadPeakLevel: 800,
     loadProfile: LOAD_PROFILE_OPTIONS[0],
     //site settings
+    siteFrequency: SITE_FREQUENCY_OPTIONS[0],
     siteVAC: 480,
     //utility settings
     exportLimit: 200,
+    cloudingFactor: 0,
+    isPresent: false,
 };
 
 function settingsReducer(state, action) {
@@ -54,10 +57,26 @@ function settingsReducer(state, action) {
                 console.error("Invalid load profile: ", action.payload);
                 return state;
             }
+        case 'SET_SITE_FREQUENCY':
+            if (SITE_FREQUENCY_OPTIONS.includes(action.payload)) {
+                return {...state, siteFrequency: action.payload};
+            } else {
+                console.error("Invalid site frequency: ", action.payload);
+                return state;
+            }
         case 'SET_SITE_VAC':
             return {...state, siteVAC: action.payload};
         case 'SET_EXPORT_LIMIT':
             return {...state, exportLimit: action.payload};
+        case 'SET_CLOUDING_FACTOR':
+            if (Number.isInteger(action.payload) && action.payload >= 0 && action.payload <= 100) {
+                return { ...state, cloudingFactor: action.payload };
+            } else {
+                console.error("Invalid clouding factor: ", action.payload);
+                return state;
+            }
+        case 'SET_IS_PRESENT':
+            return { ...state, isPresent: action.payload };
         default:
             throw new Error(`Unhandled action type: ${action.type}`);
     }
