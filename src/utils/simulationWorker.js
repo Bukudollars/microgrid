@@ -195,10 +195,10 @@ function computeValue({
                 if (newRemainingESSEnergy < totalESSEnergy) {
                     Logger.log("no PV power and ESS not charged");
                     //flows back into ESS
-                    essRealPowerContribution = -Math.min(peakESSRealPower, (totalESSEnergy - remainingESSEnergy)); 
+                    essRealPowerContribution = -Math.min(peakESSRealPower, (totalESSEnergy - remainingESSEnergy) * variables.granularity); 
                     essReactivePowerContribution = 0;
                     essPowerFactor = powerFactor(essRealPowerContribution, essReactivePowerContribution);
-                    utilityRealPowerContribution = realLoad + Math.min(peakESSRealPower, totalESSEnergy - remainingESSEnergy);
+                    utilityRealPowerContribution = realLoad + Math.min(peakESSRealPower, (totalESSEnergy - remainingESSEnergy) * variables.granularity);
                     utilityReactivePowerContribution = reactiveLoad;
                     utilityPowerFactor = powerFactor(utilityRealPowerContribution, utilityReactivePowerContribution);
                     newRemainingESSEnergy = remainingESSEnergy + (1 / variables.granularity * peakESSRealPower);
@@ -218,9 +218,10 @@ function computeValue({
             else {
                 Logger.log("PV and utility both available");
                 //If the delta between the real load and available PV power is less than the peak ESS real power, discharge the ESS if it is above 30% remaining energy.
-                if (realLoad - availablePVPower < peakESSRealPower && remainingESSEnergy / totalESSEnergy > CHARGE_STATE_MIN) {
+                if (realLoad - availablePVPower < peakESSRealPower 
+                    && remainingESSEnergy / totalESSEnergy > CHARGE_STATE_MIN) {
                     providedPVPower = availablePVPower;
-                    essRealPowerContribution = Math.min(realLoad - availablePVPower, remainingESSEnergy);
+                    essRealPowerContribution = Math.min(realLoad - availablePVPower, remainingESSEnergy * variables.granularity);
                     essReactivePowerContribution = reactiveLoad;
                     essPowerFactor = powerFactor(essRealPowerContribution, essReactivePowerContribution);
                     newRemainingESSEnergy = remainingESSEnergy - (1 / variables.granularity * (essRealPowerContribution));
