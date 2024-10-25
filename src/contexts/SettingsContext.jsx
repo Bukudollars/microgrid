@@ -22,7 +22,7 @@ const initialState = {
     siteVAC: 480,
     //utility settings
     exportLimit: 200,
-    cloudingFactor: 0,
+    cloudingFactor: 1,
     isPresent: false,
 };
 
@@ -69,7 +69,7 @@ function settingsReducer(state, action) {
         case 'SET_EXPORT_LIMIT':
             return {...state, exportLimit: action.payload};
         case 'SET_CLOUDING_FACTOR':
-            if (Number.isInteger(action.payload) && action.payload >= 0 && action.payload <= 100) {
+            if (typeof action.payload === 'number' && !isNaN(action.payload) && action.payload >= 0 && action.payload <= 1) {
                 return { ...state, cloudingFactor: action.payload };
             } else {
                 console.error("Invalid clouding factor: ", action.payload);

@@ -7,7 +7,6 @@ import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 import MenuItem from '@mui/material/MenuItem';
 import { MODULE_TYPES } from '../../constants';
-//import Paper from '@mui/material/Paper';
 import { useSettings, useSettingsDispatch } from '../../contexts/SettingsContext';
 
 function ESSSettings() {
@@ -30,7 +29,6 @@ function ESSSettings() {
         }
     }
     return (
-        //<Paper elevation={4}>
             <Box sx={{textAlign: 'left', padding : 2}}>
                 <Typography variant="h5">ESS Settings</Typography>
                 <Typography variant="body1">Module Count: </Typography>
@@ -51,19 +49,14 @@ function ESSSettings() {
                     >
 
                     {MODULE_TYPES.map((module_type) => (
-                        <MenuItem key={module_type} value={module_type}>{module_type}</MenuItem>
+                        <MenuItem key={`${module_type.type}-${module_type.power}-${module_type.energy}`} value={module_type}>
+                            {`${module_type.type}: ${module_type.power}kW, ${module_type.energy} kW-hr`}
+                            </MenuItem>
                     ))}
-
-                    {/* <MenuItem value={"Grid Stability: 250kW, 144 kW-hr"}>Grid Stability: 250kW, 144 kW-hr</MenuItem>
-                    <MenuItem value={"Grid Stability: 500kW, 288 kW-hr"}>Grid Stability: 500kW, 288 kW-hr</MenuItem>
-                    <MenuItem value={"Energy Time Shift: 250kW, 288 kW-hr"}>Energy Time Shift: 250kW, 288 kW-hr</MenuItem>
-                    <MenuItem value={"Energy Time Shift: 250kW, 1010 kW-hr"}>Energy Time Shift: 250kW, 1010 kW-hr</MenuItem>
-                    <MenuItem value={"Energy Time Shift: 1000kW, 1152 kW-hr"}>Energy Time Shift: 1000kW, 1152 kW-hr</MenuItem> */}
 
                     </Select>
                 </FormControl>
             </Box>
-        //</Paper>
     );
 }
 export default ESSSettings;

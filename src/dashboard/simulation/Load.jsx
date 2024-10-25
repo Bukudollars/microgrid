@@ -22,7 +22,7 @@ function Load() {
                 <Typography variant="body1">(P) {realLoad.toFixed(0)} kW</Typography>
             </Tooltip>
             <Tooltip title="Reactive Load" arrow>
-                <Typography variant="body1">(Q) {reactiveLoad.toFixed(0)} kVAr 4/4</Typography>
+                <Typography variant="body1">(Q) {reactiveLoad.toFixed(0)} kVAr</Typography>
             </Tooltip>
             <Tooltip title="Power Factor" arrow>
                 <Typography variant="body1">(PF) {powerFactor.toFixed(2)}</Typography>
