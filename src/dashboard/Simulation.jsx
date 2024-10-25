@@ -36,8 +36,8 @@ function Simulation() {
 
     const [variables, setVariables] = React.useState({
         utilityExportLimit: exportLimit,
-        singleESSEnergy: 144,
-        singleESSPeakPower: 250,
+        singleESSEnergy: essModuleType.energy,
+        singleESSPeakPower: essModuleType.power,
         essModuleCount: essModuleCount,
         peakLoad: loadPeakLevel,
         totalFeederBreakers: 4,
@@ -47,7 +47,7 @@ function Simulation() {
         singleGensetPower: generatorSize,
         gensetCount: generatorCount,
         granularity: MINUTES_PER_HOUR,
-        simulationTime: 60 * 24 * 10,
+        simulationTime: 60 * 24 * 1,
         loadProfile: loadProfile,
     });
 

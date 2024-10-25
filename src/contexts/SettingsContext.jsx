@@ -22,7 +22,7 @@ const initialState = {
     siteVAC: 480,
     //utility settings
     exportLimit: 200,
-    cloudingFactor: 0,
+    cloudingFactor: 1,
     isPresent: false,
 };
 
