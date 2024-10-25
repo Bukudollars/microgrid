@@ -11,6 +11,7 @@ import Grid from '@mui/material/Grid2';
 import SimulationResults from './simulation/SimulationResults';
 import { useSimulationDispatch, useSimulationState } from '../contexts/SimulationContext';
 import { HOURS_PER_HOUR, MINUTES_PER_HOUR } from '../constants';
+import { useSettings } from '../contexts/SettingsContext';
 
 function Simulation() {
     const { simulationData, loading, currentIndex } = useSimulationState();
@@ -18,19 +19,33 @@ function Simulation() {
     const [isPlaying, setIsPlaying] = React.useState(false);
     const [localIndex, setLocalIndex] = React.useState(currentIndex);
     const [playbackSpeed, setPlaybackSpeed] = React.useState(0);
+    const { 
+        generatorCount,
+        generatorSize,
+        pvPeakSize,
+        essModuleCount,
+        essModuleType,
+        loadPeakLevel,
+        loadProfile,
+        siteFrequency,
+        siteVAC,
+        exportLimit,
+        cloudingFactor,
+        isPresent
+    } = useSettings();
 
     const [variables, setVariables] = React.useState({
-        utilityExportLimit: 200,
+        utilityExportLimit: exportLimit,
         singleESSEnergy: 144,
         singleESSPeakPower: 250,
-        essModuleCount: 2,
-        peakLoad: 800,
+        essModuleCount: essModuleCount,
+        peakLoad: loadPeakLevel,
         totalFeederBreakers: 4,
-        utility: true,
-        peakPVPower: 1000,
-        cloudingFactor: 1,
-        singleGensetPower: 500,
-        gensetCount: 4,
+        utility: isPresent,
+        peakPVPower: pvPeakSize,
+        cloudingFactor: cloudingFactor,
+        singleGensetPower: generatorSize,
+        gensetCount: generatorCount,
         granularity: MINUTES_PER_HOUR,
         simulationTime: 60 * 24 * 10,
     });
