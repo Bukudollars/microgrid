@@ -9,6 +9,7 @@ function ESS() {
     const realLoad =  validData ? simulationData[currentIndex].essRealPowerContribution : 0;
     const reactiveLoad = validData ? simulationData[currentIndex].essReactivePowerContribution : 0;
     const powerFactor = validData ? simulationData[currentIndex].essPowerFactor : 0;
+    const essCharge = validData ? simulationData[currentIndex].remainingESSEnergy / simulationData[currentIndex].totalESSEnergy: 0;
 
     return (
         <Paper elevation={4}>
@@ -22,6 +23,9 @@ function ESS() {
                     </Tooltip>
                     <Tooltip title="Power Factor" arrow>
                         <Typography variant="body1">(PF) {powerFactor.toFixed(2)}</Typography>
+                    </Tooltip>
+                    <Tooltip title="ESS Charge" arrow>
+                        <Typography variant="body1">Charge: {(essCharge * 100).toFixed(0)}%</Typography>
                     </Tooltip>
                 {/* <img src="./ess.png" alt="ESS placeholder" /> */}
             </Box>

@@ -8,6 +8,7 @@ import LoadSettings from './settings/LoadSettings';
 import SiteSettings from './settings/SiteSettings';
 import UtilitySettings from './settings/UtilitySettings';
 import EnvironmentSettings from './settings/EnvironmentSettings';
+import SimulationSettings from './settings/SimulationSettings';
 import Grid from '@mui/material/Grid2';
 
 function Settings() {
@@ -35,6 +36,9 @@ function Settings() {
                 </Grid>
                 <Grid size="auto" display="flex" justifyContent="center" alignItems="center">
                     <EnvironmentSettings />
+                </Grid>
+                <Grid size="auto" display="flex" justifyContent="center" alignItems="center">
+                    <SimulationSettings />
                 </Grid>
             </Grid>
         </Box>

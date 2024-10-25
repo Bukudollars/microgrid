@@ -10,7 +10,7 @@ import ESS from './simulation/ESS';
 import Grid from '@mui/material/Grid2';
 import SimulationResults from './simulation/SimulationResults';
 import { useSimulationDispatch, useSimulationState } from '../contexts/SimulationContext';
-import { HOURS_PER_HOUR, MINUTES_PER_HOUR } from '../constants';
+import { MINUTES_PER_HOUR, HOURS_PER_DAY } from '../constants';
 import { useSettings } from '../contexts/SettingsContext';
 
 function Simulation() {
@@ -31,7 +31,8 @@ function Simulation() {
         siteVAC,
         exportLimit,
         cloudingFactor,
-        isPresent
+        isPresent,
+        simulationTime
     } = useSettings();
 
     const [variables, setVariables] = React.useState({
@@ -47,7 +48,7 @@ function Simulation() {
         singleGensetPower: generatorSize,
         gensetCount: generatorCount,
         granularity: MINUTES_PER_HOUR,
-        simulationTime: 60 * 24 * 1,
+        simulationTime: MINUTES_PER_HOUR * HOURS_PER_DAY * simulationTime,
         loadProfile: loadProfile,
     });
 

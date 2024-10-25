@@ -1,10 +1,14 @@
 import React, {createContext, useReducer, useContext} from 'react';
 import PropTypes from 'prop-types';
-import { GENERATOR_SIZES, MODULE_TYPES, LOAD_PROFILE_OPTIONS, SITE_FREQUENCY_OPTIONS } from '../constants';
+import { GENERATOR_SIZES, MODULE_TYPES, LOAD_PROFILE_OPTIONS, SITE_FREQUENCY_OPTIONS,
+    MINUTES_PER_HOUR, HOURS_PER_DAY,
+    MAX_SIMULATION_TIME
+} from '../constants';
 
 const SettingsContext = createContext();
 const SettingsDispatchContext = createContext();
 
+//default settings
 const initialState = {
     //generator settings
     generatorCount: 5,
@@ -24,6 +28,8 @@ const initialState = {
     exportLimit: 200,
     cloudingFactor: 1,
     isPresent: false,
+    //simulation settings
+    simulationTime: 10,
 };
 
 function settingsReducer(state, action) {
@@ -77,6 +83,14 @@ function settingsReducer(state, action) {
             }
         case 'SET_IS_PRESENT':
             return { ...state, isPresent: action.payload };
+        case 'SET_SIMULATION_TIME':
+            if (Number.isInteger(action.payload) && action.payload > 0 && action.payload <= MAX_SIMULATION_TIME) {
+                return { ...state, simulationTime: action.payload };
+            } else {
+                console.error("Invalid simulation time: ", action.payload);
+                return state;
+            }
+            
         default:
             throw new Error(`Unhandled action type: ${action.type}`);
     }

@@ -1,0 +1,1 @@
+export const MAX_SIMULATION_TIME = 100;
