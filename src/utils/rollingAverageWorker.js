@@ -5,17 +5,20 @@ self.onmessage = function (e) {
     console.log("Rolling average worker received message");
     const windowSize = MINUTES_PER_HOUR * HOURS_PER_DAY;
     const rollingAverages = [];
-    let windowSum = 0;
+    let genSum = 0;
+    let pvSum = 0;
 
     try {
         Logger.log("Rolling average worker received message");
         for (let i = 0; i  < e.data.length; i++) {
-            windowSum += e.data[i].gensetRealPowerContribution;
+            genSum += e.data[i].gensetRealPowerContribution;
+            pvSum += e.data[i].providedPVPower;
             if (i < windowSize) {
-                rollingAverages.push(windowSum / (i + 1));
+                rollingAverages.push({dailyGenAverage: genSum / (i + 1), dailyPVAverage: pvSum / (i + 1)});
             } else {
-                windowSum = windowSum - e.data[i - windowSize].gensetRealPowerContribution;
-                rollingAverages.push(windowSum / windowSize);
+                genSum = genSum - e.data[i - windowSize].gensetRealPowerContribution;
+                pvSum = pvSum - e.data[i - windowSize].providedPVPower;
+                rollingAverages.push({dailyGenAverage: genSum / windowSize, dailyPVAverage: pvSum / windowSize});
             }
         }
         console.log(e.data[0]);

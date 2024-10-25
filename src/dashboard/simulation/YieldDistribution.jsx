@@ -16,7 +16,8 @@ function YieldDistribution() {
     ? simulationData[currentIndex].gensetRealPowerContribution 
         / (simulationData[currentIndex].gensetRealPowerContribution + simulationData[currentIndex].providedPVPower) 
     : .5;
-    const genDailyrollingAverage = validData ? rollingAverage[currentIndex] : 0;
+    const genDailyrollingAverage = validData ? rollingAverage[currentIndex].dailyGenAverage : 0;
+    const pvDailyrollingAverage = validData ? rollingAverage[currentIndex].dailyPVAverage : 0;
     //console.log("genDailyrollingAverage", rollingAverage[0]);
 
     return (
@@ -51,7 +52,7 @@ function YieldDistribution() {
                     </Box>
                     <Tooltip title="PV Yield" arrow>
                         <Box>
-                            <Typography variant="body1">0 MWh</Typography>
+                            <Typography variant="body1">{pvDailyrollingAverage.toFixed(0)} MWh</Typography>
                             <WbSunnyIcon fontSize='large' sx={{color: 'green'}}/>
                         </Box>
                     </Tooltip>
