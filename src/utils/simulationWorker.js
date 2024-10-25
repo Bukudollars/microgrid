@@ -154,6 +154,7 @@ function computeValue({
     
     
     const realLoad = loadPerBreaker * activeFeederBreakers;
+    let newRealLoad = realLoad;
     Logger.log("Real Load: ", realLoad);
 
     //Power Factor (PF) = random value based on table in load section 
@@ -305,34 +306,36 @@ function computeValue({
             if (activeFeederBreakers < variables.totalFeederBreakers) {
                 Logger.log("activeFeederBreakers < variables.totalFeederBreakers");
                 //if there is enough excess PV capacity to cover the addition of one feeder breaker, add one to the number of active feeder breakers.
-                if (availablePVPower - realLoad >= loadPerBreaker) {
+                if (availablePVPower - newRealLoad >= loadPerBreaker) {
                     newActiveFeederBreakers++;  
+                    newRealLoad = newActiveFeederBreakers * loadPerBreaker;
                 } 
                 //If the PV alone cannot support an additional load breaker, check to see if the PV and energy storage can support an additional load breaker.
-                else if(remainingESSEnergy > 0 && availablePVPower + peakESSRealPower - realLoad >= loadPerBreaker) {
+                else if(remainingESSEnergy > 0 && availablePVPower + peakESSRealPower - newRealLoad >= loadPerBreaker) {
                     newActiveFeederBreakers++;
+                    newRealLoad = newActiveFeederBreakers * loadPerBreaker;
                 }
             }
             // more PV than the load requires run on PV. 
-            if (realLoad < availablePVPower) {
+            if (newRealLoad < availablePVPower) {
                  
                 //Check to see if the ESS requires charging.
                 if (remainingESSEnergy < totalESSEnergy) {
                     //ESS provides reactive power to load
                     essReactivePowerContribution = reactiveLoad;
                     //flows into ESS with a maximum value of the Peak ESS Real Power value. 
-                    essRealPowerContribution = -Math.min(availablePVPower - realLoad, peakESSRealPower, (totalESSEnergy - remainingESSEnergy) * variables.granularity);
+                    essRealPowerContribution = -Math.min(availablePVPower - newRealLoad, peakESSRealPower, (totalESSEnergy - remainingESSEnergy) * variables.granularity);
                     essPowerFactor = powerFactor(essRealPowerContribution, essReactivePowerContribution);
                     newRemainingESSEnergy = remainingESSEnergy - (1 / variables.granularity * essRealPowerContribution);
                     //remaining ESS energy should not be greater than total ESS energy.  
                     if (newRemainingESSEnergy > totalESSEnergy) {
                         newRemainingESSEnergy = totalESSEnergy;
                     }
-                    providedPVPower = realLoad - essRealPowerContribution;
+                    providedPVPower = newRealLoad - essRealPowerContribution;
                 } 
                 //ESS does not require charging
                 else {
-                    providedPVPower = realLoad;
+                    providedPVPower = newRealLoad;
                     essRealPowerContribution = 0;
                     essReactivePowerContribution = reactiveLoad;
                     essPowerFactor = powerFactor(essRealPowerContribution, essReactivePowerContribution);
@@ -348,7 +351,8 @@ function computeValue({
                     // breaker (real load / active breakers).   
                     // This should be rounded down to the nearest whole number.  The Active Feeder Breaker value can be zero.  
                     newActiveFeederBreakers = Math.floor(availablePVPower / loadPerBreaker);
-                    providedPVPower = realLoad;
+                    newRealLoad = newActiveFeederBreakers * loadPerBreaker;
+                    providedPVPower = newRealLoad;
                     essRealPowerContribution = 0;
                     essReactivePowerContribution = reactiveLoad;
                     essPowerFactor = powerFactor(essRealPowerContribution, essReactivePowerContribution);
@@ -356,7 +360,7 @@ function computeValue({
                 //ESS has charge
                 else {
                     //if there is not enough capacity between the PV and ESS to support the load, shed load.  
-                    if (realLoad > availablePVPower + peakESSRealPower || realLoad > availablePVPower + remainingESSEnergy * variables.granularity) {
+                    if (newRealLoad > availablePVPower + peakESSRealPower || newRealLoad > availablePVPower + remainingESSEnergy * variables.granularity) {
                         Logger.log("not enough capacity between the PV and ESS to support the load, shed load");
                         // Number of active feeder breakers equals the total PV power available plus the peak ESS real power, 
                         // divided by the load requirement per circuit breaker (real load / active breakers).   
@@ -365,9 +369,10 @@ function computeValue({
                             Math.min(availablePVPower + peakESSRealPower, availablePVPower + remainingESSEnergy * variables.granularity) 
                             / loadPerBreaker
                         );
+                        newRealLoad = newActiveFeederBreakers * loadPerBreaker;
                         providedPVPower = availablePVPower;
                         //Power flows out of the ESS
-                        essRealPowerContribution = Math.min(realLoad - availablePVPower, remainingESSEnergy * variables.granularity);
+                        essRealPowerContribution = Math.min(newRealLoad - availablePVPower, remainingESSEnergy * variables.granularity);
                         essReactivePowerContribution = reactiveLoad;
                         essPowerFactor = powerFactor(essRealPowerContribution, essReactivePowerContribution);
                         newRemainingESSEnergy = remainingESSEnergy - (1 / variables.granularity * essRealPowerContribution);
@@ -377,7 +382,7 @@ function computeValue({
                         Logger.log("PV and energy storage is sufficient to power load");
                         providedPVPower = availablePVPower;
                         //power flows out of the ESS
-                        essRealPowerContribution = realLoad - availablePVPower;
+                        essRealPowerContribution = newRealLoad - availablePVPower;
                         essReactivePowerContribution = reactiveLoad;
                         essPowerFactor = powerFactor(essRealPowerContribution, essReactivePowerContribution);
                         newRemainingESSEnergy = remainingESSEnergy - (1 / variables.granularity * essRealPowerContribution);
@@ -393,19 +398,20 @@ function computeValue({
         else if (variables.gensetCount > 0 && variables.essModuleCount === 0) {
             Logger.log("Generator sets only, no ESS");
             //Check to see how much power the gensets need to provide
-            gensetRealPowerRequirement = realLoad - availablePVPower;
+            gensetRealPowerRequirement = newRealLoad - availablePVPower;
             //Check to see if there are any unpowered loads
             if (activeFeederBreakers < variables.totalFeederBreakers) {
                 // if there is enough excess PV capacity and total genset power to cover the addition of one feeder breaker, 
                 // add one to the number of active feeder breakers.   
                 if (availablePVPower + totalGensetPower - realLoad >= loadPerBreaker) {
                     newActiveFeederBreakers++;
+                    newRealLoad = newActiveFeederBreakers * loadPerBreaker;
                 }
             }
             //there is enough PV to power load; run one generator set at 30% load, PV makes up the balance
             if (gensetRealPowerRequirement <=0) {
                 gensetsRequired = 1;
-                providedPVPower = Math.max(realLoad - minGensetLoad, 0);
+                providedPVPower = Math.max(newRealLoad - minGensetLoad, 0);
                 gensetRealPowerContribution = minGensetLoad;
                 gensetReactivePowerContribution = reactiveLoad;
                 gensetPowerFactor = powerFactor(gensetRealPowerContribution, gensetReactivePowerContribution);
@@ -420,12 +426,13 @@ function computeValue({
                     // divided by the load requirement per circuit breaker (real load / active breakers).   
                     // This should be rounded down to the nearest whole number.  The Active Feeder Breaker value can be zero.
                     newActiveFeederBreakers = Math.floor((availablePVPower + totalGensetPower) / loadPerBreaker);
+                    newRealLoad = newActiveFeederBreakers * loadPerBreaker;
                 }
                 //Number of gensets required is the lesser of genset power requirement / next genset online and the total number of generator sets.  
                 gensetsRequired = Math.min(variables.gensetCount, Math.ceil(gensetRealPowerRequirement / nextGensetOnlinePower));
                 //Genset power provided is the larger of either the generator set minimum load or the generator set power requirement.  
                 gensetRealPowerContribution = Math.max(gensetsRequired * minGensetLoad, gensetRealPowerRequirement);
-                providedPVPower = Math.max(realLoad - gensetRealPowerContribution, 0);
+                providedPVPower = Math.max(newRealLoad - gensetRealPowerContribution, 0);
                 gensetReactivePowerContribution = reactiveLoad;
                 gensetPowerFactor = powerFactor(gensetRealPowerContribution, gensetReactivePowerContribution);
             }
@@ -438,20 +445,22 @@ function computeValue({
             if (remainingESSEnergy > 0 && activeFeederBreakers < variables.totalFeederBreakers) {
                 //if there is enough excess PV capacity, total genset power, and energy storage power 
                 //to cover the addition of one feeder breaker, add one to the number of active feeder breakers.   
-                if (availablePVPower + totalGensetPower + peakESSRealPower - realLoad >= loadPerBreaker) {
+                if (availablePVPower + totalGensetPower + peakESSRealPower - newRealLoad >= loadPerBreaker) {
                     newActiveFeederBreakers++;
+                    newRealLoad = newActiveFeederBreakers * loadPerBreaker;
                 }
             }
             //Check #2 for additional load.  ESS is discharged and cannot provide power.   
             else if (activeFeederBreakers < variables.totalFeederBreakers) {
                 //if there is enough excess PV capacity and total genset power to cover the 
                 //addition of one feeder breaker, add one to the number of active feeder breakers.
-                if (availablePVPower + totalGensetPower - realLoad >= loadPerBreaker) {
+                if (availablePVPower + totalGensetPower - newRealLoad >= loadPerBreaker) {
                     newActiveFeederBreakers++;
+                    newRealLoad = newActiveFeederBreakers * loadPerBreaker;
                 }
             }
             //Check to see how much power the gensets need to provide; does not include ESS power at this point.  
-            gensetRealPowerRequirement = realLoad - availablePVPower;
+            gensetRealPowerRequirement = newRealLoad - availablePVPower;
             //more PV than the load requires run on PV and ESS.
             if (gensetRealPowerRequirement <= 0) {
                 Logger.log("more PV than the load requires, run on PV and ESS");
@@ -460,14 +469,14 @@ function computeValue({
                     //ESS provides reactive power to load
                     essReactivePowerContribution = reactiveLoad;
                     //flows into ESS with a maximum value of the Peak ESS Real Power value.   
-                    essRealPowerContribution = -Math.min(availablePVPower - realLoad, peakESSRealPower, (totalESSEnergy - remainingESSEnergy) * variables.granularity);
+                    essRealPowerContribution = -Math.min(availablePVPower - newRealLoad, peakESSRealPower, (totalESSEnergy - remainingESSEnergy) * variables.granularity);
                     essPowerFactor = powerFactor(essRealPowerContribution, essReactivePowerContribution);
                     newRemainingESSEnergy = remainingESSEnergy - (1 / variables.granularity * essRealPowerContribution);
                     //remaining ESS energy should not be greater than total ESS energy.  
                     if (newRemainingESSEnergy > totalESSEnergy) {
                         newRemainingESSEnergy = totalESSEnergy;
                     }
-                    providedPVPower = realLoad - essRealPowerContribution;
+                    providedPVPower = newRealLoad - essRealPowerContribution;
                     gensetRealPowerContribution = 0;
                     gensetReactivePowerContribution = 0;
                     gensetPowerFactor = 0;
@@ -479,7 +488,7 @@ function computeValue({
                 //ESS does not require charging
                 else {
                     Logger.log("ESS does not require charging");
-                    providedPVPower = realLoad;
+                    providedPVPower = newRealLoad;
                     essRealPowerContribution = 0;
                     essReactivePowerContribution = reactiveLoad;
                     essPowerFactor = powerFactor(essRealPowerContribution, essReactivePowerContribution);
@@ -509,7 +518,7 @@ function computeValue({
                         essRealPowerContribution = gensetRealPowerRequirement;
                         essPowerFactor = powerFactor(essRealPowerContribution, essReactivePowerContribution);
                         newRemainingESSEnergy = remainingESSEnergy - (1 / variables.granularity * essRealPowerContribution);
-                        providedPVPower = realLoad - essRealPowerContribution;
+                        providedPVPower = newRealLoad - essRealPowerContribution;
                         gensetRealPowerContribution = 0;
                         gensetReactivePowerContribution = 0;
                         gensetPowerFactor = 0;
@@ -529,6 +538,7 @@ function computeValue({
                             // divided by the load requirement per circuit breaker (real load / active breakers).   
                             // This should be rounded down to the nearest whole number.  The Active Feeder Breaker value can be zero.
                             newActiveFeederBreakers = Math.floor((availablePVPower + totalGensetPower + peakESSRealPower) / loadPerBreaker);
+                            newRealLoad = newActiveFeederBreakers * loadPerBreaker;
                         }
                         //Number of gensets required is the lesser of genset power requirement / next genset online and the total number of generator sets.  
                         gensetsRequired = Math.min(variables.gensetCount, Math.ceil(gensetRealPowerRequirement / nextGensetOnlinePower));
@@ -555,14 +565,14 @@ function computeValue({
                             if (newRemainingESSEnergy / totalESSEnergy < CHARGE_STATE_MIN) {
                                 newEssChargeState = 0;
                             }
-                            providedPVPower = realLoad - gensetRealPowerContribution - essRealPowerContribution;
+                            providedPVPower = newRealLoad - gensetRealPowerContribution - essRealPowerContribution;
                         }
                         //There is more power than the gensets can support; run ESS 
                         else if(gensetRealPowerRequirement > totalGensetPower) {
                             Logger.log("more power than the gensets can support, run ESS");
                             //sets the number of required gensets equal to the total number of gensets
                             gensetsRequired = variables.gensetCount;
-                            gensetRealPowerContribution = realLoad - availablePVPower - peakESSRealPower;
+                            gensetRealPowerContribution = newRealLoad - availablePVPower - peakESSRealPower;
                             gensetReactivePowerContribution = reactiveLoad * gensetRealPowerContribution / realLoad;
                             gensetPowerFactor = powerFactor(gensetRealPowerContribution, gensetReactivePowerContribution);
                             essRealPowerContribution = Math.min(peakESSRealPower, remainingESSEnergy * variables.granularity);
@@ -573,7 +583,7 @@ function computeValue({
                             if (newRemainingESSEnergy / totalESSEnergy < CHARGE_STATE_MIN) {
                                 newEssChargeState = 0;
                             }
-                            providedPVPower = realLoad - gensetRealPowerContribution - essRealPowerContribution;
+                            providedPVPower = newRealLoad - gensetRealPowerContribution - essRealPowerContribution;
 
                         } 
                         //run on genset only and recharge the ESS
@@ -591,7 +601,7 @@ function computeValue({
                             essPowerFactor = powerFactor(essRealPowerContribution, essReactivePowerContribution);
                             //Genset power provided is the larger of either the generator set minimum load or the generator set power requirement.  Add to this the ESS recharge power.
                             gensetRealPowerContribution = Math.max(gensetsRequired * minGensetLoad, gensetRealPowerRequirement) - essRealPowerContribution;
-                            providedPVPower = Math.max(realLoad - gensetRealPowerContribution, 0);
+                            providedPVPower = Math.max(newRealLoad - gensetRealPowerContribution, 0);
                             gensetReactivePowerContribution = reactiveLoad;
                             gensetPowerFactor = powerFactor(gensetRealPowerContribution, gensetReactivePowerContribution);
                             newRemainingESSEnergy = remainingESSEnergy - (1 / variables.granularity * essRealPowerContribution);
@@ -623,11 +633,12 @@ function computeValue({
                                 newActiveFeederBreakers = Math.floor(
                                     availablePVPower + totalGensetPower + Math.min(peakESSRealPower, remainingESSEnergy * variables.granularity) / loadPerBreaker
                                 );
+                                newRealLoad = newActiveFeederBreakers * loadPerBreaker;
                             }
                             //sets the number of required gensets equal to the total number of gensets
                             gensetsRequired = variables.gensetCount;
-                            gensetRealPowerContribution = realLoad - availablePVPower - Math.min(peakESSRealPower, remainingESSEnergy);
-                            gensetReactivePowerContribution = reactiveLoad * gensetRealPowerContribution / realLoad;
+                            gensetRealPowerContribution = newRealLoad - availablePVPower - Math.min(peakESSRealPower, remainingESSEnergy);
+                            gensetReactivePowerContribution = reactiveLoad * gensetRealPowerContribution / newRealLoad;
                             gensetPowerFactor = powerFactor(gensetRealPowerContribution, gensetReactivePowerContribution);
                             essRealPowerContribution = Math.min(peakESSRealPower, remainingESSEnergy * variables.granularity);
                             essReactivePowerContribution = reactiveLoad - gensetReactivePowerContribution;
@@ -642,6 +653,7 @@ function computeValue({
                             // divided by the load requirement per circuit breaker (real load / active breakers).   
                             // This should be rounded down to the nearest whole number.  The Active Feeder Breaker value can be zero
                             newActiveFeederBreakers = Math.floor(availablePVPower + totalGensetPower / loadPerBreaker);
+                            newRealLoad = newActiveFeederBreakers * loadPerBreaker;
                         }
                     }
                     // Number of gensets required is the lesser of genset power requirement / next genset online and the total number of generator sets.  
@@ -656,7 +668,7 @@ function computeValue({
                     essPowerFactor = powerFactor(essRealPowerContribution, essReactivePowerContribution);
                     //Genset power provided is the larger of either the generator set minimum load or the generator set power requirement.  Add to this the ESS recharge power.
                     gensetRealPowerContribution = Math.max(gensetsRequired * minGensetLoad, gensetRealPowerRequirement) - essRealPowerContribution;
-                    providedPVPower = realLoad - gensetRealPowerRequirement;
+                    providedPVPower = newRealLoad - gensetRealPowerRequirement;
                     gensetReactivePowerContribution = reactiveLoad;
                     gensetPowerFactor = powerFactor(gensetRealPowerContribution, gensetReactivePowerContribution);
                     newRemainingESSEnergy = remainingESSEnergy - (1 / variables.granularity * essRealPowerContribution);
@@ -690,7 +702,7 @@ function computeValue({
         totalESSEnergy,
         totalGensetPower,
         essChargeState,
-        realLoad: realLoad,
+        realLoad: newRealLoad,
         loadPowerFactor: newLoadPowerFactor,
         loadVariation: newLoadVariation,
         reactiveLoad: reactiveLoad,
