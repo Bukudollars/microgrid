@@ -51,7 +51,9 @@ function ESSSettings() {
                     >
 
                     {MODULE_TYPES.map((module_type) => (
-                        <MenuItem key={module_type} value={module_type}>{module_type}</MenuItem>
+                        <MenuItem key={`${module_type.type}-${module_type.power}-${module_type.energy}`} value={module_type}>
+                            {`${module_type.type}: ${module_type.power}kW, ${module_type.energy} kW-hr`}
+                            </MenuItem>
                     ))}
 
                     {/* <MenuItem value={"Grid Stability: 250kW, 144 kW-hr"}>Grid Stability: 250kW, 144 kW-hr</MenuItem>
