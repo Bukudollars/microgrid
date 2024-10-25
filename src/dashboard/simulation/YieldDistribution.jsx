@@ -8,8 +8,7 @@ import { BarChart } from '@mui/x-charts/BarChart';
 import { useSimulationState } from '../../contexts/SimulationContext';
 
 function YieldDistribution() {
-    const genYield = 412;
-    const pvYield = 126;
+
     const { simulationData, rollingAverage, loading, currentIndex } = useSimulationState();
     const validData = simulationData.length > 0 && currentIndex < simulationData.length && !loading;
     const instantYieldDistribution = validData && simulationData[currentIndex].gensetRealPowerContribution + simulationData[currentIndex].providedPVPower > 0 
@@ -18,6 +17,8 @@ function YieldDistribution() {
     : .5;
     const genDailyrollingAverage = validData ? rollingAverage[currentIndex].dailyGenAverage : 0;
     const pvDailyrollingAverage = validData ? rollingAverage[currentIndex].dailyPVAverage : 0;
+    const genMonthlyrollingAverage = validData ? rollingAverage[currentIndex].monthlyGenAverage : 0;
+    const pvMonthlyrollingAverage = validData ? rollingAverage[currentIndex].monthlyPVAverage : 0;
     //console.log("genDailyrollingAverage", rollingAverage[0]);
 
     return (
@@ -60,17 +61,17 @@ function YieldDistribution() {
                 </Stack>
                 <Typography variant="body1">Daily</Typography>
                 <Stack direction="row" sx={{justifyContent: "center", alignItems: "center"}}>
-                    <Typography variant="body1">412 MWh</Typography>
+                    <Typography variant="body1">{genMonthlyrollingAverage.toFixed(0)} MWh</Typography>
                     <BarChart 
                         width={300}
                         height={150}
                         // dataset={dataset}
                         layout="horizontal"
                         yAxis={[{scaleType: 'band', data: [""], disableLine: true, disableTicks: true}] }
-                        xAxis={[{max: genYield + pvYield}]}
-                        series={[{data: [genYield], stack: 'stack1'}, {data: [pvYield], stack: 'stack1'}]}
+                        xAxis={[{max: genMonthlyrollingAverage + pvMonthlyrollingAverage}]}
+                        series={[{data: [genMonthlyrollingAverage], stack: 'stack1', color: 'blue'}, {data: [pvMonthlyrollingAverage], stack: 'stack1', color: 'green'}]}
                     />
-                    <Typography variant="body1">126 MWh</Typography>
+                    <Typography variant="body1">{pvMonthlyrollingAverage.toFixed(0)} MWh</Typography>
                 </Stack>
                 <Typography variant="body1">Monthly</Typography>
                 
