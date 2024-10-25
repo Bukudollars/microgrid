@@ -35,7 +35,7 @@ self.onmessage = function (e) {
             activeFeederBreakers: variables.totalFeederBreakers,
             remainingESSEnergy: variables.singleESSEnergy * variables.essModuleCount,
             essChargeState: 1,
-            loadPowerFactor: Math.random() * (POWER_FACTOR_MAX.commercial - POWER_FACTOR_MIN.commercial) + POWER_FACTOR_MIN.commercial,
+            loadPowerFactor: 0.9,
             loadVariation: 0.95
         });
 
@@ -92,40 +92,67 @@ function computeValue({
     Logger.log("Total Feeder Breakers: ", variables.totalFeederBreakers);
     
     let powerFactorVariation = 0;
+    let powerFactorMax = 1;
+    let loadPerBreaker = 0;
+    let newLoadPowerFactor = loadPowerFactor;
     
     const loadProfile = variables.loadProfile;
+    const newLoadVariation = Math.max(
+        LOAD_VARIATION_MIN, 
+        Math.min((1 - Math.random() * 2) * LOAD_VARIATION_PER_MINUTE + loadVariation, LOAD_VARIATION_MAX)
+    );
     switch (loadProfile) {
         case LOAD_PROFILE_OPTIONS[0]:
             Logger.log("Commercial Load Profile");
             powerFactorVariation = POWER_FACTOR_VARIATION_PER_MINUTE.commercial;
+            powerFactorMax = POWER_FACTOR_MAX.commercial;
+            loadPerBreaker = LOAD_PROFILE[Math.floor(index / variables.granularity) % HOURS_PER_DAY].commercial * variables.peakLoad 
+                * newLoadVariation / variables.totalFeederBreakers;
+            newLoadPowerFactor = Math.max(
+                POWER_FACTOR_MIN.commercial, 
+                Math.min((1 - Math.random() * 2) * powerFactorVariation + loadPowerFactor, powerFactorMax)
+            );
             break;
         case LOAD_PROFILE_OPTIONS[1]:
             Logger.log("Residential Load Profile");
             powerFactorVariation = POWER_FACTOR_VARIATION_PER_MINUTE.residential;
+            powerFactorMax = POWER_FACTOR_MAX.residential;
+            loadPerBreaker = LOAD_PROFILE[Math.floor(index / variables.granularity) % HOURS_PER_DAY].residential * variables.peakLoad 
+                * newLoadVariation / variables.totalFeederBreakers;
+            newLoadPowerFactor = Math.max(
+                POWER_FACTOR_MIN.residential, 
+                Math.min((1 - Math.random() * 2) * powerFactorVariation + loadPowerFactor, powerFactorMax)
+            );
             break;
         case LOAD_PROFILE_OPTIONS[2]:
             Logger.log("Industrial Load Profile");
             powerFactorVariation = POWER_FACTOR_VARIATION_PER_MINUTE.industrial;
+            powerFactorMax = POWER_FACTOR_MAX.industrial;
+            loadPerBreaker = LOAD_PROFILE[Math.floor(index / variables.granularity) % HOURS_PER_DAY].industrial * variables.peakLoad 
+                * newLoadVariation / variables.totalFeederBreakers;
+            newLoadPowerFactor = Math.max(
+                POWER_FACTOR_MIN.industrial, 
+                Math.min((1 - Math.random() * 2) * powerFactorVariation + loadPowerFactor, powerFactorMax)
+            );
             break;
         case LOAD_PROFILE_OPTIONS[3]:
             Logger.log("Community Load Profile");
             powerFactorVariation = POWER_FACTOR_VARIATION_PER_MINUTE.community;
+            powerFactorMax = POWER_FACTOR_MAX.community;
+            loadPerBreaker = LOAD_PROFILE[Math.floor(index / variables.granularity) % HOURS_PER_DAY].community * variables.peakLoad 
+                * newLoadVariation / variables.totalFeederBreakers;
+            newLoadPowerFactor = Math.max(
+                POWER_FACTOR_MIN.community, 
+                Math.min((1 - Math.random() * 2) * powerFactorVariation + loadPowerFactor, powerFactorMax)
+            );
             break;
         default:
             Logger.error("Invalid load profile: ", loadProfile);
             throw new Error("Invalid load profile: ", loadProfile);
     }
 
-    const newLoadPowerFactor = Math.max(
-        POWER_FACTOR_MIN.commercial, 
-        Math.min((1 - Math.random() * 2) * powerFactorVariation + loadPowerFactor, POWER_FACTOR_MAX.commercial)
-    );
-    const newLoadVariation = Math.max(
-        LOAD_VARIATION_MIN, 
-        Math.min((1 - Math.random() * 2) * LOAD_VARIATION_PER_MINUTE + loadVariation, LOAD_VARIATION_MAX)
-    );
-    const loadPerBreaker = LOAD_PROFILE[Math.floor(index / variables.granularity) % HOURS_PER_DAY].commercial * variables.peakLoad 
-    * newLoadVariation / variables.totalFeederBreakers;
+    
+    
     const realLoad = loadPerBreaker * activeFeederBreakers;
     Logger.log("Real Load: ", realLoad);
 
