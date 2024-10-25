@@ -16,10 +16,10 @@ function Gen() {
             <Box sx={{textAlign: 'left', padding: 2, margin: 2}}>
                 <Typography variant="h5">Gen</Typography>
                 <Tooltip title="Real Load" arrow>
-                    <Typography variant="body1">(P) {realLoad.toFixed(2)} kW</Typography>
+                    <Typography variant="body1">(P) {realLoad.toFixed(0)} kW</Typography>
                 </Tooltip>
                 <Tooltip title="Reactive Load" arrow>
-                    <Typography variant="body1">(Q) {reactiveLoad.toFixed(2)} kVAr</Typography>
+                    <Typography variant="body1">(Q) {reactiveLoad.toFixed(0)} kVAr</Typography>
                 </Tooltip>
                 <Tooltip title="Power Factor" arrow>
                     <Typography variant="body1">(PF) {powerFactor.toFixed(2)}</Typography>
