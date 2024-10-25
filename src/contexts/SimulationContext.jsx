@@ -3,6 +3,7 @@ import React, { createContext, useContext, useState } from 'react';
 const SimulationStateContext = createContext();
 const  SimulationDispatchContext = createContext();
 
+
 export const useSimulationState = () => {
     const context = useContext(SimulationStateContext);
     if (context === undefined) {
@@ -24,13 +25,32 @@ const actionTypes = {
 
 };
 
+const startRollingAverageWorker = (data, setRollingAverage, setLoading) => {
+    console.log("Starting rolling average worker");
+    const rollingAverageWorker = new Worker(new URL('../utils/rollingAverageWorker.js', import.meta.url), { type: 'module' });
+    rollingAverageWorker.postMessage(data);
+
+    rollingAverageWorker.onmessage = (e) => {
+        console.log("Rolling average received: ");
+        setRollingAverage(e.data);
+        console.log(e.data);
+        setLoading(false);
+        rollingAverageWorker.terminate();
+    };
+    rollingAverageWorker.onerror = (error) => {
+        console.error("Rolling average worker error: ", error);
+        rollingAverageWorker.terminate();
+    };
+};
 
 
 export const SimulationProvider = ({ children }) => {
-    const [simulationData, setSimulationData] = useState([]);
+    const [rollingAverage, setRollingAverage] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [simulationData, setSimulationData] = useState([]);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [gensetCount, setGensetCount] = useState(0);
+    
 
     const safeSetCurrentIndex = (newIndex) => {
         if (newIndex >= 0 && newIndex < simulationData.length) {
@@ -48,7 +68,8 @@ export const SimulationProvider = ({ children }) => {
         
         worker.onmessage = (e) => {
             setSimulationData(e.data);
-            setLoading(false);
+            startRollingAverageWorker(e.data, setRollingAverage, setLoading);
+            
             worker.terminate();
         };
 
@@ -60,7 +81,7 @@ export const SimulationProvider = ({ children }) => {
     };
 
     return(
-        <SimulationStateContext.Provider value={{ simulationData, loading, currentIndex, gensetCount}}>
+        <SimulationStateContext.Provider value={{ simulationData, rollingAverage, loading, currentIndex, gensetCount}}>
             <SimulationDispatchContext.Provider value={{ startSimulation, setCurrentIndex: safeSetCurrentIndex }}>
                 {children}
             </SimulationDispatchContext.Provider>

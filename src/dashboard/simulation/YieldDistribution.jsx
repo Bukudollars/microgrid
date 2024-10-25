@@ -10,12 +10,14 @@ import { useSimulationState } from '../../contexts/SimulationContext';
 function YieldDistribution() {
     const genYield = 412;
     const pvYield = 126;
-    const { simulationData, loading, currentIndex } = useSimulationState();
+    const { simulationData, rollingAverage, loading, currentIndex } = useSimulationState();
     const validData = simulationData.length > 0 && currentIndex < simulationData.length && !loading;
     const instantYieldDistribution = validData && simulationData[currentIndex].gensetRealPowerContribution + simulationData[currentIndex].providedPVPower > 0 
     ? simulationData[currentIndex].gensetRealPowerContribution 
         / (simulationData[currentIndex].gensetRealPowerContribution + simulationData[currentIndex].providedPVPower) 
     : .5;
+    const genDailyrollingAverage = validData ? rollingAverage[currentIndex] : 0;
+    //console.log("genDailyrollingAverage", rollingAverage[0]);
 
     return (
         <Paper elevation={4} sx={{padding: 2}}>
@@ -25,7 +27,7 @@ function YieldDistribution() {
                 <Stack direction="row" sx={{justifyContent: "center", alignItems: "end"}} spacing={3}>
                     <Tooltip title="Generator Yield" arrow>
                         <Box>
-                            <Typography variant="body1">0 MWh</Typography>
+                            <Typography variant="body1">{genDailyrollingAverage.toFixed(0)} MWh</Typography>
                             <GasMeterIcon fontSize='large' sx={{color: 'blue'}} />
                         </Box>
                     </Tooltip>
