@@ -1,1 +1,1 @@
-export const SITE_FREQUENCY_OPTIONS = [50, 60];
+export const SITE_FREQUENCY_OPTIONS = Object.freeze([50, 60]);
