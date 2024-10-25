@@ -2,7 +2,8 @@ import React, {createContext, useReducer, useContext} from 'react';
 import PropTypes from 'prop-types';
 import { GENERATOR_SIZES, MODULE_TYPES, LOAD_PROFILE_OPTIONS, SITE_FREQUENCY_OPTIONS,
     MINUTES_PER_HOUR, HOURS_PER_DAY,
-    MAX_SIMULATION_TIME
+    MAX_SIMULATION_TIME,
+    MIN_SIMULATION_TIME
 } from '../constants';
 
 const SettingsContext = createContext();
@@ -84,7 +85,7 @@ function settingsReducer(state, action) {
         case 'SET_IS_PRESENT':
             return { ...state, isPresent: action.payload };
         case 'SET_SIMULATION_TIME':
-            if (Number.isInteger(action.payload) && action.payload > 0 && action.payload <= MAX_SIMULATION_TIME) {
+            if (Number.isInteger(action.payload) && action.payload >= MIN_SIMULATION_TIME && action.payload <= MAX_SIMULATION_TIME) {
                 return { ...state, simulationTime: action.payload };
             } else {
                 console.error("Invalid simulation time: ", action.payload);

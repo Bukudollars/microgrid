@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Box, Typography } from '@mui/material';
 import NumberInput from '../components/NumberInput';
-import { MAX_SIMULATION_TIME } from '../../constants/simulationConstants';
+import { MIN_SIMULATION_TIME, MAX_SIMULATION_TIME } from '../../constants/simulationConstants';
 import { useSettings, useSettingsDispatch } from '../../contexts/SettingsContext';
 
 export default function SimulationSettings() {
@@ -16,7 +16,7 @@ export default function SimulationSettings() {
             <Typography variant='h5'>Simulation Settings</Typography>
             <Typography variant='body1'>Simulation Days:</Typography>
             <NumberInput
-                min={0}
+                min={MIN_SIMULATION_TIME}
                 max={MAX_SIMULATION_TIME}
                 aria-label='Simulation Time'
                 placeholder='Simulation Time'

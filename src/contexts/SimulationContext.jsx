@@ -35,7 +35,7 @@ export const SimulationProvider = ({ children }) => {
     const safeSetCurrentIndex = (newIndex) => {
         if (newIndex >= 0 && newIndex < simulationData.length) {
             setCurrentIndex(newIndex);
-        } else {
+        } else if (simulationData.length > 0 && newIndex >= simulationData.length) {
             console.warn("Index out of bounds: ${newIndex}");
         }
     };
