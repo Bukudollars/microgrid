@@ -48,6 +48,7 @@ function Simulation() {
         gensetCount: generatorCount,
         granularity: MINUTES_PER_HOUR,
         simulationTime: 60 * 24 * 10,
+        loadProfile: loadProfile,
     });
 
     const handleStart = () => {

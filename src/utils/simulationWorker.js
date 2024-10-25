@@ -6,6 +6,7 @@ import {
     CHARGE_STATE_MIN, CHARGE_STATE_MAX,
     MINUTES_PER_HOUR, HOURS_PER_HOUR, HOURS_PER_DAY,
     POWER_FACTOR_VARIATION_PER_MINUTE,
+    LOAD_PROFILE_OPTIONS
 } from "../constants";
 import Logger from "./logger";
 self.onmessage = function (e) {
@@ -89,9 +90,35 @@ function computeValue({
     Logger.log("Peak Load: ", variables.peakLoad); 
     Logger.log("Active Feeder Breakers: ", activeFeederBreakers);
     Logger.log("Total Feeder Breakers: ", variables.totalFeederBreakers);
+    
+    let powerFactorVariation = 0;
+    
+    const loadProfile = variables.loadProfile;
+    switch (loadProfile) {
+        case LOAD_PROFILE_OPTIONS[0]:
+            Logger.log("Commercial Load Profile");
+            powerFactorVariation = POWER_FACTOR_VARIATION_PER_MINUTE.commercial;
+            break;
+        case LOAD_PROFILE_OPTIONS[1]:
+            Logger.log("Residential Load Profile");
+            powerFactorVariation = POWER_FACTOR_VARIATION_PER_MINUTE.residential;
+            break;
+        case LOAD_PROFILE_OPTIONS[2]:
+            Logger.log("Industrial Load Profile");
+            powerFactorVariation = POWER_FACTOR_VARIATION_PER_MINUTE.industrial;
+            break;
+        case LOAD_PROFILE_OPTIONS[3]:
+            Logger.log("Community Load Profile");
+            powerFactorVariation = POWER_FACTOR_VARIATION_PER_MINUTE.community;
+            break;
+        default:
+            Logger.error("Invalid load profile: ", loadProfile);
+            throw new Error("Invalid load profile: ", loadProfile);
+    }
+
     const newLoadPowerFactor = Math.max(
         POWER_FACTOR_MIN.commercial, 
-        Math.min((1 - Math.random() * 2) * POWER_FACTOR_VARIATION_PER_MINUTE.commercial + loadPowerFactor, POWER_FACTOR_MAX.commercial)
+        Math.min((1 - Math.random() * 2) * powerFactorVariation + loadPowerFactor, POWER_FACTOR_MAX.commercial)
     );
     const newLoadVariation = Math.max(
         LOAD_VARIATION_MIN, 

@@ -1,4 +1,4 @@
-export const LOAD_PROFILE = [
+export const LOAD_PROFILE = Object.freeze([
     {hour: 0, residential: 0.12, commercial: 0.15, Industrial: 1.0, Community: 0.43},
     {hour: 1, residential: 0.08, commercial: 0.15, Industrial: 1.0, Community: 0.15},
     {hour: 2, residential: 0.08, commercial: 0.15, Industrial: 1.0, Community: 0.15},
@@ -24,13 +24,13 @@ export const LOAD_PROFILE = [
     {hour: 22, residential: 0.48, commercial: 0.15, Industrial: 1.0, Community: 1.0},
     {hour: 23, residential: 0.22, commercial: 0.15, Industrial: 1.0, Community: 0.75},
     
-];
+]);
 
-export const LOAD_PROFILE_OPTIONS = ["Commercial", 'Residential', 'Industrial', 'Community']
+export const LOAD_PROFILE_OPTIONS = Object.freeze(["Commercial", 'Residential', 'Industrial', 'Community']);
 
-export const POWER_FACTOR_MIN = {residential: 0.9, commercial: 0.8, industrial: 0.75, community: 0.85};
-export const POWER_FACTOR_MAX = {residential: 1.0, commercial: 0.95, industrial: 0.9, community: 0.95};
-export const POWER_FACTOR_VARIATION_PER_MINUTE = {residential: 0.01, commercial: 0.02, industrial: 0.02, community: 0.01};
+export const POWER_FACTOR_MIN = Object.freeze({residential: 0.9, commercial: 0.8, industrial: 0.75, community: 0.85});
+export const POWER_FACTOR_MAX = Object.freeze({residential: 1.0, commercial: 0.95, industrial: 0.9, community: 0.95});
+export const POWER_FACTOR_VARIATION_PER_MINUTE = Object.freeze({residential: 0.01, commercial: 0.02, industrial: 0.02, community: 0.01});
 export const LOAD_VARIATION_MIN = 0.85;
 export const LOAD_VARIATION_MAX = 1;
 export const LOAD_VARIATION_PER_MINUTE = 0.05;
