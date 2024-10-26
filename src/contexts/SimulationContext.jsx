@@ -52,6 +52,8 @@ export const SimulationProvider = ({ children }) => {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [gensetCount, setGensetCount] = useState(0);
     const [peakLoad, setPeakLoad] = useState(0);
+    const [peakPVPower, setPeakPVPower] = useState(0);
+    const [utilityExportLimit, setUtilityExportLimit] = useState(0);
     
 
     const safeSetCurrentIndex = React.useCallback((newIndex) => {
@@ -66,6 +68,8 @@ export const SimulationProvider = ({ children }) => {
         setLoading(true);
         setGensetCount(variables.gensetCount);
         setPeakLoad(variables.peakLoad);
+        setPeakPVPower(variables.peakPVPower);
+        setUtilityExportLimit(variables.utilityExportLimit);
         const worker = new Worker(new URL('../utils/simulationWorker.js', import.meta.url), { type: 'module' });
         worker.postMessage(variables);
         
@@ -84,7 +88,7 @@ export const SimulationProvider = ({ children }) => {
     };
 
     return(
-        <SimulationStateContext.Provider value={{ simulationData, rollingAverage, loading, currentIndex, gensetCount, peakLoad}}>
+        <SimulationStateContext.Provider value={{ simulationData, rollingAverage, loading, currentIndex, gensetCount, peakLoad, peakPVPower, utilityExportLimit}}>
             <SimulationDispatchContext.Provider value={{ startSimulation, setCurrentIndex: safeSetCurrentIndex }}>
                 {children}
             </SimulationDispatchContext.Provider>
