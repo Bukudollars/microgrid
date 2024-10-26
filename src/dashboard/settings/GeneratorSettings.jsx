@@ -2,8 +2,6 @@ import * as React from 'react';
 import { Box, Typography, Select, InputLabel, FormControl, MenuItem } from '@mui/material';
 //import Paper from '@mui/material/Paper';
 import NumberInput from '../components/NumberInput';
-//import {Unstable_NumberInput as NumberInput} from '@mui/base/Unstable_NumberInput' 
-//import PropTypes from 'prop-types';
 import { useSettings, useSettingsDispatch } from '../../contexts/SettingsContext';
 import { GENERATOR_SIZES } from '../../constants';
 
@@ -55,7 +53,7 @@ function GeneratorSettings() {
           </Select>
         </FormControl>
         <Typography variant="body1">Minimum Generator Set Load: {generatorSize * 0.3} kW</Typography>
-        <Typography variant="body1">Spinning Reserve Target: 280 kW</Typography>
+        <Typography variant="body1">Spinning Reserve Target: {generatorSize * 0.7} kW</Typography>
         {/* 70-% of generator size */}
       </Box>
     //</Paper>

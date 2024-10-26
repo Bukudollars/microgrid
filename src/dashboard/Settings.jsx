@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Box } from '@mui/material';
+import { Box, Modal, Button } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import GeneratorSettings from './settings/GeneratorSettings';
 import PVSettings from './settings/PVSettings';
@@ -10,10 +10,12 @@ import UtilitySettings from './settings/UtilitySettings';
 import EnvironmentSettings from './settings/EnvironmentSettings';
 import SimulationSettings from './settings/SimulationSettings';
 import Grid from '@mui/material/Grid2';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 function Settings() {
+
     return (
-        <Box sx={{margin: 2, padding: 2}}>
+        <Box sx={{margin: 2, padding: 2, userSelect: 'none'}}>
             <Typography variant="h4">Settings</Typography>
             <Grid container spacing={2} justifyContent={'left'}>
                 <Grid size="auto" display="flex" justifyContent="left" alignItems="flex-start">

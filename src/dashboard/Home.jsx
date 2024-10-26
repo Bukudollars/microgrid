@@ -1,9 +1,10 @@
 import * as React from 'react';
-import { Box, Typography, Paper } from '@mui/material';
+import { Box, Typography, Paper, Button } from '@mui/material';
 import Grid from '@mui/material/Grid2';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 export default function Home() {
+    const navigate = useNavigate();
     return (
         <Box
             sx={{
@@ -13,7 +14,7 @@ export default function Home() {
                 padding: 4,
             }}
         >
-            <Typography variant='h3' marginBottom={2}>Microgrid Simulator</Typography>
+            <Typography variant='h3' marginBottom={2} align='center'>Microgrid Simulator</Typography>
             <Typography variant='h5' align='center'>Welcome to the Microgrid Simulator!</Typography>
             <Typography variant='body1' align='center' paddingX={6}>
                 This application is a simulation tool for microgrid systems. 
@@ -21,10 +22,15 @@ export default function Home() {
                 including generators, photovoltaic systems, energy storage systems, loads, and the utility grid. 
                 The simulation results can be viewed in real-time on the simulation page.
             </Typography>
-            <Box paddingTop={2} sx={{userSelect: 'none'}}>
+            <Box paddingTop={2} 
+                sx={{userSelect: 'none'}}
+            >
                 <Grid container spacing={{xs: 2, md: 3}} columns={{ xs: 4, sm: 8, md: 12}}justifyContent={'center'}>
                     <Grid size={{ xs: 2, sm: 4, md: 4}}>
-                        {/* <Link to="/simulation"> */}
+                        <Button
+                            onClick={() => navigate('/simulation')}
+                            sx={{width: '100%'}}
+                        >
                             <Box>
                                 <Paper>
                                     <Typography variant='h6'>Simulation</Typography>
@@ -32,7 +38,23 @@ export default function Home() {
                                     <img src="./simulation.png" alt="Simulation Thumnail" width={'100%'}/>
                                 </Paper>
                             </Box>
-                        {/* </Link> */}
+                        </Button>
+                            
+                    </Grid>
+                    <Grid size={{ xs: 2, sm: 4, md: 4}}>
+                        <Button
+                            onClick={() => navigate('/settings')}
+                            sx={{width: '100%'}}
+                        >
+                            <Box>
+                                <Paper>
+                                    <Typography variant='h6'>Settings</Typography>
+                                    <Typography variant='body2'>Modify Simulation Settings</Typography>
+                                    <img src="./settings.png" alt="Settings Thumnail" width={'100%'}/>
+                                </Paper>
+                            </Box>
+                        </Button>
+                            
                     </Grid>
                 </Grid>
 

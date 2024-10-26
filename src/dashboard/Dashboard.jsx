@@ -1,151 +1,124 @@
-import React, { Component, useState } from 'react';
-import PropTypes from 'prop-types';
-import Box from '@mui/material/Box';
-import { createTheme } from '@mui/material/styles';
-import SettingsIcon from '@mui/icons-material/Settings';
-import SpeedIcon from '@mui/icons-material/Speed';
-import TableChartIcon from '@mui/icons-material/TableChart';
-import { AppProvider } from '@toolpad/core/AppProvider';
-import { DashboardLayout } from '@toolpad/core/DashboardLayout';
-import Simulation from './Simulation';
-import Config from './Settings';
-import TableView from './TableView';
-import Home from './Home';
-import HomeIcon from '@mui/icons-material/Home';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import * as React from 'react';
+import { Box, AppBar, Typography, Divider,
+    List, ListItem, ListItemButton, ListItemText,
+    Toolbar,
+    IconButton,
+    Button,
+    Drawer
+ } from '@mui/material';
+ import MenuIcon from '@mui/icons-material/Menu';
+ import HomeIcon from '@mui/icons-material/Home';
+ import SpeedIcon from '@mui/icons-material/Speed';
+ import SettingsIcon from '@mui/icons-material/Settings';
+ import Home from './Home';
+ import { Routes, Route, useNavigate } from 'react-router-dom';
+ import Simulation from './Simulation';
+ import Settings from './Settings';
 
-const NAVIGATION = [
-  // {
-  //   segment: 'table',
-  //   title: 'Table',
-  //   icon: <TableChartIcon />,
-  // },
-  {
-    segment: '/',
-    title: 'Home',
-    icon: <HomeIcon />,
-  },
-  {
-    segment: 'simulation',
-    title: 'Simulation',
-    icon: <SpeedIcon />,
-    to: '/simulation'
-  },
-  {
-    kind: 'divider',
-  },
-  {
-    segment: 'settings',
-    title: 'Settings',
-    icon: <SettingsIcon />,
-    to: '/settings'
-  },
-];
+const drawerWidth = 240;
 
-const demoTheme = createTheme({
-    cssVariables: {
-      colorSchemeSelector: 'data-toolpad-color-scheme',
-    },
-    colorSchemes: { light: true, dark: true },
-    breakpoints: {
-      values: {
-        xs: 0,
-        sm: 600,
-        md: 600,
-        lg: 1200,
-        xl: 1536,
-      },
-    },
-  });
-
-function DemoPageContent({ pathname }) {
-
-  return (
-    <Box
-      sx={{
-        py: 2,
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        textAlign: 'center',
-      }}
-    >
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/simulation" element={<Simulation />} />
-        <Route path="/settings" element={<Config />} />
-      </Routes>
-      {/* <Typography>Dashboard content for {pathname}</Typography> */}
-      {/* {pathname === '/' && <Home />}
-      {pathname === '/home' && <Home />}
-      {pathname === '/simulation' && <Simulation />}
-      {pathname === '/settings' && <Config />} */}
-      {/* {pathname === '/table' && <TableView />} */}
-    </Box>
-  );
-}
-
-DemoPageContent.propTypes = {
-  pathname: PropTypes.string.isRequired,
-};
-
-function DashboardLayoutBasic(props) {
-
-  const [pathname, setPathname] = React.useState('/');
-
-  const router = React.useMemo(() => {
-    return {
-      pathname,
-      searchParams: new URLSearchParams(),
-      navigate: (path) => setPathname(String(path)),
+export default function Dashboard() {
+    const [mobileOpen, setMobileOpen] = React.useState(false);
+    const handleDrawerToggle = () => {
+        setMobileOpen(!mobileOpen);
     };
-  }, [pathname]);
+    const navigate = useNavigate();
 
-  // Remove this const when copying and pasting into your project.
-  // const demoWindow = window !== undefined ? window() : undefined;
+    const drawer = (
+        <Box onClick={handleDrawerToggle} sx={{ textAlign: 'center', userSelect: 'none'}} width={drawerWidth}>
+            <Typography variant="h6" sx={{my: 2 }}>Menu</Typography>
+            <Divider />
+            <List>
+                <ListItem disablePadding>
+                        <ListItemButton 
+                            onClick={() => navigate('./')}
+                            sx={{ textAlign: 'center'}}
+                        >
+                            <HomeIcon />    
+                            <ListItemText primary="Home" sx={{px: 2}}/>
+                        </ListItemButton>
+                </ListItem>
+                <ListItem disablePadding>
+                        <ListItemButton 
+                            onClick={() => navigate('./simulation')}
+                            sx={{ textAlign: 'center'}}
+                        >
+                            <SpeedIcon />
+                            <ListItemText primary="Simulation" sx={{px: 2}}/>
+                        </ListItemButton>
+                </ListItem>
+                <ListItem disablePadding>
+                        <ListItemButton 
+                            onClick={() => navigate('./settings')}
+                            sx={{ textAlign: 'center'}}
+                        >
+                            <SettingsIcon />
+                            <ListItemText primary="Settings" sx={{px: 2}}/>
+                        </ListItemButton>
+                </ListItem>
+            </List>
+        </Box>
+    );
 
-  return (
-    // preview-start
-    <Router basename='/microgrid'>
-      <AppProvider
-        navigation={NAVIGATION}
-        branding={{
-          logo: <img src="./catlogo.png" alt="Caterpillar logo" />,
-          title: 'CATERPILLAR',
-        }}
-        router={router}
-        theme={demoTheme}
-        // window={demoWindow}
-      >
-        <DashboardLayout 
-          defaultSidebarCollapsed={true}
-          sx={{
-            height: '100%',
-            overflow: 'hidden',
-            width: '100%',
-          }}
-        >
-          <Box
-            sx={{width: '100%'}}
-          >
-            <DemoPageContent 
-              pathname={pathname}
-            />
-          </Box>
-          
-        </DashboardLayout>
-      </AppProvider>
-    </Router>
-    // preview-end
-  );
-}
+    return (
 
-// DashboardLayoutBasic.propTypes = {
-//   /**
-//    * Injected by the documentation to work in an iframe.
-//    * Remove this when copying and pasting into your project.
-//    */
-//   // window: PropTypes.func,
-// };
+            <Box sx={{ display: 'flex'}}>
+                <AppBar component="nav" sx={{userSelect: 'none'}}>
+                    <Toolbar>
+                        <IconButton
+                            color='inherit'
+                            aria-label='open drawer'
+                            edge='start'
+                            onClick={handleDrawerToggle}
+                            sx={{ 
+                                mr: 2, 
+                                // display: { sm: 'none' } 
+                            }}
+                        >
+                            <MenuIcon />
+                        </IconButton>
+                        <img src="./cat-logo.svg" alt="logo" width="50" height="50" />
+                        <Typography 
+                        variant='h6' 
+                        component="div"
+                        sx={{flexGrow: 1, 
+                            pl: 2,
+                            display: { 
+                            // xs: 'none', 
+                            // sm: 'block'
+                            }}}>
+                            MICROGRID
+                        </Typography>
+                        <Box>
+                            <Button>Home</Button>
+                        </Box>
+                    </Toolbar>
+                </AppBar>
+                <nav>
+                    <Drawer
+                        variant="temporary"
+                        open={mobileOpen}
+                        onClose={handleDrawerToggle}
+                        ModalProps={{
+                            keepMounted: true,
+                        }}
+                        sx={{
+                            '&.MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
+                        }}
+                    >
+                        {drawer}
+                    </Drawer>
+                </nav>
+                <Box component="main" sx={{p: 3}}>
+                    <Toolbar />
+                    <Routes>
+                        <Route path="/" element={<Home />} />
+                        <Route path="/simulation" element={<Simulation />} />
+                        <Route path="/settings" element={<Settings />} />
+                    </Routes>
 
-export default DashboardLayoutBasic;
+                </Box>
+            </Box>
+
+    );
+};

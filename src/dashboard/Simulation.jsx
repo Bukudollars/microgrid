@@ -188,7 +188,11 @@ function Simulation() {
                     }}
                 >
                     <Slider 
-                        value={typeof localIndex === 'number' ? localIndex : 0}
+                        value={
+                            typeof localIndex === 'number' ? 
+                            localIndex 
+                            : 0
+                        }
                         aria-labelledby='time-slider'
                         valueLabelDisplay='auto'
                         min={0}
@@ -196,10 +200,10 @@ function Simulation() {
                         onChange={handleSliderChange}
                         disabled={loading || simulationData.length === 0}
                         width={300}
-                        valueLabelFormat={(localIndex) => {
-                            const time = minutesToTime(localIndex);
-                            return `${time.days}d ${String(time.hours).padStart(2, '0')}:${String(time.minutes).padStart(2, '0')}`;
-                        }}
+                        // valueLabelFormat={(localIndex) => {
+                        //     const time = minutesToTime(localIndex);
+                        //     return `${time.days}d ${String(time.hours).padStart(2, '0')}:${String(time.minutes).padStart(2, '0')}`;
+                        // }}
                         marks={playBackMarks}
                     />
                     
