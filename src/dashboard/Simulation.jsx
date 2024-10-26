@@ -264,17 +264,23 @@ function Simulation() {
                 </Tooltip>
                 
             </Stack>
-            <Box
-                sx={{opacity: loading || simulationData.length === 0 ? 0.25 : 1}}
+            <Stack
+                direction={{ xs: 'column', sm: 'column', md: 'column', lg: 'row' }}
+                spacing={2}
+                sx={{opacity: loading || simulationData.length === 0 ? 0.25 : 1,
+                    padding: 2,
+                }}
             >
-                <Grid container spacing={1}
-                    justifyContent={'center'}
-                >
-                    <Grid size='auto'>
+
+                    <Box
+                        padding={1}
+                    >
                         <YieldDistribution />
-                    </Grid>
-                    <Grid container spacing={1}
-                        justifyContent={'center'}
+                    </Box>
+                    <Grid container spacing={3}
+                        justifyContent={{xs: 'center', sm: 'center', md: 'center', lg: 'left'}}
+                        padding={1}
+                        
                     >
                         <Grid size='auto'>
                             <Load />
@@ -292,8 +298,8 @@ function Simulation() {
                             <ESS />
                         </Grid>
                     </Grid>
-                </Grid>
-            </Box>
+
+            </Stack>
             
         </Box>
     );
