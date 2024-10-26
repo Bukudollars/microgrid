@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Box, ButtonGroup, Button, Typography, Slider, Tooltip } from '@mui/material';
+import { Box, ButtonGroup, Button, Typography, Slider, Tooltip, CircularProgress } from '@mui/material';
 import { PlayArrow, Pause, Replay } from '@mui/icons-material';
 import YieldDistribution from './simulation/YieldDistribution';
 import Load from './simulation/Load';
@@ -19,6 +19,7 @@ function Simulation() {
     const [isPlaying, setIsPlaying] = React.useState(false);
     const [localIndex, setLocalIndex] = React.useState(currentIndex);
     const [playbackSpeed, setPlaybackSpeed] = React.useState(0);
+    const [showSpinner, setShowSpinner] = React.useState(false);
     const { 
         generatorCount,
         generatorSize,
@@ -51,6 +52,19 @@ function Simulation() {
         simulationTime: MINUTES_PER_HOUR * HOURS_PER_DAY * simulationTime,
         loadProfile: loadProfile,
     });
+
+    React.useEffect(() => {
+        let timer;
+        if (loading) {
+            timer = setTimeout(() => {
+                setShowSpinner(true);
+            }, 200);
+        } else {
+            clearTimeout(timer);
+            setShowSpinner(false);
+        }
+        return () => clearTimeout(timer);
+    }, [loading]);
 
     const handleStart = () => {
         startSimulation(variables);
@@ -103,7 +117,22 @@ function Simulation() {
         }
     }
 
+    if (showSpinner) {
+        return (
+            <Box
+                sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    height: '100vh'
+                }}
+            >
+                <CircularProgress />
+            </Box>
+        );
+    }
     return (
+        
         <Box sx={{margin: 2}}>
             <Box>
                 <Slider 
