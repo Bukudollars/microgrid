@@ -15,29 +15,29 @@ function Settings() {
     return (
         <Box sx={{margin: 2, padding: 2}}>
             <Typography variant="h4">Settings</Typography>
-            <Grid container spacing={2}>
-                <Grid size="auto" display="flex" justifyContent="center" alignItems="center">
+            <Grid container spacing={2} justifyContent={'left'}>
+                <Grid size="auto" display="flex" justifyContent="left" alignItems="flex-start">
                     <GeneratorSettings />
                 </Grid>
-                <Grid size="auto" display="flex" justifyContent="center" alignItems="center">
+                <Grid size="auto" display="flex" justifyContent="left" alignItems="flex-start">
                     <PVSettings />
                 </Grid>
-                <Grid size="auto" display="flex" justifyContent="center" alignItems="center">
+                <Grid size="auto" display="flex" justifyContent="left" alignItems="flex-start">
                     <ESSSettings />
                 </Grid>
-                <Grid size="auto" display="flex" justifyContent="center" alignItems="center">
+                <Grid size="auto" display="flex" justifyContent="left" alignItems="flex-start">
                     <LoadSettings />
                 </Grid>
-                <Grid size="auto" display="flex" justifyContent="center" alignItems="center">
+                <Grid size="auto" display="flex" justifyContent="left" alignItems="flex-start">
                     <SiteSettings />
                 </Grid>
-                <Grid size="auto" display="flex" justifyContent="center" alignItems="center">
+                <Grid size="auto" display="flex" justifyContent="left" alignItems="flex-start">
                     <UtilitySettings />
                 </Grid>
-                <Grid size="auto" display="flex" justifyContent="center" alignItems="center">
+                <Grid size="auto" display="flex" justifyContent="left" alignItems="flex-start">
                     <EnvironmentSettings />
                 </Grid>
-                <Grid size="auto" display="flex" justifyContent="center" alignItems="center">
+                <Grid size="auto" display="flex" justifyContent="left" alignItems="flex-start">
                     <SimulationSettings />
                 </Grid>
             </Grid>

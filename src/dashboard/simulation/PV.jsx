@@ -16,7 +16,7 @@ function PV() {
             <Stack
                 direction="row"
                 justifyContent="center"
-                alignItems="center"
+                alignItems="flex-start"
             >
                 <Box sx={{margin: 2, padding: 2, textAlign: 'left'}}>
                     <Typography variant="h5">PV</Typography>

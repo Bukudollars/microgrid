@@ -17,11 +17,11 @@ function ESS() {
             <Stack
                 direction="row"
                 justifyContent="center"
-                alignItems="center"
+                alignItems="flex-start"
             >
                 <Box sx={{textAlign: 'left', padding: 2, margin: 2}}>
-                <Typography variant="h5">ESS</Typography>
-                <Tooltip title="Real Load" arrow>
+                    <Typography variant="h5">ESS</Typography>
+                    <Tooltip title="Real Load" arrow>
                         <Typography variant="body1">(P) {realLoad.toFixed(0)} kW</Typography>
                     </Tooltip>
                     <Tooltip title="Reactive Load" arrow>

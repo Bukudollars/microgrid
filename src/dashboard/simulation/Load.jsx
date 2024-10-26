@@ -19,7 +19,7 @@ function Load() {
             <Stack
                 direction="row"
                 justifyContent="center"
-                alignItems="center"
+                alignItems="flex-start"
             >
                 <Box sx={{textAlign: 'left', margin: 2, padding: 2}}>
                     <Typography variant="h5">Load</Typography>

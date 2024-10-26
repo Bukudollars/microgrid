@@ -133,8 +133,19 @@ function Simulation() {
     }
     return (
         
-        <Box sx={{margin: 2}}>
-            <Box>
+        <Box sx={{
+            justifyContent: 'center',
+            width: '100%',
+        }}>
+            <Box
+                sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    margin: 'auto',
+                    width: '95%'
+                }}
+            >
                 <Slider 
                     value={typeof localIndex === 'number' ? localIndex : 0}
                     aria-labelledby='time-slider'
@@ -143,6 +154,7 @@ function Simulation() {
                     max={simulationData.length - 1}
                     onChange={handleSliderChange}
                     disabled={loading || simulationData.length === 0}
+                    width={300}
                 />
             </Box>
             <Box>
@@ -183,25 +195,32 @@ function Simulation() {
                 
             </Box>
             <Typography variant="body">Day: {Math.floor(localIndex / (60 * 24))} Time: {String(Math.floor(localIndex / 60) % 24).padStart(2, '0')}:{String(localIndex % 60).padStart(2, '0')}</Typography>
-            <Grid container spacing={2}>
-                <Grid size={12}>
+            <Grid container spacing={1}
+                justifyContent={'center'}
+            >
+                <Grid size='auto'>
                     <YieldDistribution />
                 </Grid>
-                <Grid size='auto'>
-                    <Load />
+                <Grid container spacing={1}
+                    justifyContent={'center'}
+                >
+                    <Grid size='auto'>
+                        <Load />
+                    </Grid>
+                    <Grid size='auto'>
+                        <Utility />
+                    </Grid>
+                    <Grid size='auto'>
+                        <Gen />
+                    </Grid>
+                    <Grid size='auto'>
+                        <PV />
+                    </Grid>
+                    <Grid size='auto'>
+                        <ESS />
+                    </Grid>
                 </Grid>
-                <Grid size='auto'>
-                    <Utility />
-                </Grid>
-                <Grid size='auto'>
-                    <Gen />
-                </Grid>
-                <Grid size='auto'>
-                    <PV />
-                </Grid>
-                <Grid size='auto'>
-                    <ESS />
-                </Grid>
+                
             </Grid>
         </Box>
     );

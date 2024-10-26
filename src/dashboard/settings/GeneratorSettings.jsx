@@ -25,7 +25,10 @@ function GeneratorSettings() {
   }
   return (
     //<Paper elevation={4}>
-      <Box sx={{textAlign: 'left', padding : 2}}>
+      <Box sx={{
+        textAlign: 'left', 
+        padding : 2
+        }}>
         <Typography variant="h5">Generator Settings</Typography>
         <Typography variant="body1">Number of Generators: </Typography>
         <NumberInput min={0}

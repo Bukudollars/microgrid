@@ -17,7 +17,7 @@ function Gen() {
             <Stack
                 direction="row"
                 justifyContent="center"
-                alignItems="center"
+                alignItems="flex-start"
             >
                 <Box sx={{textAlign: 'left', padding: 2, margin: 2}}>
                     <Typography variant="h5">Gen</Typography>

@@ -14,7 +14,13 @@ function PVSettings() {
     }
     return (
         //<Paper elevation={4}>
-            <Box sx={{textAlign: 'left', padding : 2}}>
+            <Box sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'flex-start',
+                textAlign: 'left', 
+                padding : 2
+            }}>
                 <Typography variant="h5">PV Settings</Typography>
                 <Typography variant="body1">PV Peak Size: </Typography>
                 <NumberInput 

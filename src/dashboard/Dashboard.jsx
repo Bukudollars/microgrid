@@ -48,7 +48,7 @@ function DemoPageContent({ pathname }) {
   return (
     <Box
       sx={{
-        py: 4,
+        py: 2,
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
@@ -94,8 +94,22 @@ function DashboardLayoutBasic(props) {
       theme={demoTheme}
       // window={demoWindow}
     >
-      <DashboardLayout defaultSidebarCollapsed>
-        <DemoPageContent pathname={pathname} />
+      <DashboardLayout 
+        defaultSidebarCollapsed={true}
+        sx={{
+          height: '100%',
+          overflow: 'hidden',
+          width: '100%',
+        }}
+      >
+        <Box
+          sx={{width: '100%'}}
+        >
+          <DemoPageContent 
+            pathname={pathname}
+          />
+        </Box>
+        
       </DashboardLayout>
     </AppProvider>
     // preview-end
