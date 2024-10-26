@@ -3,6 +3,7 @@ import { Box, Tooltip } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import { useSimulationState } from '../../contexts/SimulationContext';
+import { BarChart } from '@mui/x-charts/BarChart';
 
 function Utility() {
     const { simulationData, loading, currentIndex } = useSimulationState();

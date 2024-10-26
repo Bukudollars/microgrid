@@ -51,6 +51,7 @@ export const SimulationProvider = ({ children }) => {
     const [simulationData, setSimulationData] = useState([]);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [gensetCount, setGensetCount] = useState(0);
+    const [peakLoad, setPeakLoad] = useState(0);
     
 
     const safeSetCurrentIndex = React.useCallback((newIndex) => {
@@ -64,6 +65,7 @@ export const SimulationProvider = ({ children }) => {
     const startSimulation = (variables) => {
         setLoading(true);
         setGensetCount(variables.gensetCount);
+        setPeakLoad(variables.peakLoad);
         const worker = new Worker(new URL('../utils/simulationWorker.js', import.meta.url), { type: 'module' });
         worker.postMessage(variables);
         
@@ -82,7 +84,7 @@ export const SimulationProvider = ({ children }) => {
     };
 
     return(
-        <SimulationStateContext.Provider value={{ simulationData, rollingAverage, loading, currentIndex, gensetCount}}>
+        <SimulationStateContext.Provider value={{ simulationData, rollingAverage, loading, currentIndex, gensetCount, peakLoad}}>
             <SimulationDispatchContext.Provider value={{ startSimulation, setCurrentIndex: safeSetCurrentIndex }}>
                 {children}
             </SimulationDispatchContext.Provider>
