@@ -68,7 +68,6 @@ DemoPageContent.propTypes = {
 };
 
 function DashboardLayoutBasic(props) {
-  const { window } = props;
 
   const [pathname, setPathname] = React.useState('/');
 
@@ -95,7 +94,7 @@ function DashboardLayoutBasic(props) {
       theme={demoTheme}
       // window={demoWindow}
     >
-      <DashboardLayout>
+      <DashboardLayout defaultSidebarCollapsed>
         <DemoPageContent pathname={pathname} />
       </DashboardLayout>
     </AppProvider>
@@ -103,12 +102,12 @@ function DashboardLayoutBasic(props) {
   );
 }
 
-DashboardLayoutBasic.propTypes = {
-  /**
-   * Injected by the documentation to work in an iframe.
-   * Remove this when copying and pasting into your project.
-   */
-  // window: PropTypes.func,
-};
+// DashboardLayoutBasic.propTypes = {
+//   /**
+//    * Injected by the documentation to work in an iframe.
+//    * Remove this when copying and pasting into your project.
+//    */
+//   // window: PropTypes.func,
+// };
 
 export default DashboardLayoutBasic;
