@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Box, Modal, Button } from '@mui/material';
+import { Box } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import GeneratorSettings from './settings/GeneratorSettings';
 import PVSettings from './settings/PVSettings';
@@ -10,7 +10,6 @@ import UtilitySettings from './settings/UtilitySettings';
 import EnvironmentSettings from './settings/EnvironmentSettings';
 import SimulationSettings from './settings/SimulationSettings';
 import Grid from '@mui/material/Grid2';
-import { useLocation, useNavigate } from 'react-router-dom';
 
 function Settings() {
 
