@@ -73,7 +73,7 @@ export const SimulationProvider = ({ children }) => {
         setPeakPVPower(variables.peakPVPower);
         setUtilityExportLimit(variables.utilityExportLimit);
         setPeakGensetPower(variables.singleGensetPower * variables.gensetCount);
-        setPeakESSPower(variables.singleESSEnergy * variables.essModuleCount);
+        setPeakESSPower(variables.singleESSPeakPower * variables.essModuleCount);
         const worker = new Worker(new URL('../utils/simulationWorker.js', import.meta.url), { type: 'module' });
         worker.postMessage(variables);
         
