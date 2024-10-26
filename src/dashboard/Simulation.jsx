@@ -269,13 +269,15 @@ function Simulation() {
                 spacing={2}
                 sx={{opacity: loading || simulationData.length === 0 ? 0.25 : 1,
                     padding: 2,
+                    alignItems: 'center',
+                    // alignContent: 'center',
                 }}
             >
 
                     <Box
                         padding={1}
                     >
-                        <YieldDistribution />
+                        <YieldDistribution sx={{px: 2}}/>
                     </Box>
                     <Grid container spacing={3}
                         justifyContent={{xs: 'center', sm: 'center', md: 'center', lg: 'left'}}

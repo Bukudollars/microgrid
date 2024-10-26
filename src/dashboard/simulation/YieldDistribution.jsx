@@ -23,7 +23,7 @@ function YieldDistribution() {
 
     return (
         <Paper elevation={4} sx={{padding: 2}}>
-            <Stack sx={{justifyContent: "center", alignItems: "center"}}>
+            <Stack sx={{justifyContent: "center", alignItems: "center", mx: 3}}>
                 <Typography variant="h5">Yield Distribution</Typography>
                 {/* <img src="./yield-distribution.png" alt="Yield Distribution placeholder" /> */}
                 <Stack direction="row" sx={{justifyContent: "center", alignItems: "end"}} spacing={3}>
