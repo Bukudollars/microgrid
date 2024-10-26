@@ -108,19 +108,17 @@ function Simulation() {
     React.useEffect(() => {
         let intervalId;
         let refreshRate = 1;
-        if (playbackSpeed === 0) {
-            refreshRate = 1;
-        } else if (playbackSpeed <= 3) {
+        if (playbackSpeed <= 1) {
             refreshRate = 2 ** playbackSpeed;
         } else {
-            refreshRate = 2 ** 4;
+            refreshRate = 2 ** 2;
         }
         if (isPlaying && simulationData.length > 0) {
             intervalId = setInterval(() => {
                 setLocalIndex(prevIndex => {
                     if (prevIndex >= simulationData.length - 1) {
                         setIsPlaying(false);
-                        return prevIndex;
+                        return simulationData.length - 1;   
                     }
                     return prevIndex + (2 ** playbackSpeed) / refreshRate;
                 });
