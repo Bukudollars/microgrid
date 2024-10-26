@@ -24,7 +24,7 @@ export default function Home() {
             <Box paddingTop={2} sx={{userSelect: 'none'}}>
                 <Grid container spacing={{xs: 2, md: 3}} columns={{ xs: 4, sm: 8, md: 12}}justifyContent={'center'}>
                     <Grid size={{ xs: 2, sm: 4, md: 4}}>
-                        <Link to="/simulation">
+                        {/* <Link to="/simulation"> */}
                             <Box>
                                 <Paper>
                                     <Typography variant='h6'>Simulation</Typography>
@@ -32,7 +32,7 @@ export default function Home() {
                                     <img src="./simulation.png" alt="Simulation Thumnail" width={'100%'}/>
                                 </Paper>
                             </Box>
-                        </Link>
+                        {/* </Link> */}
                     </Grid>
                 </Grid>
 

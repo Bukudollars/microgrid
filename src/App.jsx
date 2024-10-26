@@ -1,13 +1,16 @@
 import * as React from 'react';
-import DashboardLayoutBasic from './dashboard/Dashboard';
 import { SimulationProvider } from './contexts/SimulationContext';  
+import { SettingsProvider } from './contexts/SettingsContext';
+import Dashboard from './dashboard/Dashboard2';
 
 
 export default function App() {
   return (
-    <SimulationProvider>
-      <DashboardLayoutBasic />
-    </SimulationProvider>
-      
+    <SettingsProvider>
+      <SimulationProvider>
+        <Dashboard />
+      </SimulationProvider>
+    </SettingsProvider>
+    
   );
 }
