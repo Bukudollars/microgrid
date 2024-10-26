@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
 import { createTheme } from '@mui/material/styles';
 import SettingsIcon from '@mui/icons-material/Settings';
+import SpeedIcon from '@mui/icons-material/Speed';
 import TableChartIcon from '@mui/icons-material/TableChart';
 import { AppProvider } from '@toolpad/core/AppProvider';
 import { DashboardLayout } from '@toolpad/core/DashboardLayout';
@@ -17,6 +18,11 @@ const NAVIGATION = [
   //   title: 'Table',
   //   icon: <TableChartIcon />,
   // },
+  {
+    segment: 'simulation',
+    title: 'Simulation',
+    icon: <SpeedIcon />,
+  },
   {
     kind: 'divider',
   },
@@ -57,6 +63,7 @@ function DemoPageContent({ pathname }) {
     >
       {/* <Typography>Dashboard content for {pathname}</Typography> */}
       {pathname === '/' && <Simulation />}
+      {pathname === '/simulation' && <Simulation />}
       {pathname === '/settings' && <Config />}
       {/* {pathname === '/table' && <TableView />} */}
     </Box>

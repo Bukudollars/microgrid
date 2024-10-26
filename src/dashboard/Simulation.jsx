@@ -53,12 +53,40 @@ function Simulation() {
         loadProfile: loadProfile,
     });
 
+    const playBackMarks = [
+        {
+            value: 0, 
+            label: currentIndex <= 0 || simulationData.length <= 0 ? "0d 00:00" :
+                `${Math.floor(currentIndex / (60 * 24))}d ${String(Math.floor(currentIndex / 60) % 24).padStart(2, '0')}:${String(currentIndex % 60).padStart(2, '0')}`
+        },
+        {
+            value: simulationData.length - 1,
+            label: simulationData.length <= 0 ? "0d 00:00" :
+                `-${Math.floor((simulationData.length - 1 - currentIndex) / (60 * 24))}d ${String(Math.floor((simulationData.length - 1 - currentIndex) / 60) % 24).padStart(2, '0')}:${String((simulationData.length - 1 - currentIndex) % 60).padStart(2, '0')}`
+        }
+    ];
+
+    const playSpeedMarks = Object.freeze([
+        {
+            value: 0,
+            label: '1X',
+        },
+        {
+            value: 5,
+            label: '32X',
+        },
+        {
+            value: 10,
+            label: '1024X',
+        }
+    ]);
+
     React.useEffect(() => {
         let timer;
         if (loading) {
             timer = setTimeout(() => {
                 setShowSpinner(true);
-            }, 200);
+            }, 300);
         } else {
             clearTimeout(timer);
             setShowSpinner(false);
@@ -117,6 +145,14 @@ function Simulation() {
         }
     }
 
+    function minutesToTime(minutes) {
+        return {
+            days: Math.floor(minutes / (MINUTES_PER_HOUR * HOURS_PER_DAY)),
+            hours: Math.floor(minutes / MINUTES_PER_HOUR) % HOURS_PER_DAY,
+            minutes: minutes % MINUTES_PER_HOUR
+        };
+    }
+
     if (showSpinner) {
         return (
             <Box
@@ -136,28 +172,38 @@ function Simulation() {
         <Box sx={{
             justifyContent: 'center',
             width: '100%',
+            userSelect: 'none',
+            px: 4,
         }}>
-            <Box
-                sx={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    margin: 'auto',
-                    width: '95%',
-                    pt: 3
-                }}
-            >
-                <Slider 
-                    value={typeof localIndex === 'number' ? localIndex : 0}
-                    aria-labelledby='time-slider'
-                    valueLabelDisplay='auto'
-                    min={0}
-                    max={simulationData.length - 1}
-                    onChange={handleSliderChange}
-                    disabled={loading || simulationData.length === 0}
-                    width={300}
-                />
-            </Box>
+            <Tooltip title="Time" arrow followCursor>
+                <Box
+                    sx={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        margin: 'auto',
+                        width: '95%',
+                        pt: 3
+                    }}
+                >
+                    <Slider 
+                        value={typeof localIndex === 'number' ? localIndex : 0}
+                        aria-labelledby='time-slider'
+                        valueLabelDisplay='auto'
+                        min={0}
+                        max={simulationData.length - 1}
+                        onChange={handleSliderChange}
+                        disabled={loading || simulationData.length === 0}
+                        width={300}
+                        valueLabelFormat={(localIndex) => {
+                            const time = minutesToTime(localIndex);
+                            return `${time.days}d ${String(time.hours).padStart(2, '0')}:${String(time.minutes).padStart(2, '0')}`;
+                        }}
+                        marks={playBackMarks}
+                    />
+                    
+                </Box>
+            </Tooltip>
             <Box>
                 <ButtonGroup>
                     <Button 
@@ -171,15 +217,15 @@ function Simulation() {
                         <Button onClick={handleStart} disabled={loading}><Replay /></Button>
                     </Tooltip>
                 </ButtonGroup>
-                <Box sx={{ 
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    margin:'auto',
-                    // height: '100vh',
-                    width: 250
+                <Tooltip title="Playback Speed" arrow>
+                    <Box sx={{ 
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        margin:'auto',
+                        // height: '100vh',
+                        width: 250,
                     }}>
-                        <Tooltip title="Playback Speed" arrow>
                             <Slider 
                             value={playbackSpeed}
                             min={0}
@@ -189,40 +235,44 @@ function Simulation() {
                             onChange={handlePlaybackSpeedChange}
                             valueLabelDisplay='auto'
                             aria-labelledby='playback-speed-slider'
-
+                            disabled={loading || simulationData.length === 0}
+                            marks={playSpeedMarks}
                             />
-                        </Tooltip>
-                </Box>
+                    </Box>
+                </Tooltip>
                 
             </Box>
-            <Typography variant="body">Day: {Math.floor(localIndex / (60 * 24))} Time: {String(Math.floor(localIndex / 60) % 24).padStart(2, '0')}:{String(localIndex % 60).padStart(2, '0')}</Typography>
-            <Grid container spacing={1}
-                justifyContent={'center'}
+            <Box
+                sx={{opacity: loading || simulationData.length === 0 ? 0.25 : 1}}
             >
-                <Grid size='auto'>
-                    <YieldDistribution />
-                </Grid>
                 <Grid container spacing={1}
                     justifyContent={'center'}
                 >
                     <Grid size='auto'>
-                        <Load />
+                        <YieldDistribution />
                     </Grid>
-                    <Grid size='auto'>
-                        <Utility />
-                    </Grid>
-                    <Grid size='auto'>
-                        <Gen />
-                    </Grid>
-                    <Grid size='auto'>
-                        <PV />
-                    </Grid>
-                    <Grid size='auto'>
-                        <ESS />
+                    <Grid container spacing={1}
+                        justifyContent={'center'}
+                    >
+                        <Grid size='auto'>
+                            <Load />
+                        </Grid>
+                        <Grid size='auto'>
+                            <Utility />
+                        </Grid>
+                        <Grid size='auto'>
+                            <Gen />
+                        </Grid>
+                        <Grid size='auto'>
+                            <PV />
+                        </Grid>
+                        <Grid size='auto'>
+                            <ESS />
+                        </Grid>
                     </Grid>
                 </Grid>
-                
-            </Grid>
+            </Box>
+            
         </Box>
     );
 }
