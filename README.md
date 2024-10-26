@@ -13,5 +13,6 @@ npm install
 
 npm run dev
 
-![image](https://github.com/user-attachments/assets/dd755c4a-1f37-42bc-a37d-28e663665cea)
+![image](https://github.com/user-attachments/assets/a489053d-529f-483a-a21e-74a13277a39c)
+
 
