@@ -11,7 +11,7 @@ import {
 import Logger from "./logger";
 self.onmessage = function (e) {
     try {
-        console.log("Worker received message: ", e.data);
+        Logger.log("Worker received message: ", e.data);
         const variables = e.data;
         // const variables = Object.freeze({
         //     utilityExportLimit: 200,

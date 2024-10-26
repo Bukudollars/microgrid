@@ -2,7 +2,7 @@ import Logger from './logger';
 import { MINUTES_PER_HOUR, HOURS_PER_DAY, DAYS_PER_MONTH } from '../constants';
 
 self.onmessage = function (e) {
-    console.log("Rolling average worker received message");
+    Logger.log("Rolling average worker received message");
     const dailyWindowSize = MINUTES_PER_HOUR * HOURS_PER_DAY;
     const monthlyWindowSize = dailyWindowSize * DAYS_PER_MONTH;
     const rollingAverages = [];

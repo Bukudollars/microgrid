@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState } from 'react';
+import Logger from '../utils/logger';
 
 const SimulationStateContext = createContext();
 const  SimulationDispatchContext = createContext();
@@ -26,19 +27,19 @@ const actionTypes = {
 };
 
 const startRollingAverageWorker = (data, setRollingAverage, setLoading) => {
-    console.log("Starting rolling average worker");
+    Logger.log("Starting rolling average worker");
     const rollingAverageWorker = new Worker(new URL('../utils/rollingAverageWorker.js', import.meta.url), { type: 'module' });
     rollingAverageWorker.postMessage(data);
 
     rollingAverageWorker.onmessage = (e) => {
-        console.log("Rolling average received: ");
+        Logger.log("Rolling average received: ");
         setRollingAverage(e.data);
-        console.log(e.data);
+        Logger.log(e.data);
         setLoading(false);
         rollingAverageWorker.terminate();
     };
     rollingAverageWorker.onerror = (error) => {
-        console.error("Rolling average worker error: ", error);
+        Logger.error("Rolling average worker error: ", error);
         rollingAverageWorker.terminate();
     };
 };
@@ -52,13 +53,13 @@ export const SimulationProvider = ({ children }) => {
     const [gensetCount, setGensetCount] = useState(0);
     
 
-    const safeSetCurrentIndex = (newIndex) => {
+    const safeSetCurrentIndex = React.useCallback((newIndex) => {
         if (newIndex >= 0 && newIndex < simulationData.length) {
             setCurrentIndex(newIndex);
         } else if (simulationData.length > 0 && newIndex >= simulationData.length) {
             console.warn("Index out of bounds: ${newIndex}");
         }
-    };
+    }, [simulationData.length]);
 
     const startSimulation = (variables) => {
         setLoading(true);
@@ -74,7 +75,7 @@ export const SimulationProvider = ({ children }) => {
         };
 
         worker.onerror = (error) => {
-            console.error("Worker error: ", error);
+            Logger.error("Worker error: ", error);
             setLoading(false);
             worker.terminate();
         };

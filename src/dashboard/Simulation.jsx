@@ -83,7 +83,7 @@ function Simulation() {
                 clearInterval(intervalId);
             }
         };
-    }, [isPlaying, simulationData, playbackSpeed]);
+    }, [isPlaying, simulationData.length, playbackSpeed]);
 
     React.useEffect(() => {
         setCurrentIndex(localIndex);
@@ -126,7 +126,7 @@ function Simulation() {
                         </Button>
                     {/* <Button disabled={loading || simulationData.length === 0}><Pause /></Button> */}
                     <Tooltip title="New Simulation" arrow>
-                        <Button onClick={handleStart}><Replay /></Button>
+                        <Button onClick={handleStart} disabled={loading}><Replay /></Button>
                     </Tooltip>
                 </ButtonGroup>
                 <Box sx={{ 
