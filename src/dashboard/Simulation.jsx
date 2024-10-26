@@ -143,7 +143,8 @@ function Simulation() {
                     justifyContent: 'center',
                     alignItems: 'center',
                     margin: 'auto',
-                    width: '95%'
+                    width: '95%',
+                    pt: 3
                 }}
             >
                 <Slider 
