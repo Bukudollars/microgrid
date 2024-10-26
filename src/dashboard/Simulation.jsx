@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Box, ButtonGroup, Button, Typography, Slider, Tooltip, CircularProgress } from '@mui/material';
+import { Box, ButtonGroup, Button, Typography, Slider, Tooltip, CircularProgress, Stack } from '@mui/material';
 import { PlayArrow, Pause, Replay } from '@mui/icons-material';
 import YieldDistribution from './simulation/YieldDistribution';
 import Load from './simulation/Load';
@@ -171,6 +171,7 @@ function Simulation() {
         
         <Box sx={{
             justifyContent: 'center',
+            alignItems: 'center',
             width: '100%',
             userSelect: 'none',
             px: 4,
@@ -204,7 +205,12 @@ function Simulation() {
                     
                 </Box>
             </Tooltip>
-            <Box>
+            <Stack 
+                direction='column'
+                alignContent='center'
+                justifyContent='center'
+                alignItems='center'
+            >
                 <ButtonGroup>
                     <Button 
                         disabled={loading || simulationData.length === 0}
@@ -241,7 +247,7 @@ function Simulation() {
                     </Box>
                 </Tooltip>
                 
-            </Box>
+            </Stack>
             <Box
                 sx={{opacity: loading || simulationData.length === 0 ? 0.25 : 1}}
             >
