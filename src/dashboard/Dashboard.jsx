@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { Component, useState } from 'react';
 import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
 import { createTheme } from '@mui/material/styles';
@@ -10,7 +10,9 @@ import { DashboardLayout } from '@toolpad/core/DashboardLayout';
 import Simulation from './Simulation';
 import Config from './Settings';
 import TableView from './TableView';
-
+import Home from './Home';
+import HomeIcon from '@mui/icons-material/Home';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 
 const NAVIGATION = [
   // {
@@ -19,9 +21,15 @@ const NAVIGATION = [
   //   icon: <TableChartIcon />,
   // },
   {
+    segment: '/',
+    title: 'Home',
+    icon: <HomeIcon />,
+  },
+  {
     segment: 'simulation',
     title: 'Simulation',
     icon: <SpeedIcon />,
+    to: '/simulation'
   },
   {
     kind: 'divider',
@@ -30,6 +38,7 @@ const NAVIGATION = [
     segment: 'settings',
     title: 'Settings',
     icon: <SettingsIcon />,
+    to: '/settings'
   },
 ];
 
@@ -61,10 +70,16 @@ function DemoPageContent({ pathname }) {
         textAlign: 'center',
       }}
     >
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/simulation" element={<Simulation />} />
+        <Route path="/settings" element={<Config />} />
+      </Routes>
       {/* <Typography>Dashboard content for {pathname}</Typography> */}
-      {pathname === '/' && <Simulation />}
+      {/* {pathname === '/' && <Home />}
+      {pathname === '/home' && <Home />}
       {pathname === '/simulation' && <Simulation />}
-      {pathname === '/settings' && <Config />}
+      {pathname === '/settings' && <Config />} */}
       {/* {pathname === '/table' && <TableView />} */}
     </Box>
   );
@@ -91,34 +106,36 @@ function DashboardLayoutBasic(props) {
 
   return (
     // preview-start
-    <AppProvider
-      navigation={NAVIGATION}
-      branding={{
-        logo: <img src="./catlogo.png" alt="Caterpillar logo" />,
-        title: 'CATERPILLAR',
-      }}
-      router={router}
-      theme={demoTheme}
-      // window={demoWindow}
-    >
-      <DashboardLayout 
-        defaultSidebarCollapsed={true}
-        sx={{
-          height: '100%',
-          overflow: 'hidden',
-          width: '100%',
+    <Router basename='/microgrid'>
+      <AppProvider
+        navigation={NAVIGATION}
+        branding={{
+          logo: <img src="./catlogo.png" alt="Caterpillar logo" />,
+          title: 'CATERPILLAR',
         }}
+        router={router}
+        theme={demoTheme}
+        // window={demoWindow}
       >
-        <Box
-          sx={{width: '100%'}}
+        <DashboardLayout 
+          defaultSidebarCollapsed={true}
+          sx={{
+            height: '100%',
+            overflow: 'hidden',
+            width: '100%',
+          }}
         >
-          <DemoPageContent 
-            pathname={pathname}
-          />
-        </Box>
-        
-      </DashboardLayout>
-    </AppProvider>
+          <Box
+            sx={{width: '100%'}}
+          >
+            <DemoPageContent 
+              pathname={pathname}
+            />
+          </Box>
+          
+        </DashboardLayout>
+      </AppProvider>
+    </Router>
     // preview-end
   );
 }
