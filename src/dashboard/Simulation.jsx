@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Box, ButtonGroup, Button, Typography, Slider, Tooltip, CircularProgress, Stack } from '@mui/material';
+import { Box, ButtonGroup, Button, Slider, Tooltip, CircularProgress, Stack } from '@mui/material';
 import { PlayArrow, Pause, Replay } from '@mui/icons-material';
 import YieldDistribution from './simulation/YieldDistribution';
 import Load from './simulation/Load';
@@ -8,7 +8,6 @@ import Gen from './simulation/Gen';
 import PV from './simulation/PV';
 import ESS from './simulation/ESS';
 import Grid from '@mui/material/Grid2';
-import SimulationResults from './simulation/SimulationResults';
 import { useSimulationDispatch, useSimulationState } from '../contexts/SimulationContext';
 import { MINUTES_PER_HOUR, HOURS_PER_DAY } from '../constants';
 import { useSettings } from '../contexts/SettingsContext';
@@ -108,6 +107,14 @@ function Simulation() {
 
     React.useEffect(() => {
         let intervalId;
+        let refreshRate = 1;
+        if (playbackSpeed === 0) {
+            refreshRate = 1;
+        } else if (playbackSpeed <= 3) {
+            refreshRate = 2 ** playbackSpeed;
+        } else {
+            refreshRate = 2 ** 4;
+        }
         if (isPlaying && simulationData.length > 0) {
             intervalId = setInterval(() => {
                 setLocalIndex(prevIndex => {
@@ -115,10 +122,10 @@ function Simulation() {
                         setIsPlaying(false);
                         return prevIndex;
                     }
-                    return prevIndex + 2 ** playbackSpeed;
+                    return prevIndex + (2 ** playbackSpeed) / refreshRate;
                 });
                 
-            }, 1000);
+            }, 1000 / refreshRate);
         }
         return () => {
             if (intervalId) {
@@ -153,6 +160,12 @@ function Simulation() {
         };
     }
 
+    React.useEffect(() => {
+        if (simulationData.length <= 0) {
+            handleStart();
+        }
+    }, []);
+
     if (showSpinner) {
         return (
             <Box
@@ -160,7 +173,8 @@ function Simulation() {
                     display: 'flex',
                     justifyContent: 'center',
                     alignItems: 'center',
-                    height: '100vh'
+                    height: '100vh',
+                    width: '100vw'
                 }}
             >
                 <CircularProgress />

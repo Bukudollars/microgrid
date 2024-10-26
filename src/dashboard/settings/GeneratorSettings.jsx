@@ -52,8 +52,8 @@ function GeneratorSettings() {
             
           </Select>
         </FormControl>
-        <Typography variant="body1">Minimum Generator Set Load: {generatorSize * 0.3} kW</Typography>
-        <Typography variant="body1">Spinning Reserve Target: {generatorSize * 0.7} kW</Typography>
+        <Typography variant="body1">Minimum Generator Set Load: {(generatorSize * 0.3).toFixed(0)} kW</Typography>
+        <Typography variant="body1">Spinning Reserve Target: {(generatorSize * 0.7).toFixed(0)} kW</Typography>
         {/* 70-% of generator size */}
       </Box>
     //</Paper>
