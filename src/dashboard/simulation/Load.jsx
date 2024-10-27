@@ -43,7 +43,8 @@ function Load() {
                         height={200}
                         yAxis={[{max: peakLoad}]}
                         xAxis={[{scaleType: 'band', disableLine: true, disableTicks: true, data: [""]}]}
-                        series={[{data: [realLoad]}]}
+                        series={[{data: [realLoad], label: "Real Load", valueFormatter: (value) => value.toFixed(0) + " kW"}]}
+                        slotProps={{ legend: { hidden: true } }}
                     />
                 </Box>
             </Stack>
