@@ -17,6 +17,7 @@ function Simulation() {
     const { startSimulation, setCurrentIndex } = useSimulationDispatch();
     const [isPlaying, setIsPlaying] = React.useState(false);
     const [sliderValue, setSliderValue] = React.useState(currentIndex);
+    const [sliderChanging, setSliderChanging] = React.useState(false);
     const [localIndex, setLocalIndex] = React.useState(currentIndex);
     const [playbackSpeed, setPlaybackSpeed] = React.useState(0);
     const [showSpinner, setShowSpinner] = React.useState(false);
@@ -105,10 +106,13 @@ function Simulation() {
     };
 
     const handleSliderChange = (event, newValue) => {
+        setSliderChanging(true);
         setSliderValue(newValue);
     };
 
     const handleSliderChangeCommitted = (event, newValue) => {
+        
+        setSliderChanging(false);
         setLocalIndex(newValue);
         // setIsPlaying(false);
     }
@@ -127,11 +131,14 @@ function Simulation() {
                 setLocalIndex((prevIndex) => {
                     if (prevIndex >= simulationData.length - 1) {
                         setIsPlaying(false);
+                        if (!sliderChanging) setSliderValue(simulationData.length - 1);
                         return simulationData.length - 1;   
                     }
                     const newIndex = prevIndex + (2 ** playbackSpeed) / refreshRate;
+                    if (!sliderChanging) setSliderValue(newIndex);
                     return newIndex;
                 });
+
             }, 1000 / refreshRate);
         }
         return () => {
@@ -139,7 +146,7 @@ function Simulation() {
                 clearInterval(intervalId);
             }
         };
-    }, [isPlaying, simulationData.length, playbackSpeed]);
+    }, [isPlaying, simulationData.length, playbackSpeed, sliderChanging]);
 
     const handlePlayPauseClick = () => {
         if(!loading && simulationData.length > 0) {
