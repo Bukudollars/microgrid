@@ -11,14 +11,19 @@ function YieldDistribution() {
 
     const { simulationData, rollingAverage, loading, currentIndex } = useSimulationState();
     const validData = simulationData.length > 0 && currentIndex < simulationData.length && !loading;
-    const instantYieldDistribution = validData && simulationData[currentIndex].gensetRealPowerContribution + simulationData[currentIndex].providedPVPower > 0 
-    ? simulationData[currentIndex].gensetRealPowerContribution 
-        / (simulationData[currentIndex].gensetRealPowerContribution + simulationData[currentIndex].providedPVPower) 
-    : .5;
-    const genDailyrollingAverage = validData ? rollingAverage[currentIndex].dailyGenAverage : 0;
-    const pvDailyrollingAverage = validData ? rollingAverage[currentIndex].dailyPVAverage : 0;
-    const genMonthlyrollingAverage = validData ? rollingAverage[currentIndex].monthlyGenAverage : 0;
-    const pvMonthlyrollingAverage = validData ? rollingAverage[currentIndex].monthlyPVAverage : 0;
+    const instantYieldDistribution = (
+        validData 
+        && (((simulationData[currentIndex]?.gensetRealPowerContribution ?? 0) 
+            + (simulationData[currentIndex]?.providedPVPower ?? 0)) 
+            > 0)) 
+        ? (simulationData[currentIndex]?.gensetRealPowerContribution ?? 0)
+            / ((simulationData[currentIndex]?.gensetRealPowerContribution ?? 0) 
+                + (simulationData[currentIndex]?.providedPVPower ?? 0)) 
+        : .5;
+    const genDailyrollingAverage = validData ? rollingAverage[currentIndex]?.dailyGenAverage ?? 0 : 0;
+    const pvDailyrollingAverage = validData ? rollingAverage[currentIndex]?.dailyPVAverage ?? 0 : 0;
+    const genMonthlyrollingAverage = validData ? rollingAverage[currentIndex]?.monthlyGenAverage ?? 0 : 0;
+    const pvMonthlyrollingAverage = validData ? rollingAverage[currentIndex]?.monthlyPVAverage ?? 0 : 0;
     //console.log("genDailyrollingAverage", rollingAverage[0]);
 
     return (
@@ -40,22 +45,24 @@ function YieldDistribution() {
                     
                     <Stack direction="column" sx={{alignItems: "center"}}>
                         <Tooltip title="Instant Yield Distribution" arrow>
-                            <Gauge 
-                                width={250}
-                                height={200}
-                                startAngle={-100}
-                                endAngle={100}
-                                value={instantYieldDistribution * 100} 
-                                sx={(theme) => ({
-                                    [`& .${gaugeClasses.valueArc}`]: {
-                                        fill: 'blue'
-                                    },
-                                    [`& .${gaugeClasses.referenceArc}`]: {
-                                        fill: 'green'
-                                    }
-                                })}
-                                text={(instantYieldDistribution * 100).toFixed(0) + "% | " + (100 - instantYieldDistribution * 100).toFixed(0) + "%"}
-                            />
+                            <Box>
+                                <Gauge 
+                                    width={250}
+                                    height={200}
+                                    startAngle={-100}
+                                    endAngle={100}
+                                    value={instantYieldDistribution * 100} 
+                                    sx={(theme) => ({
+                                        [`& .${gaugeClasses.valueArc}`]: {
+                                            fill: 'blue'
+                                        },
+                                        [`& .${gaugeClasses.referenceArc}`]: {
+                                            fill: 'green'
+                                        }
+                                    })}
+                                    text={(instantYieldDistribution * 100).toFixed(0) + "% | " + (100 - instantYieldDistribution * 100).toFixed(0) + "%"}
+                                />
+                            </Box>
                         </Tooltip>
                         <Typography variant="body1">Current Yield</Typography>
                         <BarChart 
@@ -74,14 +81,14 @@ function YieldDistribution() {
                                     stack: 'stack1', 
                                     color: 'blue', 
                                     label: 'Generator', 
-                                    valueFormatter: (value) => value.toFixed(0) + " MWh"
+                                    valueFormatter: (value) => value ? value.toFixed(0) + " MWh" : "0 MWh"
                                 }, 
                                 {
                                     data: [pvMonthlyrollingAverage], 
                                     stack: 'stack1', 
                                     color: 'green', 
                                     label: 'PV',
-                                    valueFormatter: (value) => value.toFixed(0) + " MWh"
+                                    valueFormatter: (value) => value ? value.toFixed(0) + " MWh" : "0 MWh"
                                 }]}
                             slotProps = {{ legend: {hidden: true}}}
                         />

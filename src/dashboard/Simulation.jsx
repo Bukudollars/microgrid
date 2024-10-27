@@ -235,9 +235,10 @@ function Simulation() {
                         {!isPlaying? <PlayArrow /> : <Pause />}
                         </Button>
                     {/* <Button disabled={loading || simulationData.length === 0}><Pause /></Button> */}
-                    <Tooltip title="New Simulation" arrow>
+                    <Tooltip title="Restart Simulation" arrow>
                         <Button onClick={handleStart} disabled={loading}><Replay /></Button>
                     </Tooltip>
+
                 </ButtonGroup>
                 <Tooltip title="Playback Speed" arrow>
                     <Box sx={{ 
