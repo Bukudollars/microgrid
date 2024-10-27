@@ -6,11 +6,11 @@ import { BarChart } from '@mui/x-charts/BarChart';
 
 function ESS() {
     const { simulationData, loading, currentIndex, peakESSPower } = useSimulationState();
-    const validData = simulationData.length > 0 && currentIndex < simulationData.length && !loading;
-    const realLoad =  validData ? simulationData[currentIndex].essRealPowerContribution : 0;
-    const reactiveLoad = validData ? simulationData[currentIndex].essReactivePowerContribution : 0;
-    const powerFactor = validData ? simulationData[currentIndex].essPowerFactor : 0;
-    const essCharge = validData ? simulationData[currentIndex].remainingESSEnergy / simulationData[currentIndex].totalESSEnergy: 0;
+    // const validData = simulationData.length > 0 && currentIndex < simulationData.length && !loading;
+    const realLoad =  simulationData?.[currentIndex]?.essRealPowerContribution ?? 0;
+    const reactiveLoad = simulationData?.[currentIndex]?.essReactivePowerContribution ?? 0;
+    const powerFactor = simulationData?.[currentIndex]?.essPowerFactor ?? 0;
+    const essCharge = (simulationData?.[currentIndex]?.remainingESSEnergy ?? 1) / (simulationData?.[currentIndex]?.totalESSEnergy ?? 1);
 
     return (
         <Paper elevation={4}>
@@ -47,7 +47,8 @@ function ESS() {
                                 colors: ['green', 'red']
                         }}]}
                         xAxis={[{scaleType: 'band', disableLine: true, disableTicks: true, data: [""]}]}
-                        series={[{data: [realLoad]}]}
+                        series={[{data: [realLoad], label: "Real Load", valueFormatter: (value) => value ? value.toFixed(0) + " kW" : "0 kW"}]}
+                        slotProps={{ legend: { hidden: true } }}
                     />
                 </Box>
             </Stack>

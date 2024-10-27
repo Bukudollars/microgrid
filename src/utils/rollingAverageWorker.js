@@ -14,31 +14,31 @@ self.onmessage = function (e) {
     try {
         Logger.log("Rolling average worker received message");
         for (let i = 0; i  < e.data.length; i++) {
-            genSumDaily += e.data[i].gensetRealPowerContribution;
-            pvSumDaily += e.data[i].providedPVPower;
-            genSumMonthly += e.data[i].gensetRealPowerContribution;
-            pvSumMonthly += e.data[i].providedPVPower;
+            genSumDaily += e.data[i].gensetRealPowerContribution / MINUTES_PER_HOUR;
+            pvSumDaily += e.data[i].providedPVPower / MINUTES_PER_HOUR;
+            genSumMonthly += e.data[i].gensetRealPowerContribution / MINUTES_PER_HOUR;
+            pvSumMonthly += e.data[i].providedPVPower / MINUTES_PER_HOUR;
 
             let dailyGenAverage, dailyPVAverage;
             if (i < dailyWindowSize) {
-                dailyGenAverage = genSumDaily / (i + 1);
-                dailyPVAverage = pvSumDaily / (i + 1);
+                dailyGenAverage = genSumDaily / 1000;
+                dailyPVAverage = pvSumDaily / 1000;
             } else {
-                genSumDaily -= e.data[i - dailyWindowSize].gensetRealPowerContribution;
-                pvSumDaily -= e.data[i - dailyWindowSize].providedPVPower;
-                dailyGenAverage = genSumDaily / dailyWindowSize;
-                dailyPVAverage = pvSumDaily / dailyWindowSize;
+                genSumDaily -= e.data[i - dailyWindowSize].gensetRealPowerContribution / MINUTES_PER_HOUR;
+                pvSumDaily -= e.data[i - dailyWindowSize].providedPVPower / MINUTES_PER_HOUR;
+                dailyGenAverage = genSumDaily / 1000;
+                dailyPVAverage = pvSumDaily / 1000;
             }
 
             let monthlyGenAverage, monthlyPVAverage;
             if (i < monthlyWindowSize) {
-                monthlyGenAverage = genSumMonthly / (i + 1);
-                monthlyPVAverage = pvSumMonthly / (i + 1);
+                monthlyGenAverage = genSumMonthly / 1000;
+                monthlyPVAverage = pvSumMonthly / 1000;
             } else {
-                genSumMonthly -= e.data[i - monthlyWindowSize].gensetRealPowerContribution;
-                pvSumMonthly -= e.data[i - monthlyWindowSize].providedPVPower;
-                monthlyGenAverage = genSumMonthly / monthlyWindowSize;
-                monthlyPVAverage = pvSumMonthly / monthlyWindowSize;
+                genSumMonthly -= e.data[i - monthlyWindowSize].gensetRealPowerContribution / MINUTES_PER_HOUR;
+                pvSumMonthly -= e.data[i - monthlyWindowSize].providedPVPower / MINUTES_PER_HOUR;
+                monthlyGenAverage = genSumMonthly / 1000;
+                monthlyPVAverage = pvSumMonthly / 1000;
             }
             rollingAverages.push({
                 dailyGenAverage,
