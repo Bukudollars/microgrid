@@ -277,7 +277,7 @@ function Simulation() {
                     <Box
                         padding={1}
                     >
-                        <YieldDistribution sx={{px: 2}}/>
+                        <YieldDistribution />
                     </Box>
                     <Grid container spacing={3}
                         justifyContent={{xs: 'center', sm: 'center', md: 'center', lg: 'left'}}
