@@ -6,8 +6,8 @@ import { BarChart } from '@mui/x-charts/BarChart';
 
 function PV() {
     const { simulationData, loading, currentIndex, peakPVPower } = useSimulationState();
-    const validData = simulationData.length > 0 && currentIndex < simulationData.length && !loading;
-    const realLoad =  validData ? simulationData[currentIndex].providedPVPower : 0;
+    // const validData = simulationData.length > 0 && currentIndex < simulationData.length && !loading;
+    const realLoad =  simulationData?.[currentIndex]?.providedPVPower ?? 0;
     const reactiveLoad = 0;
     const powerFactor = 1;
     
@@ -37,7 +37,8 @@ function PV() {
                         height={200}
                         yAxis={[{max: peakPVPower}]}
                         xAxis={[{scaleType: 'band', disableLine: true, disableTicks: true, data: [""]}]}
-                        series={[{data: [realLoad]}]}
+                        series={[{data: [realLoad], label: "Real Load", valueFormatter: (value) => value ? value.toFixed(0) + " kW" : "0 kW"}]}
+                        slotProps={{ legend: { hidden: true } }}
                     />
                 </Box>
             </Stack>
