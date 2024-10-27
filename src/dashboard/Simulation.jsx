@@ -16,6 +16,7 @@ function Simulation() {
     const { simulationData, loading, currentIndex } = useSimulationState();
     const { startSimulation, setCurrentIndex } = useSimulationDispatch();
     const [isPlaying, setIsPlaying] = React.useState(false);
+    const [sliderValue, setSliderValue] = React.useState(currentIndex);
     const [localIndex, setLocalIndex] = React.useState(currentIndex);
     const [playbackSpeed, setPlaybackSpeed] = React.useState(0);
     const [showSpinner, setShowSpinner] = React.useState(false);
@@ -81,6 +82,10 @@ function Simulation() {
     ]);
 
     React.useEffect(() => {
+        setCurrentIndex(localIndex);
+    }, [localIndex]);
+
+    React.useEffect(() => {
         let timer;
         if (loading) {
             timer = setTimeout(() => {
@@ -100,10 +105,14 @@ function Simulation() {
     };
 
     const handleSliderChange = (event, newValue) => {
+        setSliderValue(newValue);
+    };
+
+    const handleSliderChangeCommitted = (event, newValue) => {
         setLocalIndex(newValue);
-        setCurrentIndex(newValue);
-        setIsPlaying(false);
+        // setIsPlaying(false);
     }
+
 
     React.useEffect(() => {
         let intervalId;
@@ -115,14 +124,14 @@ function Simulation() {
         }
         if (isPlaying && simulationData.length > 0) {
             intervalId = setInterval(() => {
-                setLocalIndex(prevIndex => {
+                setLocalIndex((prevIndex) => {
                     if (prevIndex >= simulationData.length - 1) {
                         setIsPlaying(false);
                         return simulationData.length - 1;   
                     }
-                    return prevIndex + (2 ** playbackSpeed) / refreshRate;
+                    const newIndex = prevIndex + (2 ** playbackSpeed) / refreshRate;
+                    return newIndex;
                 });
-                
             }, 1000 / refreshRate);
         }
         return () => {
@@ -131,10 +140,6 @@ function Simulation() {
             }
         };
     }, [isPlaying, simulationData.length, playbackSpeed]);
-
-    React.useEffect(() => {
-        setCurrentIndex(localIndex);
-    }, [localIndex, setCurrentIndex]);
 
     const handlePlayPauseClick = () => {
         if(!loading && simulationData.length > 0) {
@@ -164,6 +169,11 @@ function Simulation() {
         }
     }, []);
 
+      const tooltipContent = (() => {
+        const time = minutesToTime(sliderValue);
+        return `Time: ${time.days}d ${String(time.hours).padStart(2, '0')}:${String(time.minutes).padStart(2, '0')}`;
+      })();
+
     if (showSpinner) {
         return (
             <Box
@@ -188,7 +198,7 @@ function Simulation() {
             userSelect: 'none',
             px: 4,
         }}>
-            <Tooltip title="Time" arrow followCursor>
+            <Tooltip title={tooltipContent} arrow followCursor placement='top'>
                 <Box
                     sx={{
                         display: 'flex',
@@ -201,21 +211,19 @@ function Simulation() {
                 >
                     <Slider 
                         value={
-                            typeof localIndex === 'number' ? 
-                            localIndex 
-                            : 0
+                            typeof sliderValue === 'number' ? sliderValue : 0
+                            // typeof localIndex === 'number' ? 
+                            // localIndex 
+                            // : 0
                         }
                         aria-labelledby='time-slider'
-                        valueLabelDisplay='auto'
+                        valueLabelDisplay='off'
                         min={0}
                         max={simulationData.length - 1}
                         onChange={handleSliderChange}
+                        onChangeCommitted={handleSliderChangeCommitted}
                         disabled={loading || simulationData.length === 0}
                         width={300}
-                        // valueLabelFormat={(localIndex) => {
-                        //     const time = minutesToTime(localIndex);
-                        //     return `${time.days}d ${String(time.hours).padStart(2, '0')}:${String(time.minutes).padStart(2, '0')}`;
-                        // }}
                         marks={playBackMarks}
                     />
                     
