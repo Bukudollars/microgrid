@@ -103,6 +103,7 @@ function Simulation() {
         startSimulation(variables);
         setLocalIndex(0);
         setIsPlaying(false);
+        setSliderValue(0);
     };
 
     const handleSliderChange = (event, newValue) => {
