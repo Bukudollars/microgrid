@@ -5,7 +5,7 @@ import { useSimulationState } from '../../contexts/SimulationContext';
 import { BarChart } from '@mui/x-charts/BarChart';
 
 function ESS() {
-    const { simulationData, loading, currentIndex, peakESSPower } = useSimulationState();
+    const { simulationData, currentIndex, peakESSPower } = useSimulationState();
     // const validData = simulationData.length > 0 && currentIndex < simulationData.length && !loading;
     const realLoad =  simulationData?.[currentIndex]?.essRealPowerContribution ?? 0;
     const reactiveLoad = simulationData?.[currentIndex]?.essReactivePowerContribution ?? 0;

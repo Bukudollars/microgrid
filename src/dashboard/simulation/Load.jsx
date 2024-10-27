@@ -1,7 +1,5 @@
 import * as React from 'react';
 import { Box, Tooltip, Typography, Paper, Stack } from '@mui/material';
-import { useSettings } from '../../contexts/SettingsContext';
-import { LOAD_PROFILE, POWER_FACTOR_MIN, POWER_FACTOR_MAX } from '../../constants';
 import { useSimulationState } from '../../contexts/SimulationContext';
 import { BarChart } from '@mui/x-charts/BarChart';
 

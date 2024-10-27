@@ -4,7 +4,7 @@ import {
     LOAD_VARIATION_PER_MINUTE,
     MIN_POWER_THRESHOLD, NEXT_ONLINE_THRESHOLD ,
     CHARGE_STATE_MIN, CHARGE_STATE_MAX,
-    MINUTES_PER_HOUR, HOURS_PER_HOUR, HOURS_PER_DAY,
+    HOURS_PER_DAY,
     POWER_FACTOR_VARIATION_PER_MINUTE,
     LOAD_PROFILE_OPTIONS
 } from "../constants";
@@ -701,7 +701,6 @@ function computeValue({
         remainingESSEnergy: newRemainingESSEnergy,
         totalESSEnergy,
         totalGensetPower,
-        essChargeState,
         realLoad: newRealLoad,
         loadPowerFactor: newLoadPowerFactor,
         loadVariation: newLoadVariation,
@@ -714,7 +713,6 @@ function computeValue({
         utilityRealPowerContribution,
         utilityReactivePowerContribution,
         utilityPowerFactor,
-        providedPVPower,
         gensetRealPowerContribution,
         gensetReactivePowerContribution,
         gensetPowerFactor,

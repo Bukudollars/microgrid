@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState } from 'react';
 import Logger from '../utils/logger';
+import PropTypes from 'prop-types';
 
 const SimulationStateContext = createContext();
 const  SimulationDispatchContext = createContext();
@@ -21,10 +22,10 @@ export const useSimulationDispatch = () => {
     return context;
 };
 
-const actionTypes = {
-    INITIALIZE_ENTITIES: 'INITIALIZE_ENTITIES',
+// const actionTypes = {
+//     INITIALIZE_ENTITIES: 'INITIALIZE_ENTITIES',
 
-};
+// };
 
 const startRollingAverageWorker = (data, setRollingAverage, setLoading) => {
     Logger.log("Starting rolling average worker");
@@ -46,6 +47,9 @@ const startRollingAverageWorker = (data, setRollingAverage, setLoading) => {
 
 
 export const SimulationProvider = ({ children }) => {
+    SimulationProvider.propTypes = {
+        children: PropTypes.node.isRequired,
+    };
     const [rollingAverage, setRollingAverage] = useState([]);
     const [loading, setLoading] = useState(false);
     const [simulationData, setSimulationData] = useState([]);

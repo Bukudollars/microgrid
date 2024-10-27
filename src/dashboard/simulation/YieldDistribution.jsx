@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Box, Stack, Paper, Tooltip, Hidden } from '@mui/material';
+import * as React from 'react';
+import { Box, Stack, Paper, Tooltip } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import GasMeterIcon from '@mui/icons-material/GasMeter';
 import WbSunnyIcon from '@mui/icons-material/WbSunny';
@@ -52,7 +52,7 @@ function YieldDistribution() {
                                     startAngle={-100}
                                     endAngle={100}
                                     value={instantYieldDistribution * 100} 
-                                    sx={(theme) => ({
+                                    sx={() => ({
                                         [`& .${gaugeClasses.valueArc}`]: {
                                             fill: 'blue'
                                         },

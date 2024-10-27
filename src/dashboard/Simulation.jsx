@@ -29,15 +29,13 @@ function Simulation() {
         essModuleType,
         loadPeakLevel,
         loadProfile,
-        siteFrequency,
-        siteVAC,
         exportLimit,
         cloudingFactor,
         isPresent,
         simulationTime
     } = useSettings();
 
-    const [variables, setVariables] = React.useState({
+    const variables = {
         utilityExportLimit: exportLimit,
         singleESSEnergy: essModuleType.energy,
         singleESSPeakPower: essModuleType.power,
@@ -52,7 +50,7 @@ function Simulation() {
         granularity: MINUTES_PER_HOUR,
         simulationTime: MINUTES_PER_HOUR * HOURS_PER_DAY * simulationTime,
         loadProfile: loadProfile,
-    });
+    };
 
     const playBackMarks = [
         {

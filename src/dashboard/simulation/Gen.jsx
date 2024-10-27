@@ -5,7 +5,7 @@ import { useSimulationState } from '../../contexts/SimulationContext';
 import { BarChart } from '@mui/x-charts/BarChart';
 
 function Gen() {
-    const { simulationData, loading, currentIndex, gensetCount, peakGensetPower } = useSimulationState();
+    const { simulationData, currentIndex, gensetCount, peakGensetPower } = useSimulationState();
     //const validData = simulationData.length > 0 && currentIndex < simulationData.length && !loading;
     const realLoad =  simulationData?.[currentIndex]?.gensetRealPowerContribution ?? 0;
     const reactiveLoad = simulationData?.[currentIndex]?.gensetReactivePowerContribution ?? 0;

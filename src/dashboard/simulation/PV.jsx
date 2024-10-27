@@ -5,7 +5,7 @@ import { useSimulationState } from '../../contexts/SimulationContext';
 import { BarChart } from '@mui/x-charts/BarChart';
 
 function PV() {
-    const { simulationData, loading, currentIndex, peakPVPower } = useSimulationState();
+    const { simulationData, currentIndex, peakPVPower } = useSimulationState();
     // const validData = simulationData.length > 0 && currentIndex < simulationData.length && !loading;
     const realLoad =  simulationData?.[currentIndex]?.providedPVPower ?? 0;
     const reactiveLoad = 0;

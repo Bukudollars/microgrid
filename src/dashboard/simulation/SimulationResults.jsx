@@ -1,9 +1,7 @@
 import * as React from 'react';
-import { Box, Typography, Table, TableContainer, TableHead, TableRow, TableCell, TableBody, TablePagination } from '@mui/material';
+import PropTypes from 'prop-types';
+import { Box, Typography, Table, TableContainer, TableHead, TableRow, TableCell, TableBody } from '@mui/material';
 
-function TablePaginationActions(props) {
-    const theme = useTheme();
-}
 
 const SimulationResults = ({data}) => {
     return (
@@ -71,6 +69,29 @@ const SimulationResults = ({data}) => {
             )}
         </Box>
     );
+};
+SimulationResults.propTypes = {
+    data: PropTypes.arrayOf(PropTypes.shape({
+        remainingESSEnergy: PropTypes.number.isRequired,
+        totalESSEnergy: PropTypes.number.isRequired,
+        totalGensetPower: PropTypes.number.isRequired,
+        essChargeState: PropTypes.number.isRequired,
+        realLoad: PropTypes.number.isRequired,
+        loadPowerFactor: PropTypes.number.isRequired,
+        reactiveLoad: PropTypes.number.isRequired,
+        availablePVPower: PropTypes.number.isRequired,
+        essReactivePowerContribution: PropTypes.number.isRequired,
+        essRealPowerContribution: PropTypes.number.isRequired,
+        essPowerFactor: PropTypes.number.isRequired,
+        utilityRealPowerContribution: PropTypes.number.isRequired,
+        utilityReactivePowerContribution: PropTypes.number.isRequired,
+        utilityPowerFactor: PropTypes.number.isRequired,
+        providedPVPower: PropTypes.number.isRequired,
+        activeFeederBreakers: PropTypes.number.isRequired,
+        gensetRealPowerContribution: PropTypes.number.isRequired,
+        gensetReactivePowerContribution: PropTypes.number.isRequired,
+        gensetsRequired: PropTypes.number.isRequired,
+    })).isRequired,
 };
 
 export default SimulationResults;

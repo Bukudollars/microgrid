@@ -1,7 +1,6 @@
 import React, {createContext, useReducer, useContext} from 'react';
 import PropTypes from 'prop-types';
 import { GENERATOR_SIZES, MODULE_TYPES, LOAD_PROFILE_OPTIONS, SITE_FREQUENCY_OPTIONS,
-    MINUTES_PER_HOUR, HOURS_PER_DAY,
     MAX_SIMULATION_TIME,
     MIN_SIMULATION_TIME
 } from '../constants';
