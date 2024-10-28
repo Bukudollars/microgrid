@@ -5,12 +5,12 @@ import { BarChart } from '@mui/x-charts/BarChart';
 
 function Load() {
     //const realLoad = loadPeakLevel * LOAD_PROFILE.find(entry=> entry.hour === 1).residential;
-    const { simulationData, loading, currentIndex, peakLoad } = useSimulationState();
-    const validData = simulationData.length > 0 && currentIndex < simulationData.length && !loading;
-    const realLoad =  validData ? simulationData[currentIndex]?.realLoad ?? 0 : 0;
-    const powerFactor = validData ? simulationData[currentIndex]?.loadPowerFactor ?? 0 : 0;
-    const reactiveLoad = validData ? simulationData[currentIndex]?.reactiveLoad ?? 0 : 0;
-    const activeFeederBreakers = validData ? simulationData[currentIndex]?.activeFeederBreakers ?? 0 : 0;
+    const { simulationData, currentIndex, peakLoad } = useSimulationState();
+
+    const realLoad =  simulationData?.[currentIndex]?.realLoad ?? 0;
+    const powerFactor = simulationData?.[currentIndex]?.loadPowerFactor ?? 0;
+    const reactiveLoad = simulationData?.[currentIndex]?.reactiveLoad ?? 0;
+    const activeFeederBreakers = simulationData?.[currentIndex]?.activeFeederBreakers ?? 0;
     const totalFeederBreakers = 4
     return (
         <Paper elevation={4}>

@@ -8,13 +8,16 @@ import Gen from './simulation/Gen';
 import PV from './simulation/PV';
 import ESS from './simulation/ESS';
 import Grid from '@mui/material/Grid2';
-import { useSimulationDispatch, useSimulationState } from '../contexts/SimulationContext';
+import { useSimulationDispatch, useSimulationState, useCurrentIndex, useCurrentIndexDispatch } from '../contexts/SimulationContext';
 import { MINUTES_PER_HOUR, HOURS_PER_DAY } from '../constants';
 import { useSettings } from '../contexts/SettingsContext';
 
 function Simulation() {
-    const { simulationData, loading, currentIndex } = useSimulationState();
-    const { startSimulation, setCurrentIndex } = useSimulationDispatch();
+    const { simulationData, loading } = useSimulationState();
+    const { startSimulation } = useSimulationDispatch();
+    const currentIndex = useCurrentIndex();
+    const setCurrentIndex = useCurrentIndexDispatch();
+
     const [isPlaying, setIsPlaying] = React.useState(false);
     const [sliderValue, setSliderValue] = React.useState(currentIndex);
     const [sliderChanging, setSliderChanging] = React.useState(false);
@@ -55,13 +58,13 @@ function Simulation() {
     const playBackMarks = [
         {
             value: 0, 
-            label: currentIndex <= 0 || simulationData.length <= 0 ? "0d 00:00" :
+            label: currentIndex <= 0 || (simulationData?.length ?? 0) <= 0 ? "0d 00:00" :
                 `${Math.floor(currentIndex / (60 * 24))}d ${String(Math.floor(currentIndex / 60) % 24).padStart(2, '0')}:${String(currentIndex % 60).padStart(2, '0')}`
         },
         {
-            value: simulationData.length - 1,
-            label: simulationData.length <= 0 ? "0d 00:00" :
-                `-${Math.floor((simulationData.length - 1 - currentIndex) / (60 * 24))}d ${String(Math.floor((simulationData.length - 1 - currentIndex) / 60) % 24).padStart(2, '0')}:${String((simulationData.length - 1 - currentIndex) % 60).padStart(2, '0')}`
+            value: (simulationData?.length ?? 0) - 1,
+            label: (simulationData?.length ?? 0) <= 0 ? "0d 00:00" :
+                `-${Math.floor(((simulationData?.length ?? 0) - 1 - currentIndex) / (60 * 24))}d ${String(Math.floor(((simulationData?.length ?? 0) - 1 - currentIndex) / 60) % 24).padStart(2, '0')}:${String((simulationData.length - 1 - currentIndex) % 60).padStart(2, '0')}`
         }
     ];
 
@@ -125,13 +128,13 @@ function Simulation() {
         } else {
             refreshRate = 2 ** 2;
         }
-        if (isPlaying && simulationData.length > 0) {
+        if (isPlaying && (simulationData?.length ?? 0) > 0) {
             intervalId = setInterval(() => {
                 setLocalIndex((prevIndex) => {
-                    if (prevIndex >= simulationData.length - 1) {
+                    if (prevIndex >= (simulationData?.length ?? 0) - 1) {
                         setIsPlaying(false);
-                        if (!sliderChanging) setSliderValue(simulationData.length - 1);
-                        return simulationData.length - 1;   
+                        if (!sliderChanging) setSliderValue((simulationData?.length ?? 0) - 1);
+                        return (simulationData?.length ?? 0) - 1;   
                     }
                     const newIndex = prevIndex + (2 ** playbackSpeed) / refreshRate;
                     if (!sliderChanging) setSliderValue(newIndex);
@@ -145,10 +148,10 @@ function Simulation() {
                 clearInterval(intervalId);
             }
         };
-    }, [isPlaying, simulationData.length, playbackSpeed, sliderChanging]);
+    }, [isPlaying, (simulationData?.length ?? 0), playbackSpeed, sliderChanging]);
 
     const handlePlayPauseClick = () => {
-        if(!loading && simulationData.length > 0) {
+        if(!loading && (simulationData?.length ?? 0) > 0) {
             setIsPlaying(!isPlaying);
         }
     };
@@ -170,7 +173,7 @@ function Simulation() {
     }
 
     React.useEffect(() => {
-        if (simulationData.length <= 0) {
+        if ((simulationData?.length ?? 0) <= 0) {
             handleStart();
         }
     }, []);
@@ -225,10 +228,10 @@ function Simulation() {
                         aria-labelledby='time-slider'
                         valueLabelDisplay='off'
                         min={0}
-                        max={simulationData.length - 1}
+                        max={(simulationData?.length ?? 0) - 1}
                         onChange={handleSliderChange}
                         onChangeCommitted={handleSliderChangeCommitted}
-                        disabled={loading || simulationData.length === 0}
+                        disabled={loading || (simulationData?.length ?? 0) === 0}
                         width={300}
                         marks={playBackMarks}
                     />
@@ -243,10 +246,10 @@ function Simulation() {
             >
                 <ButtonGroup>
                     <Button 
-                        disabled={loading || simulationData.length === 0}
+                        disabled={loading || (simulationData?.length ?? 0) === 0}
                         onClick={handlePlayPauseClick}
                     >
-                        {!isPlaying? <PlayArrow /> : <Pause />}
+                        {!isPlaying ? <PlayArrow /> : <Pause />}
                         </Button>
                     {/* <Button disabled={loading || simulationData.length === 0}><Pause /></Button> */}
                     <Tooltip title="Restart Simulation" arrow>
@@ -272,7 +275,7 @@ function Simulation() {
                             onChange={handlePlaybackSpeedChange}
                             valueLabelDisplay='auto'
                             aria-labelledby='playback-speed-slider'
-                            disabled={loading || simulationData.length === 0}
+                            disabled={loading || (simulationData?.length ?? 0) === 0}
                             marks={playSpeedMarks}
                             />
                     </Box>
@@ -282,7 +285,7 @@ function Simulation() {
             <Stack
                 direction={{ xs: 'column', sm: 'column', md: 'column', lg: 'row' }}
                 spacing={2}
-                sx={{opacity: loading || simulationData.length === 0 ? 0.25 : 1,
+                sx={{opacity: loading || (simulationData?.length ?? 0) === 0 ? 0.25 : 1,
                     padding: 2,
                     alignItems: 'center',
                     // alignContent: 'center',

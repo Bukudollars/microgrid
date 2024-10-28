@@ -9,21 +9,21 @@ import { useSimulationState } from '../../contexts/SimulationContext';
 
 function YieldDistribution() {
 
-    const { simulationData, rollingAverage, loading, currentIndex } = useSimulationState();
-    const validData = simulationData.length > 0 && currentIndex < simulationData.length && !loading;
+    const { simulationData, rollingAverage, currentIndex } = useSimulationState();
+
+
     const instantYieldDistribution = (
-        validData 
-        && (((simulationData[currentIndex]?.gensetRealPowerContribution ?? 0) 
-            + (simulationData[currentIndex]?.providedPVPower ?? 0)) 
+        (((simulationData?.[currentIndex]?.gensetRealPowerContribution ?? 0) 
+            + (simulationData?.[currentIndex]?.providedPVPower ?? 0)) 
             > 0)) 
-        ? (simulationData[currentIndex]?.gensetRealPowerContribution ?? 0)
-            / ((simulationData[currentIndex]?.gensetRealPowerContribution ?? 0) 
-                + (simulationData[currentIndex]?.providedPVPower ?? 0)) 
+        ? (simulationData?.[currentIndex]?.gensetRealPowerContribution ?? 0)
+            / ((simulationData?.[currentIndex]?.gensetRealPowerContribution ?? 0) 
+                + (simulationData?.[currentIndex]?.providedPVPower ?? 0)) 
         : .5;
-    const genDailyrollingAverage = validData ? rollingAverage[currentIndex]?.dailyGenAverage ?? 0 : 0;
-    const pvDailyrollingAverage = validData ? rollingAverage[currentIndex]?.dailyPVAverage ?? 0 : 0;
-    const genMonthlyrollingAverage = validData ? rollingAverage[currentIndex]?.monthlyGenAverage ?? 0 : 0;
-    const pvMonthlyrollingAverage = validData ? rollingAverage[currentIndex]?.monthlyPVAverage ?? 0 : 0;
+    const genDailyrollingAverage = rollingAverage?.[currentIndex]?.dailyGenAverage ?? 0;
+    const pvDailyrollingAverage = rollingAverage?.[currentIndex]?.dailyPVAverage ?? 0;
+    const genMonthlyrollingAverage = rollingAverage?.[currentIndex]?.monthlyGenAverage ?? 0;
+    const pvMonthlyrollingAverage = rollingAverage?.[currentIndex]?.monthlyPVAverage ?? 0;
     //console.log("genDailyrollingAverage", rollingAverage[0]);
 
     return (

@@ -6,11 +6,11 @@ import { useSimulationState } from '../../contexts/SimulationContext';
 import { BarChart } from '@mui/x-charts/BarChart';
 
 function Utility() {
-    const { simulationData, loading, currentIndex, peakLoad, utilityExportLimit } = useSimulationState();
-    const validData = simulationData.length > 0 && currentIndex < simulationData.length && !loading;
-    const realLoad =  validData ? simulationData[currentIndex]?.utilityRealPowerContribution ?? 0 : 0;
-    const reactiveLoad = validData ? simulationData[currentIndex]?.utilityReactivePowerContribution ?? 0 : 0;
-    const powerFactor = validData ? simulationData[currentIndex]?.utilityPowerFactor ?? 0 : 0;
+    const { simulationData, currentIndex, peakLoad, utilityExportLimit } = useSimulationState();
+
+    const realLoad =  simulationData?.[currentIndex]?.utilityRealPowerContribution ?? 0;
+    const reactiveLoad = simulationData?.[currentIndex]?.utilityReactivePowerContribution ?? 0;
+    const powerFactor = simulationData?.[currentIndex]?.utilityPowerFactor ?? 0;
     return (
         <Paper elevation={4}>
             <Stack
