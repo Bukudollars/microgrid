@@ -15,7 +15,7 @@ import { useSettings, useSettingsDispatch } from '../contexts/SettingsContext';
 import { GENERATOR_SIZES, LOAD_PROFILE_OPTIONS, MODULE_TYPES, SITE_FREQUENCY_OPTIONS } from '../constants';
 import Alert from '@mui/material/Alert';
 import { MIN_SIMULATION_TIME, MAX_SIMULATION_TIME } from '../constants';
-
+import { MINUTES_PER_HOUR, HOURS_PER_DAY } from '../constants';
 import SaveSettingsModal from './components/SaveSettingsModal';
 
 
@@ -40,6 +40,8 @@ function Settings() {
     const [siteFrequencyState,  setSiteFrequencyState]  = useState(siteFrequency);
     const [exportLimitState,    setExportLimitState]    = useState(exportLimit);
     const [isPresentState,      setIsPresentState]      = useState(isPresent);
+
+    const [variables, setVariables] = useState({})
 
     const [alertOpen, setAlertOpen] = useState(false)
     const [alertMsg,  setAlertMsg]  = useState("")
@@ -121,6 +123,25 @@ function Settings() {
         dispatch({type:  'SET_EXPORT_LIMIT',     payload: exportLimitState });
         dispatch({type:  'SET_IS_PRESENT',       payload: isPresentState });
 
+
+        setVariables({
+            utilityExportLimit:  exportLimitState,
+            singleESSEnergy:     essModuleTypeState.energy,
+            singleESSPeakPower:  essModuleTypeState.power,
+            essModuleCount:      essModuleCountState,
+            peakLoad:            loadPeakLevelState,
+            totalFeederBreakers: 4,
+            utility:             isPresentState,
+            peakPVPower:         pvPeakSizeState,
+            cloudingFactor:      cloudingFactorState,
+            singleGensetPower:   generatorSizeState,
+            gensetCount:         generatorCountState,
+            granularity:         MINUTES_PER_HOUR,
+            simulationTime:      MINUTES_PER_HOUR * HOURS_PER_DAY * simulationTimeState,
+            loadProfile:         loadProfileState,
+        })
+
+
         setAlertOpen(true)
         setAlertSvr("success")
         setAlertMsg("Settings updated successfully")
@@ -131,7 +152,7 @@ function Settings() {
 
     return (
         <>
-            <SaveSettingsModal open={open} setOpen={setOpen}/>
+            <SaveSettingsModal open={open} setOpen={setOpen} variables={variables}/>
             {alertOpen && (
                 <Alert severity={alertSvr} onClose={() => {setAlertOpen(false)}}>{alertMsg}</Alert>
             )}

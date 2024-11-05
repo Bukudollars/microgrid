@@ -2,15 +2,25 @@ import React from 'react'
 import { Modal } from '@mui/material';
 import { Box, Button, Stack  } from '@mui/material';
 import Typography from '@mui/material/Typography';
+import { useNavigate } from 'react-router-dom';
+import { useSimulationDispatch } from '../../contexts/SimulationContext';
+import { useCurrentIndexDispatch } from '../../contexts/SimulationContext';
 
-const SaveSettingsModal = ({open, setOpen}) => {
+const SaveSettingsModal = ({open, setOpen, variables}) => {
+
+    const navigate = useNavigate();
+    const { startSimulation } = useSimulationDispatch();
+    const setCurrentIndex = useCurrentIndexDispatch();
 
     const handleYes = (event) => {
-
+        navigate("/simulation")
+        setOpen(false)
+        setCurrentIndex(0)
+        startSimulation(variables)
     }
 
     const handleNo = (event) => {
-
+        setOpen(false)
     }
 
     return (
@@ -41,10 +51,10 @@ const SaveSettingsModal = ({open, setOpen}) => {
                         Would you like to rerun simulations with the new settings?
                     </Typography>
                     <Stack direction="row" spacing={2} sx={{ mt: 3 }}>
-                        <Button variant="contained" color="primary" onClick={() => {setOpen(false)}}>
+                        <Button variant="contained" color="primary" onClick={handleYes}>
                             Yes
                         </Button>
-                        <Button variant="outlined" color="secondary" onClick={() => {setOpen(false)}}>
+                        <Button variant="outlined" color="secondary" onClick={handleNo}>
                             No
                         </Button>
                     </Stack>
