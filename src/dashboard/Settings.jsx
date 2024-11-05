@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Box, Button } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import GeneratorSettings from './settings/GeneratorSettings';
@@ -13,6 +13,9 @@ import SimulationSettings from './settings/SimulationSettings';
 import Grid from '@mui/material/Grid2';
 import { useSettings, useSettingsDispatch } from '../contexts/SettingsContext';
 import { GENERATOR_SIZES, LOAD_PROFILE_OPTIONS, MODULE_TYPES, SITE_FREQUENCY_OPTIONS } from '../constants';
+import Alert from '@mui/material/Alert';
+import { MIN_SIMULATION_TIME, MAX_SIMULATION_TIME } from '../constants';
+
 
 function Settings() {
     const { cloudingFactor, essModuleCount, essModuleType, 
@@ -35,44 +38,76 @@ function Settings() {
     const [siteFrequencyState,  setSiteFrequencyState]  = useState(siteFrequency);
     const [exportLimitState,    setExportLimitState]    = useState(exportLimit);
     const [isPresentState,      setIsPresentState]      = useState(isPresent);
+    const [alertOpen, setAlertOpen] = useState(false)
+    const [alertMsg,  setAlertMsg]  = useState("")
+    const [alertSvr,  setAlertSvr]  = useState("")
 
 
     const handleSaveSettings = (event) => {
         event.preventDefault()
-        
-        if (typeof cloudingFactorState === 'number' && !isNaN(cloudingFactorState) && cloudingFactorState >= 0 && cloudingFactorState <= 1) {
-            dispatch({ type: 'SET_CLOUDING_FACTOR', payload: cloudingFactorState });
-        } else {
+
+        if (!(typeof cloudingFactorState === 'number' && !isNaN(cloudingFactorState) && cloudingFactorState >= 0 && cloudingFactorState <= 1)) {
+            setAlertOpen(true)
+            setAlertSvr("error")
+            setAlertMsg("Invalid clouding factor: ")
             console.error("Invalid clouding factor: ", cloudingFactorState);
+            return;
         }
 
-        if (MODULE_TYPES.includes(essModuleTypeState)) {
-            console.log(essModuleTypeState)
-            dispatch({type: 'SET_ESS_MODULE_TYPE', payload: essModuleTypeState});
-        } else {
+        if (!MODULE_TYPES.includes(essModuleTypeState)) {
+            setAlertOpen(true)
+            setAlertSvr("error")
+            setAlertMsg("Invalid module type")
             console.error("Invalid module type: ", essModuleTypeState);
+            return;
         }
 
-        if (GENERATOR_SIZES.includes(generatorSizeState)) {
-            console.log("Generator Size: ", generatorSizeState);
-            dispatch({type: 'SET_GENERATOR_SIZE', payload: generatorSizeState});
-        } else {
+        if (!GENERATOR_SIZES.includes(generatorSizeState)) {
+            setAlertOpen(true)
+            setAlertSvr("error")
+            setAlertMsg("Invalid generator size")
             console.error("Invalid generator size: ", generatorSizeState);
+            return;
         }
 
-        if (LOAD_PROFILE_OPTIONS.includes(loadProfileState)) {
-            dispatch({type: 'SET_LOAD_PROFILE', payload: loadProfileState});
-        } else {
+        if (!LOAD_PROFILE_OPTIONS.includes(loadProfileState)) {
+            setAlertOpen(true)
+            setAlertSvr("error")
+            setAlertMsg("Invalid load profile")
             console.error("Invalid load profile: ", loadProfileState);
+            return;
         }
 
-        if (SITE_FREQUENCY_OPTIONS.includes(siteFrequencyState)) {
-            console.log("Site Frequency: ", siteFrequencyState);
-            dispatch({type: 'SET_SITE_FREQUENCY', payload: siteFrequencyState});
-        } else {
+        if (!SITE_FREQUENCY_OPTIONS.includes(siteFrequencyState)) {
+            setAlertOpen(true)
+            setAlertSvr("error")
+            setAlertMsg("Invalid site frequency")
             console.error("Invalid site frequency: ", siteFrequencyState);
+            return;
         }
 
+        if (!(typeof cloudingFactorState === 'number' && !isNaN(cloudingFactorState) && cloudingFactorState >= 0 && cloudingFactorState <= 1)) {
+            setAlertOpen(true)
+            setAlertSvr("error")
+            setAlertMsg("Invalid clouding factor")
+            console.error("Invalid clouding factor: ", cloudingFactorState);
+            return;
+        }
+
+        if (!(Number.isInteger(simulationTimeState) && simulationTimeState >= MIN_SIMULATION_TIME && simulationTimeState <= MAX_SIMULATION_TIME)) {
+            setAlertOpen(true)
+            setAlertSvr("error")
+            setAlertMsg("Invalid simulation time")
+            console.error("Invalid simulation time: ", simulationTimeState);  
+            return;
+        }
+
+
+        dispatch({type:  'SET_CLOUDING_FACTOR',  payload: cloudingFactorState});
+        dispatch({type:  'SET_ESS_MODULE_TYPE',  payload: essModuleTypeState});
+        dispatch({type:  'SET_GENERATOR_SIZE',   payload: generatorSizeState});
+        dispatch({type:  'SET_LOAD_PROFILE',     payload: loadProfileState});
+        dispatch({type:  'SET_SITE_FREQUENCY',   payload: siteFrequencyState});
         dispatch({type:  'SET_ESS_MODULE_COUNT', payload: essModuleCountState});
         dispatch({type:  'SET_GENERATOR_COUNT',  payload: generatorCountState});
         dispatch({type:  'SET_LOAD_PEAK_LEVEL',  payload: loadPeakLevelState});
@@ -82,10 +117,21 @@ function Settings() {
         dispatch({type:  'SET_EXPORT_LIMIT',     payload: exportLimitState });
         dispatch({type:  'SET_IS_PRESENT',       payload: isPresentState });
 
+        setAlertOpen(true)
+        setAlertSvr("success")
+        setAlertMsg("Settings updated successfully")
+
+
     }
+
+    useEffect(() => {}, [alertOpen])
 
     return (
         <>
+            {alertOpen && (
+                <Alert severity={alertSvr} onClose={() => {setAlertOpen(false)}}>{alertMsg}</Alert>
+            )}
+            
             <Box sx={{margin: 2, padding: 2, userSelect: 'none'}}>
                 <Typography variant="h4">Settings</Typography>
                 <Grid container spacing={2} justifyContent={'left'}>
