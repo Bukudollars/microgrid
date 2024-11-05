@@ -93,14 +93,6 @@ function Settings() {
             return;
         }
 
-        if (!(typeof cloudingFactorState === 'number' && !isNaN(cloudingFactorState) && cloudingFactorState >= 0 && cloudingFactorState <= 1)) {
-            setAlertOpen(true)
-            setAlertSvr("error")
-            setAlertMsg("Invalid clouding factor")
-            console.error("Invalid clouding factor: ", cloudingFactorState);
-            return;
-        }
-
         if (!(Number.isInteger(simulationTimeState) && simulationTimeState >= MIN_SIMULATION_TIME && simulationTimeState <= MAX_SIMULATION_TIME)) {
             setAlertOpen(true)
             setAlertSvr("error")
