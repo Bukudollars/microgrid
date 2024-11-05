@@ -11,24 +11,15 @@ import { useSettings, useSettingsDispatch } from '../../contexts/SettingsContext
 import { SITE_FREQUENCY_OPTIONS } from '../../constants/siteConstants';
 
 function SiteSettings({siteVAC, setSiteVAC, siteFrequency, setSiteFrequency}) {
-    // const { siteVAC, siteFrequency } = useSettings();
-    // const dispatch = useSettingsDispatch();
 
     const handleChangeFrequency = (event) => {
         const value = parseInt(event.target.value, 10);
-        // if (SITE_FREQUENCY_OPTIONS.includes(value)) {
-        //     console.log("Site Frequency: ", value);
-        //     dispatch({type: 'SET_SITE_FREQUENCY', payload: value});
-        // } else {
-        //     console.error("Invalid site frequency: ", value);
-        // }
         setSiteFrequency(value)
     }
     const handleChangeSiteVAC = (event, value) => {
-        // console.log("Site VAC: ", value);
-        // dispatch({type: 'SET_SITE_VAC', payload: value});
         setSiteVAC(value)
     }
+    
     return (
         <Box sx={{textAlign: 'left', padding : 2}}>
             <Typography variant="h5">Site Settings</Typography>

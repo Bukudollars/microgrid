@@ -6,11 +6,6 @@ import { useSettings, useSettingsDispatch } from '../../contexts/SettingsContext
 import { GENERATOR_SIZES } from '../../constants';
 
 function GeneratorSettings({generatorCount, setGeneratorCount, generatorSize, setGeneratorSize}) {
-  // const dispatch = useSettingsDispatch();
-  // const handleChangeGenCount = (event, value) => {
-  //   console.log("Generator Count: ", value);
-  //   dispatch({type: 'SET_GENERATOR_COUNT', payload: value});
-  // }
 
     const handleChangeGenCount = (event, value) => {
       setGeneratorCount(value)
@@ -20,16 +15,6 @@ function GeneratorSettings({generatorCount, setGeneratorCount, generatorSize, se
       const gen_count = parseInt(event.target.value, 10);
       setGeneratorSize(gen_count)
     }
-
-  // const handleChangeGenSize = (event) => {
-  //   const value = parseInt(event.target.value, 10);
-  //   if (GENERATOR_SIZES.includes(value)) {
-  //     console.log("Generator Size: ", value);
-  //     dispatch({type: 'SET_GENERATOR_SIZE', payload: value});
-  //   } else {
-  //     console.error("Invalid generator size: ", value);
-  //   }
-  // }
 
   return (
     //<Paper elevation={4}>

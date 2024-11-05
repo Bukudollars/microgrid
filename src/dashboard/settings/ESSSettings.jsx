@@ -10,27 +10,16 @@ import { MODULE_TYPES } from '../../constants';
 import { useSettings, useSettingsDispatch } from '../../contexts/SettingsContext';
 
 function ESSSettings({essModuleCount, setEssModuleCount, essModuleType, setEssModuleType}) {
-    // const { essModuleCount, essModuleType } = useSettings();
-    // const dispatch = useSettingsDispatch();
 
     const handleChangeESSModuleCount = (event, value) => {
-        // console.log("ESS Module Count: ", value);
-        // dispatch({type: 'SET_ESS_MODULE_COUNT', payload: value});
-
         setEssModuleCount(value)
     }
 
     const handleChangeModuleType = (event) => {
         const value = event.target.value;
-
-        // if (MODULE_TYPES.includes(value)) {
-        //     console.log(value)
-        //     dispatch({type: 'SET_ESS_MODULE_TYPE', payload: value});
-        // } else {
-        //     console.error("Invalid module type: ", value);
-        // }
         setEssModuleType(value)
     }
+    
     return (
             <Box sx={{textAlign: 'left', padding : 2}}>
                 <Typography variant="h5">ESS Settings</Typography>

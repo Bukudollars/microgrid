@@ -5,14 +5,11 @@ import { MIN_SIMULATION_TIME, MAX_SIMULATION_TIME } from '../../constants/simula
 import { useSettings, useSettingsDispatch } from '../../contexts/SettingsContext';
 
 export default function SimulationSettings({simulationTime, setSimulationTime}) {
-    // const { simulationTime } = useSettings();
-    // const dispatch = useSettingsDispatch();
 
     const handleChangeSimulationTime = (event, value) => {
-        // console.log("Simulation Time: ", value);
-        // dispatch({type: 'SET_SIMULATION_TIME', payload: value});
         setSimulationTime(value)
     }
+    
     return (
         <Box sx={{textAlign: 'left', padding: 2}}>
             <Typography variant='h5'>Simulation Settings</Typography>

@@ -6,14 +6,11 @@ import NumberInput from '../components/NumberInput';
 import { useSettings, useSettingsDispatch } from '../../contexts/SettingsContext';
 
 function PVSettings({pvPeakSize, setPvPeakSize}) {
-    // const { pvPeakSize } = useSettings();
-    // const dispatch = useSettingsDispatch();
-
+    
     const handleChangePVPeakSize = (event, value) => {
-        // console.log("PV Peak Size: ", value);
-        // dispatch({type: 'SET_PV_PEAK_SIZE', payload: value});
         setPvPeakSize(value)
     }
+
     return (
         //<Paper elevation={4}>
             <Box sx={{
