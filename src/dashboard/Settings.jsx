@@ -16,6 +16,8 @@ import { GENERATOR_SIZES, LOAD_PROFILE_OPTIONS, MODULE_TYPES, SITE_FREQUENCY_OPT
 import Alert from '@mui/material/Alert';
 import { MIN_SIMULATION_TIME, MAX_SIMULATION_TIME } from '../constants';
 
+import SaveSettingsModal from './components/SaveSettingsModal';
+
 
 function Settings() {
     const { cloudingFactor, essModuleCount, essModuleType, 
@@ -38,9 +40,12 @@ function Settings() {
     const [siteFrequencyState,  setSiteFrequencyState]  = useState(siteFrequency);
     const [exportLimitState,    setExportLimitState]    = useState(exportLimit);
     const [isPresentState,      setIsPresentState]      = useState(isPresent);
+
     const [alertOpen, setAlertOpen] = useState(false)
     const [alertMsg,  setAlertMsg]  = useState("")
     const [alertSvr,  setAlertSvr]  = useState("")
+
+    const [open, setOpen] = useState(false)
 
 
     const handleSaveSettings = (event) => {
@@ -102,7 +107,6 @@ function Settings() {
             return;
         }
 
-
         dispatch({type:  'SET_CLOUDING_FACTOR',  payload: cloudingFactorState});
         dispatch({type:  'SET_ESS_MODULE_TYPE',  payload: essModuleTypeState});
         dispatch({type:  'SET_GENERATOR_SIZE',   payload: generatorSizeState});
@@ -120,14 +124,14 @@ function Settings() {
         setAlertOpen(true)
         setAlertSvr("success")
         setAlertMsg("Settings updated successfully")
-
-
+        setOpen(true)
     }
 
     useEffect(() => {}, [alertOpen])
 
     return (
         <>
+            <SaveSettingsModal open={open} setOpen={setOpen}/>
             {alertOpen && (
                 <Alert severity={alertSvr} onClose={() => {setAlertOpen(false)}}>{alertMsg}</Alert>
             )}
