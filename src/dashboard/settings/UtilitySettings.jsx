@@ -7,19 +7,22 @@ import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import { useSettings, useSettingsDispatch } from '../../contexts/SettingsContext';
 
-function UtilitySettings() {
-    const { exportLimit, isPresent } = useSettings();
-    const dispatch = useSettingsDispatch();
+function UtilitySettings({exportLimit, setExportLimit, isPresent, setIsPresent}) {
+    // const { exportLimit, isPresent } = useSettings();
+    // const dispatch = useSettingsDispatch();
 
     const handleChangeExportLimit = (event, value) => {
-        console.log("Export Limit: ", value);
-        dispatch({ type: 'SET_EXPORT_LIMIT', payload: value });
+        // console.log("Export Limit: ", value);
+        // dispatch({ type: 'SET_EXPORT_LIMIT', payload: value });
+        setExportLimit(value)
     };
 
     const handleIsPresentChange = (event) => {
         const value = event.target.checked;
-        console.log("Is Present: ", value);
-        dispatch({ type: 'SET_IS_PRESENT', payload: value });
+        // console.log("Is Present: ", value);
+        // dispatch({ type: 'SET_IS_PRESENT', payload: value });
+
+        setIsPresent(value)
     };
 
     return (

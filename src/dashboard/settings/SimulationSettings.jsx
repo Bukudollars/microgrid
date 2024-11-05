@@ -4,12 +4,14 @@ import NumberInput from '../components/NumberInput';
 import { MIN_SIMULATION_TIME, MAX_SIMULATION_TIME } from '../../constants/simulationConstants';
 import { useSettings, useSettingsDispatch } from '../../contexts/SettingsContext';
 
-export default function SimulationSettings() {
-    const { simulationTime } = useSettings();
-    const dispatch = useSettingsDispatch();
+export default function SimulationSettings({simulationTime, setSimulationTime}) {
+    // const { simulationTime } = useSettings();
+    // const dispatch = useSettingsDispatch();
+
     const handleChangeSimulationTime = (event, value) => {
-        console.log("Simulation Time: ", value);
-        dispatch({type: 'SET_SIMULATION_TIME', payload: value});
+        // console.log("Simulation Time: ", value);
+        // dispatch({type: 'SET_SIMULATION_TIME', payload: value});
+        setSimulationTime(value)
     }
     return (
         <Box sx={{textAlign: 'left', padding: 2}}>

@@ -5,12 +5,14 @@ import NumberInput from '../components/NumberInput';
 //import Paper from '@mui/material/Paper';
 import { useSettings, useSettingsDispatch } from '../../contexts/SettingsContext';
 
-function PVSettings() {
-    const { pvPeakSize } = useSettings();
-    const dispatch = useSettingsDispatch();
+function PVSettings({pvPeakSize, setPvPeakSize}) {
+    // const { pvPeakSize } = useSettings();
+    // const dispatch = useSettingsDispatch();
+
     const handleChangePVPeakSize = (event, value) => {
-        console.log("PV Peak Size: ", value);
-        dispatch({type: 'SET_PV_PEAK_SIZE', payload: value});
+        // console.log("PV Peak Size: ", value);
+        // dispatch({type: 'SET_PV_PEAK_SIZE', payload: value});
+        setPvPeakSize(value)
     }
     return (
         //<Paper elevation={4}>

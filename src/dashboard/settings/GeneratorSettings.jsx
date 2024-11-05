@@ -6,7 +6,6 @@ import { useSettings, useSettingsDispatch } from '../../contexts/SettingsContext
 import { GENERATOR_SIZES } from '../../constants';
 
 function GeneratorSettings({generatorCount, setGeneratorCount, generatorSize, setGeneratorSize}) {
-
   // const dispatch = useSettingsDispatch();
   // const handleChangeGenCount = (event, value) => {
   //   console.log("Generator Count: ", value);

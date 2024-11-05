@@ -10,22 +10,25 @@ import Paper from '@mui/material/Paper';
 import { useSettings, useSettingsDispatch } from '../../contexts/SettingsContext';
 import { LOAD_PROFILE_OPTIONS } from '../../constants';
 
-function LoadSettings() {
-    const { loadPeakLevel, loadProfile } = useSettings();
-    const dispatch = useSettingsDispatch();
+function LoadSettings({loadPeakLevel, setLoadPeakLevel, loadProfile, setLoadProfile}) {
+    // const { loadPeakLevel, loadProfile } = useSettings();
+    // const dispatch = useSettingsDispatch();
+
     const handleChangeLoadPeakLevel = (event, value) => {
-        console.log("Load Peak Level: ", value);
-        dispatch({type: 'SET_LOAD_PEAK_LEVEL', payload: value});
+        // console.log("Load Peak Level: ", value);
+        // dispatch({type: 'SET_LOAD_PEAK_LEVEL', payload: value});
+        setLoadPeakLevel(value)
     }
 
     const handleChangeLoadProfile = (event) => {
         const value = event.target.value;
 
-        if (LOAD_PROFILE_OPTIONS.includes(value)) {
-            dispatch({type: 'SET_LOAD_PROFILE', payload: value});
-        } else {
-            console.error("Invalid load profile: ", value);
-        }
+        // if (LOAD_PROFILE_OPTIONS.includes(value)) {
+        //     dispatch({type: 'SET_LOAD_PROFILE', payload: value});
+        // } else {
+        //     console.error("Invalid load profile: ", value);
+        // }
+        setLoadProfile(value)
     }
     return (
         //<Paper elevation={4}>
