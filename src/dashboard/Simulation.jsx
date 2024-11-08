@@ -14,6 +14,9 @@ import { MINUTES_PER_HOUR, HOURS_PER_DAY } from '../constants';
 import { useSettings } from '../contexts/SettingsContext';
 
 function Simulation() {
+
+    const tileMinWidth = 370;
+
     const { simulationData, loading } = useSimulationState();
     const { startSimulation } = useSimulationDispatch();
     const currentIndex = useCurrentIndex();
@@ -206,7 +209,7 @@ function Simulation() {
             alignItems: 'center',
             width: '100%',
             userSelect: 'none',
-            px: 4,
+            px: 0,
         }}>
             <Tooltip title={tooltipContent} arrow followCursor placement='top'>
                 <Box
@@ -216,7 +219,8 @@ function Simulation() {
                         alignItems: 'center',
                         margin: 'auto',
                         width: '95%',
-                        pt: 3
+                        pt: 3,
+                        px: 3
                     }}
                 >
                     <Slider 
@@ -284,41 +288,42 @@ function Simulation() {
                 
             </Stack>
             <Stack
-                direction={{ xs: 'column', sm: 'column', md: 'column', lg: 'row' }}
-                spacing={2}
+                direction={{ xs: 'column', sm: 'column', md: 'row', lg: 'row', xl: 'row' }}
+                spacing={1}
+                mx={{ xs: 0, sm: 0, md: 1, lg: 1, xl: 1 }}
                 sx={{opacity: loading || (simulationData?.length ?? 0) === 0 ? 0.25 : 1,
-                    padding: 2,
-                    alignItems: 'center',
+                    mt: 1,
+                    alignItems: 'top',
+                    justifyContent: 'center',
                     // alignContent: 'center',
                 }}
             >
 
-                    <Box
-                        padding={1}
-                    >
+                    <Box minWidth={tileMinWidth} width='100%' pt={1}>
                         <YieldDistribution />
                     </Box>
-                    <Grid container spacing={3}
+                    <Grid container spacing={2}
                         justifyContent={{xs: 'center', sm: 'center', md: 'center', lg: 'left'}}
-                        padding={1}
+                        padding={{xs: 0, sm: 0, md: 0, lg: 1}}
+                        alignItems='center'
                         
                     >
-                        <Grid size='auto'>
+                        <Grid size='auto' minWidth={tileMinWidth}>
                             <Load />
                         </Grid>
-                        <Grid size='auto'>
+                        <Grid size='auto'minWidth={tileMinWidth}>
                             <Utility />
                         </Grid>
-                        <Grid size='auto'>
+                        <Grid size='auto'minWidth={tileMinWidth}>
                             <Gen />
                         </Grid>
-                        <Grid size='auto'>
+                        <Grid size='auto'minWidth={tileMinWidth}>
                             <PV />
                         </Grid>
-                        <Grid size='auto'>
+                        <Grid size='auto'minWidth={tileMinWidth}>
                             <ESS />
                         </Grid>
-                        <Grid size='auto'>
+                        <Grid size='auto'minWidth={tileMinWidth}>
                             <Carbon />
                         </Grid>
                     </Grid>

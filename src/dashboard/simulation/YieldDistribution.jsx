@@ -27,13 +27,37 @@ function YieldDistribution() {
     //console.log("genDailyrollingAverage", rollingAverage[0]);
 
     return (
-        <Paper elevation={4} sx={{padding: 2}}>
-            <Stack direction="column" sx={{justifyContent: "center", alignItems: "center", mx: 3}}>
+        <Paper elevation={4} sx={{py: 1}}>
+            <Stack direction="column" spacing={0} sx={{justifyContent: "center", alignItems: "center", mx: 0, px: 0}}>
                 <Typography variant="h5">Yield Distribution</Typography>
                 {/* <img src="./yield-distribution.png" alt="Yield Distribution placeholder" /> */}
-                <Stack direction="row" sx={{justifyContent: "center", alignItems: "center"}} spacing={3}>
+                <Tooltip title="Instant Yield Distribution" arrow>
+                    <Box>
+                        <Gauge 
+                            width={310}
+                            height={200}
+                            startAngle={-100}
+                            endAngle={100}
+                            value={instantYieldDistribution * 100} 
+                            sx={() => ({
+                                [`& .${gaugeClasses.valueArc}`]: {
+                                    fill: 'blue'
+                                },
+                                [`& .${gaugeClasses.referenceArc}`]: {
+                                    fill: 'green'
+                                },
+                                mx: 0,
+                                px: 0
+                            })}
+                            text={(instantYieldDistribution * 100).toFixed(0) + "% | " + (100 - instantYieldDistribution * 100).toFixed(0) + "%"}
+
+                        />
+                    </Box>
+                </Tooltip>
+                <Typography variant="body1">Current Yield</Typography>
+                <Stack direction="row" sx={{justifyContent: "center", alignItems: "center"}} spacing={17} pt={2}>
                     
-                    <Stack direction="column" spacing = {4} sx={{justifyContent: "center", alignItems: "center", pt: 7}}>
+                    <Stack direction="column" spacing = {1} sx={{justifyContent: "center", alignItems: "center"}}>
                         <Tooltip title="Generator Daily Average Yield" arrow>
                             <Typography variant="body1">{genDailyrollingAverage.toFixed(0)} MWh</Typography>
                         </Tooltip>
@@ -43,30 +67,24 @@ function YieldDistribution() {
                         </Tooltip>
                     </Stack>
                     
-                    <Stack direction="column" sx={{alignItems: "center"}}>
-                        <Tooltip title="Instant Yield Distribution" arrow>
-                            <Box>
-                                <Gauge 
-                                    width={250}
-                                    height={200}
-                                    startAngle={-100}
-                                    endAngle={100}
-                                    value={instantYieldDistribution * 100} 
-                                    sx={() => ({
-                                        [`& .${gaugeClasses.valueArc}`]: {
-                                            fill: 'blue'
-                                        },
-                                        [`& .${gaugeClasses.referenceArc}`]: {
-                                            fill: 'green'
-                                        }
-                                    })}
-                                    text={(instantYieldDistribution * 100).toFixed(0) + "% | " + (100 - instantYieldDistribution * 100).toFixed(0) + "%"}
-                                />
-                            </Box>
+                    
+                    <Stack direction="column" spacing={1} sx={{justifyContent: "center", alignItems: "center"}}>
+                        <Tooltip title="PV Daily Average Yield" arrow>
+                            <Typography variant="body1">{pvDailyrollingAverage.toFixed(0)} MWh</Typography>
                         </Tooltip>
-                        <Typography variant="body1">Current Yield</Typography>
+                            <WbSunnyIcon sx={{color: 'green', fontSize: '60px'}}/>
+                        <Tooltip title="PV Monthly Average Yield" arrow>
+                            <Typography variant="body1">{pvMonthlyrollingAverage.toFixed(0)} MWh</Typography>
+                        </Tooltip>
+                    </Stack>
+                    
+                    
+                </Stack>
+
+                <Stack direction="column" sx={{alignItems: "center"}}>
+                        
                         <BarChart 
-                            width={300}
+                            width={370}
                             height={150}
                             // dataset={dataset}
                             layout="horizontal"
@@ -91,21 +109,10 @@ function YieldDistribution() {
                                     valueFormatter: (value) => value ? value.toFixed(0) + " MWh" : "0 MWh"
                                 }]}
                             slotProps = {{ legend: {hidden: true}}}
+                            
                         />
                         <Typography variant="body1">Monthly Rolling Average</Typography>
                     </Stack>
-                    <Stack direction="column" spacing={4} sx={{justifyContent: "center", alignItems: "center", pt: 7}}>
-                        <Tooltip title="PV Daily Average Yield" arrow>
-                            <Typography variant="body1">{pvDailyrollingAverage.toFixed(0)} MWh</Typography>
-                        </Tooltip>
-                            <WbSunnyIcon sx={{color: 'green', fontSize: '60px'}}/>
-                        <Tooltip title="PV Monthly Average Yield" arrow>
-                            <Typography variant="body1">{pvMonthlyrollingAverage.toFixed(0)} MWh</Typography>
-                        </Tooltip>
-                    </Stack>
-                    
-                    
-                </Stack>
                 
                 
                 
