@@ -6,8 +6,10 @@ import WbSunnyIcon from '@mui/icons-material/WbSunny';
 import { Gauge, gaugeClasses } from '@mui/x-charts/Gauge'
 import { BarChart } from '@mui/x-charts/BarChart';
 import { useSimulationState } from '../../contexts/SimulationContext';
+import isTouch from '../../hooks/isTouch';
 
 function YieldDistribution() {
+    const isTouchDevice = isTouch();
 
     const { simulationData, rollingAverage, currentIndex } = useSimulationState();
 
@@ -28,11 +30,13 @@ function YieldDistribution() {
 
     return (
         <Paper elevation={4} sx={{py: 1}}>
-            <Stack direction="column" spacing={0} sx={{justifyContent: "center", alignItems: "center", mx: 0, px: 0}}>
+            <Stack direction="column" spacing={0} sx={{justifyContent: "center", alignItems: "center", mx: 0, px: 0, touchAction: "auto"}}>
                 <Typography variant="h5">Yield Distribution</Typography>
                 {/* <img src="./yield-distribution.png" alt="Yield Distribution placeholder" /> */}
-                <Tooltip title="Instant Yield Distribution" arrow>
-                    <Box>
+                {/* <Tooltip title="Instant Yield Distribution" arrow> */}
+                    <Box
+                        sx={{touchAction: "auto"}}
+                    >
                         <Gauge 
                             width={310}
                             height={200}
@@ -47,13 +51,15 @@ function YieldDistribution() {
                                     fill: 'green'
                                 },
                                 mx: 0,
-                                px: 0
+                                px: 0,
+                                '& svg': { touchAction: 'auto' }
                             })}
                             text={(instantYieldDistribution * 100).toFixed(0) + "% | " + (100 - instantYieldDistribution * 100).toFixed(0) + "%"}
+                            // {...(isTouchDevice ? { tooltip: {trigger: 'none'}} : {})}
 
                         />
                     </Box>
-                </Tooltip>
+                {/* </Tooltip> */}
                 <Typography variant="body1">Current Yield</Typography>
                 <Stack direction="row" sx={{justifyContent: "center", alignItems: "center"}} spacing={17} pt={2}>
                     
@@ -109,6 +115,8 @@ function YieldDistribution() {
                                     valueFormatter: (value) => value ? value.toFixed(0) + " MWh" : "0 MWh"
                                 }]}
                             slotProps = {{ legend: {hidden: true}}}
+                            sx={{'&&': {touchAction: 'auto'}}}
+                            {...(isTouchDevice ? { tooltip: {trigger: 'none'}} : {})}
                             
                         />
                         <Typography variant="body1">Monthly Rolling Average</Typography>

@@ -3,8 +3,10 @@ import { Paper, Stack, Typography, Box, Tooltip } from '@mui/material';
 import { useSimulationState } from '../../contexts/SimulationContext';
 import { GEN_CO2_PER_KWH, UTILITY_CO2_PER_KWH, POUNDS_PER_TON } from '../../constants';
 import { BarChart } from '@mui/x-charts';
+import isTouch from '../../hooks/isTouch';
 
 export default function Carbon() {
+    const isTouchDevice = isTouch();
     const { rollingAverage, currentIndex } = useSimulationState();
     const carbonOutput = (
         (rollingAverage?.[currentIndex]?.genSum ?? 0) * GEN_CO2_PER_KWH 
@@ -55,6 +57,8 @@ export default function Carbon() {
                             
                         ]}
                         slotProps={{ legend: { hidden: true } }}
+                        {...(isTouchDevice ? { tooltip: {trigger: 'none'}} : {})}
+                        sx={{'&&': { touchAction: 'auto' }}}
                     />
                 </Box>
                 

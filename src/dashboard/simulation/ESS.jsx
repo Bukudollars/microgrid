@@ -3,6 +3,7 @@ import { Box, Tooltip, Paper, Stack } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import { useSimulationState } from '../../contexts/SimulationContext';
 import { BarChart } from '@mui/x-charts/BarChart';
+import isTouch from '../../hooks/isTouch';
 
 function ESS() {
     const { simulationData, currentIndex, peakESSPower } = useSimulationState();
@@ -11,6 +12,7 @@ function ESS() {
     const reactiveLoad = simulationData?.[currentIndex]?.essReactivePowerContribution ?? 0;
     const powerFactor = simulationData?.[currentIndex]?.essPowerFactor ?? 0;
     const essCharge = (simulationData?.[currentIndex]?.remainingESSEnergy ?? 1) / (simulationData?.[currentIndex]?.totalESSEnergy ?? 1);
+    const isTouchDevice = isTouch();
 
     return (
         <Paper elevation={4}>
@@ -49,6 +51,8 @@ function ESS() {
                         xAxis={[{scaleType: 'band', disableLine: true, disableTicks: true, data: [""]}]}
                         series={[{data: [realLoad], label: "Real Load", valueFormatter: (value) => value ? value.toFixed(0) + " kW" : "0 kW"}]}
                         slotProps={{ legend: { hidden: true } }}
+                        {...(isTouchDevice ? { tooltip: {trigger: 'none'}} : {})}
+                        sx={{'&&': { touchAction: 'auto' }}}
                     />
                 </Box>
             </Stack>

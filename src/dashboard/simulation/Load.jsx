@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Box, Tooltip, Typography, Paper, Stack } from '@mui/material';
 import { useSimulationState } from '../../contexts/SimulationContext';
 import { BarChart } from '@mui/x-charts/BarChart';
+import isTouch from '../../hooks/isTouch';
 
 function Load() {
     //const realLoad = loadPeakLevel * LOAD_PROFILE.find(entry=> entry.hour === 1).residential;
@@ -12,6 +13,7 @@ function Load() {
     const reactiveLoad = simulationData?.[currentIndex]?.reactiveLoad ?? 0;
     const activeFeederBreakers = simulationData?.[currentIndex]?.activeFeederBreakers ?? 0;
     const totalFeederBreakers = 4
+    const isTouchDevice = isTouch();
     return (
         <Paper elevation={4}>
             <Stack
@@ -43,6 +45,11 @@ function Load() {
                         xAxis={[{scaleType: 'band', disableLine: true, disableTicks: true, data: [""]}]}
                         series={[{data: [realLoad], label: "Real Load", valueFormatter: (value) => value ? value.toFixed(0) + " kW" : "0 kW"}]}
                         slotProps={{ legend: { hidden: true } }}
+                        // disableAxisListener={true}
+                        // axisHighlight={false}
+                        {...(isTouchDevice ? { tooltip: {trigger: 'none'}} : {})}
+                        sx={{'&&': { touchAction: 'auto' }}}
+                        
                     />
                 </Box>
             </Stack>
