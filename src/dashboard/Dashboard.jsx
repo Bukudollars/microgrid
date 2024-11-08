@@ -25,7 +25,7 @@ export default function Dashboard() {
     const navigate = useNavigate();
 
     const drawer = (
-        <Box onClick={handleDrawerToggle} sx={{ textAlign: 'center', userSelect: 'none'}} width={drawerWidth}>
+        <Box onClick={handleDrawerToggle} sx={{ textAlign: 'center', userSelect: 'none'}} width={drawerWidth} bgcolor="primary.main" color="secondary">
             <Typography variant="h6" sx={{my: 2 }}>Menu</Typography>
             <Divider />
             <List>
@@ -63,8 +63,10 @@ export default function Dashboard() {
     return (
 
             <Box sx={{ display: 'flex'}}>
-                <AppBar component="nav" sx={{userSelect: 'none'}}>
-                    <Toolbar>
+                <AppBar component="nav" sx={{userSelect: 'none'}} color="secondary">
+                    <Toolbar
+                        color="secondary"
+                    >
                         <IconButton
                             color='inherit'
                             aria-label='open drawer'
@@ -89,9 +91,7 @@ export default function Dashboard() {
                             }}}>
                             MICROGRID
                         </Typography>
-                        <Box>
-                            <Button>Home</Button>
-                        </Box>
+                        
                     </Toolbar>
                 </AppBar>
                 <nav>
@@ -105,6 +105,8 @@ export default function Dashboard() {
                         sx={{
                             '&.MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
                         }}
+                        PaperProps={{sx: {width: drawerWidth, bgcolor: 'primary.main'}}}
+                        
                     >
                         {drawer}
                     </Drawer>
