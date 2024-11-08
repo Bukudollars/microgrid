@@ -25,13 +25,13 @@ export default function Carbon() {
                 <Box sx={{textAlign: 'left', padding: 2, margin: 2}}>
                     <Typography variant="h5">Carbon</Typography>
                     <Tooltip title="Emissions" arrow>
-                        <Typography variant="body1">(E) {carbonOutput.toFixed(1)} tons</Typography>
+                        <Typography variant="body1">(E) {carbonOutput.toFixed(1)} t</Typography>
                     </Tooltip>
                     <Tooltip title="Savings" arrow>
-                        <Typography variant="body1">(S) {carbonSavings.toFixed(1)} tons</Typography>
+                        <Typography variant="body1">(S) {carbonSavings.toFixed(1)} t</Typography>
                     </Tooltip>
                     <Tooltip title="Net Emissions" arrow>
-                        <Typography variant="body1">(N) {(carbonOutput + carbonSavings).toFixed(1)} tons</Typography>
+                        <Typography variant="body1">(N) {(carbonOutput + carbonSavings).toFixed(1)} t</Typography>
                     </Tooltip>
                 </Box>
                 <Box>
