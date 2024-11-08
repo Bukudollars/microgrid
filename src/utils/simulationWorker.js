@@ -684,6 +684,7 @@ function computeValue({
             }
 
         }
+        
     }
     
     Logger.log("essRealPowerContribution: ", essRealPowerContribution);

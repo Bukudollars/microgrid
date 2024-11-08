@@ -10,6 +10,10 @@ self.onmessage = function (e) {
     let pvSumDaily = 0;
     let genSumMonthly = 0;
     let pvSumMonthly = 0;
+    let genSum = 0;
+    let pvSum = 0;
+    let essSum = 0;
+    let utilitySum = 0;
 
     try {
         Logger.log("Rolling average worker received message");
@@ -18,6 +22,15 @@ self.onmessage = function (e) {
             pvSumDaily += e.data[i].providedPVPower / MINUTES_PER_HOUR;
             genSumMonthly += e.data[i].gensetRealPowerContribution / MINUTES_PER_HOUR;
             pvSumMonthly += e.data[i].providedPVPower / MINUTES_PER_HOUR;
+
+            genSum += e.data[i].gensetRealPowerContribution / MINUTES_PER_HOUR;
+            pvSum += e.data[i].providedPVPower / MINUTES_PER_HOUR;
+            if (e.data[i].essPowerContribution > 0) {
+                essSum += e.data[i].essPowerContribution / MINUTES_PER_HOUR;
+            }
+            if (e.data[i].utilityRealPowerContribution > 0) {
+                utilitySum += e.data[i].utilityRealPowerContribution / MINUTES_PER_HOUR;
+            }
 
             let dailyGenAverage, dailyPVAverage;
             if (i < dailyWindowSize) {
@@ -44,7 +57,11 @@ self.onmessage = function (e) {
                 dailyGenAverage,
                 dailyPVAverage,
                 monthlyGenAverage,
-                monthlyPVAverage
+                monthlyPVAverage,
+                genSum,
+                pvSum,
+                essSum,
+                utilitySum
             });
         }
         self.postMessage(rollingAverages);
