@@ -7,6 +7,7 @@ import Utility from './simulation/Utility';
 import Gen from './simulation/Gen';
 import PV from './simulation/PV';
 import ESS from './simulation/ESS';
+import Carbon from './simulation/Carbon';
 import Grid from '@mui/material/Grid2';
 import { useSimulationDispatch, useSimulationState, useCurrentIndex, useCurrentIndexDispatch } from '../contexts/SimulationContext';
 import { MINUTES_PER_HOUR, HOURS_PER_DAY } from '../constants';
@@ -316,6 +317,9 @@ function Simulation() {
                         </Grid>
                         <Grid size='auto'>
                             <ESS />
+                        </Grid>
+                        <Grid size='auto'>
+                            <Carbon />
                         </Grid>
                     </Grid>
 
