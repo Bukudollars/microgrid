@@ -1,19 +1,14 @@
 import * as React from 'react';
+import { useState } from 'react';
 import { Box } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import Slider from '@mui/material/Slider';
 import { useSettings, useSettingsDispatch } from '../../contexts/SettingsContext';
 
-function EnvironmentSettings() {
-    const { cloudingFactor } = useSettings();
-    const dispatch = useSettingsDispatch();
-
+function EnvironmentSettings({cloudingFactor, setCloudingFactor}) {
+    
     const handleCloudingFactorChange = (event, newValue) => {
-        if (typeof newValue === 'number' && !isNaN(newValue) && newValue >= 0 && newValue <= 1) {
-            dispatch({ type: 'SET_CLOUDING_FACTOR', payload: newValue });
-        } else {
-            console.error("Invalid clouding factor: ", newValue);
-        }
+        setCloudingFactor(newValue)
     };
 
     return (

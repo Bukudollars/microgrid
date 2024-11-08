@@ -5,22 +5,17 @@ import NumberInput from '../components/NumberInput';
 import { useSettings, useSettingsDispatch } from '../../contexts/SettingsContext';
 import { GENERATOR_SIZES } from '../../constants';
 
-function GeneratorSettings() {
-  const { generatorCount, generatorSize } = useSettings();
-  const dispatch = useSettingsDispatch();
-  const handleChangeGenCount = (event, value) => {
-    console.log("Generator Count: ", value);
-    dispatch({type: 'SET_GENERATOR_COUNT', payload: value});
-  }
-  const handleChangeGenSize = (event) => {
-    const value = parseInt(event.target.value, 10);
-    if (GENERATOR_SIZES.includes(value)) {
-      console.log("Generator Size: ", value);
-      dispatch({type: 'SET_GENERATOR_SIZE', payload: value});
-    } else {
-      console.error("Invalid generator size: ", value);
+function GeneratorSettings({generatorCount, setGeneratorCount, generatorSize, setGeneratorSize}) {
+
+    const handleChangeGenCount = (event, value) => {
+      setGeneratorCount(value)
     }
-  }
+
+    const handleChangeGenSize = (event, value) => {
+      const gen_count = parseInt(event.target.value, 10);
+      setGeneratorSize(gen_count)
+    }
+
   return (
     //<Paper elevation={4}>
       <Box sx={{
