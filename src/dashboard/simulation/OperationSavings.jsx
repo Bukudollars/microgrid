@@ -8,12 +8,12 @@ import { BarChart } from '@mui/x-charts/BarChart';
 import { useSimulationState } from '../../contexts/SimulationContext';
 import isTouch from '../../hooks/isTouch';
 
-function OperationCost({width, height}) {
+function OperationSavings({width, height}) {
     const isTouchDevice = isTouch();
 
     const { simulationData, rollingAverage, currentIndex } = useSimulationState();
 
-    const operation_cost    = 100.00;
+    const operation_savings = 10.00;
 
 
     return (
@@ -24,10 +24,10 @@ function OperationCost({width, height}) {
                 alignItems="flex-start"
             >
                 <Box sx={{textAlign: 'left', padding: 2, margin: 2}}>
-                    <Typography variant="h5">Operating Cost</Typography>
+                    <Typography variant="h5">Operating Savings</Typography>
                     <br/>
-                    <Tooltip title="Operation Cost" arrow>
-                        <Typography variant="body1">(C)  {operation_cost.toFixed(2)} $</Typography>
+                    <Tooltip title="Operation Savings" arrow>
+                        <Typography variant="body1">(S)  {operation_savings.toFixed(2)} $</Typography>
                     </Tooltip>
                 </Box>
                 <Box>
@@ -37,7 +37,7 @@ function OperationCost({width, height}) {
                         yAxis={[{}]}
                         xAxis={[{scaleType: 'band', disableLine: true, disableTicks: true, data: [""]}]}
                         series={[
-                            {data: [operation_cost],    label: "Cost",    valueFormatter: (value) => value ? value.toFixed(2) + " $" : "0 $", stack: 'stack1', color: 'red'},
+                            {data: [operation_savings], label: "Savings", valueFormatter: (value) => value ? value.toFixed(2) + " $" : "0 $", stack: 'stack1', color: 'green'},
                         ]}
                         slotProps={{ legend: { hidden: true } }}
                         {...(isTouchDevice ? { tooltip: {trigger: 'none'}} : {})}
@@ -49,4 +49,4 @@ function OperationCost({width, height}) {
     );
 }
 
-export default OperationCost;
+export default OperationSavings;

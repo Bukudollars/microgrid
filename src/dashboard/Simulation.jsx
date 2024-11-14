@@ -13,6 +13,7 @@ import { useSimulationDispatch, useSimulationState, useCurrentIndex, useCurrentI
 import { MINUTES_PER_HOUR, HOURS_PER_DAY } from '../constants';
 import { useSettings } from '../contexts/SettingsContext';
 import OperationCost from './simulation/OperationCost';
+import OperationSavings from './simulation/OperationSavings';
 
 function Simulation() {
 
@@ -303,9 +304,14 @@ function Simulation() {
                     <Box minWidth={tileMinWidth} width="100%" pt={1}>
                         <Stack direction="column" sx={{ height: '100%' }} spacing={2}>
                             <YieldDistribution height="65%" />
-                            <OperationCost width="50%" height="31%" />
+                            <Stack direction="row" spacing={2} sx={{ width: '100%' }}>
+                                <OperationCost    width="50%" height="31%" />
+                                <OperationSavings width="50%" height="31%" />
+                            </Stack>
                         </Stack>
                     </Box>
+
+
 
                     <Grid container spacing={2}
                         justifyContent={{xs: 'center', sm: 'center', md: 'center', lg: 'left'}}
