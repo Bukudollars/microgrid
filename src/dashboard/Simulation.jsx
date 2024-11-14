@@ -303,7 +303,7 @@ function Simulation() {
                     <Box minWidth={tileMinWidth} width="100%" pt={1}>
                         <Stack direction="column" sx={{ height: '100%' }} spacing={2}>
                             <YieldDistribution height="65%" />
-                            <OperationCost height="31%" />
+                            <OperationCost width="50%" height="31%" />
                         </Stack>
                     </Box>
 
