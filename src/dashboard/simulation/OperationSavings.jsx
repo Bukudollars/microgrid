@@ -24,7 +24,7 @@ function OperationSavings({width, height}) {
                 alignItems="flex-start"
             >
                 <Box sx={{textAlign: 'left', padding: 2, margin: 2}}>
-                    <Typography variant="h5">Operating Savings</Typography>
+                    <Typography variant="h5">Operating <br/> Savings</Typography>
                     <br/>
                     <Tooltip title="Operation Savings" arrow>
                         <Typography variant="body1">(S)  {operation_savings.toFixed(2)} $</Typography>

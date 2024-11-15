@@ -8,7 +8,7 @@ import { BarChart } from '@mui/x-charts/BarChart';
 import { useSimulationState } from '../../contexts/SimulationContext';
 import isTouch from '../../hooks/isTouch';
 
-function YieldDistribution({height}) {
+function YieldDistribution() {
     const isTouchDevice = isTouch();
 
     const { simulationData, rollingAverage, currentIndex } = useSimulationState();
@@ -29,7 +29,7 @@ function YieldDistribution({height}) {
     //console.log("genDailyrollingAverage", rollingAverage[0]);
 
     return (
-        <Paper elevation={4} sx={{py: 1, height: height || '100%'}}>
+        <Paper elevation={4} sx={{py: 1}}>
             <Stack direction="column" spacing={0} sx={{justifyContent: "center", alignItems: "center", mx: 0, px: 0, touchAction: "auto"}}>
                 <Typography variant="h5">Yield Distribution</Typography>
                 {/* <img src="./yield-distribution.png" alt="Yield Distribution placeholder" /> */}
@@ -39,7 +39,7 @@ function YieldDistribution({height}) {
                     >
                         <Gauge 
                             width={310}
-                            height={120}
+                            height={200}
                             startAngle={-100}
                             endAngle={100}
                             value={instantYieldDistribution * 100} 
@@ -67,7 +67,7 @@ function YieldDistribution({height}) {
                         <Tooltip title="Generator Daily Average Yield" arrow>
                             <Typography variant="body1">{genDailyrollingAverage.toFixed(0)} MWh</Typography>
                         </Tooltip>
-                        <GasMeterIcon sx={{color: 'blue', fontSize: '30px'}} />
+                        <GasMeterIcon sx={{color: 'blue', fontSize: '60px'}} />
                         <Tooltip title="Generator Monthly Average Yield" arrow>
                             <Typography variant="body1">{genMonthlyrollingAverage.toFixed(0)} MWh</Typography>
                         </Tooltip>
@@ -78,7 +78,7 @@ function YieldDistribution({height}) {
                         <Tooltip title="PV Daily Average Yield" arrow>
                             <Typography variant="body1">{pvDailyrollingAverage.toFixed(0)} MWh</Typography>
                         </Tooltip>
-                            <WbSunnyIcon sx={{color: 'green', fontSize: '30px'}}/>
+                            <WbSunnyIcon sx={{color: 'green', fontSize: '60px'}}/>
                         <Tooltip title="PV Monthly Average Yield" arrow>
                             <Typography variant="body1">{pvMonthlyrollingAverage.toFixed(0)} MWh</Typography>
                         </Tooltip>
@@ -91,7 +91,7 @@ function YieldDistribution({height}) {
                         
                         <BarChart 
                             width={370}
-                            height={80}
+                            height={150}
                             // dataset={dataset}
                             layout="horizontal"
                             yAxis={[{scaleType: 'band', data: [''], disableLine: true, disableTicks: true}] }
@@ -121,7 +121,10 @@ function YieldDistribution({height}) {
                         />
                         <Typography variant="body1">Monthly Rolling Average</Typography>
                     </Stack>
-
+                
+                
+                
+                
             </Stack>
         </Paper>
     );

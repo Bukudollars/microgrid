@@ -24,7 +24,7 @@ function OperationCost({width, height}) {
                 alignItems="flex-start"
             >
                 <Box sx={{textAlign: 'left', padding: 2, margin: 2}}>
-                    <Typography variant="h5">Operating Cost</Typography>
+                    <Typography variant="h5">Operating <br /> Cost</Typography>
                     <br/>
                     <Tooltip title="Operation Cost" arrow>
                         <Typography variant="body1">(C)  {operation_cost.toFixed(2)} $</Typography>

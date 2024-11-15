@@ -301,14 +301,8 @@ function Simulation() {
                 }}
             >
 
-                    <Box minWidth={tileMinWidth} width="100%" pt={1}>
-                        <Stack direction="column" sx={{ height: '100%' }} spacing={2}>
-                            <YieldDistribution height="65%" />
-                            <Stack direction="row" spacing={2} sx={{ width: '100%' }}>
-                                <OperationCost    width="50%" height="31%" />
-                                <OperationSavings width="50%" height="31%" />
-                            </Stack>
-                        </Stack>
+                    <Box minWidth={tileMinWidth} width='100%' pt={1}>
+                        <YieldDistribution />
                     </Box>
 
 
@@ -336,6 +330,12 @@ function Simulation() {
                         </Grid>
                         <Grid size='auto'minWidth={tileMinWidth}>
                             <Carbon />
+                        </Grid>
+                        <Grid size='auto'minWidth={tileMinWidth}>
+                            <OperationCost />
+                        </Grid>
+                        <Grid size='auto'minWidth={tileMinWidth}>
+                            <OperationSavings />
                         </Grid>
                     </Grid>
 
