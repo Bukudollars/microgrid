@@ -12,6 +12,8 @@ import Grid from '@mui/material/Grid2';
 import { useSimulationDispatch, useSimulationState, useCurrentIndex, useCurrentIndexDispatch } from '../contexts/SimulationContext';
 import { MINUTES_PER_HOUR, HOURS_PER_DAY } from '../constants';
 import { useSettings } from '../contexts/SettingsContext';
+import OperationCost from './simulation/OperationCost';
+import OperationSavings from './simulation/OperationSavings';
 
 function Simulation() {
 
@@ -302,6 +304,9 @@ function Simulation() {
                     <Box minWidth={tileMinWidth} width='100%' pt={1}>
                         <YieldDistribution />
                     </Box>
+
+
+
                     <Grid container spacing={2}
                         justifyContent={{xs: 'center', sm: 'center', md: 'center', lg: 'left'}}
                         padding={{xs: 0, sm: 0, md: 0, lg: 1}}
@@ -325,6 +330,12 @@ function Simulation() {
                         </Grid>
                         <Grid size='auto'minWidth={tileMinWidth}>
                             <Carbon />
+                        </Grid>
+                        <Grid size='auto'minWidth={tileMinWidth}>
+                            <OperationCost />
+                        </Grid>
+                        <Grid size='auto'minWidth={tileMinWidth}>
+                            <OperationSavings />
                         </Grid>
                     </Grid>
 
