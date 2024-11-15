@@ -1,20 +1,20 @@
 import * as React from 'react';
 import { Box, Stack, Paper, Tooltip } from '@mui/material';
 import Typography from '@mui/material/Typography';
-import GasMeterIcon from '@mui/icons-material/GasMeter';
-import WbSunnyIcon from '@mui/icons-material/WbSunny';
-import { Gauge, gaugeClasses } from '@mui/x-charts/Gauge'
 import { BarChart } from '@mui/x-charts/BarChart';
 import { useSimulationState } from '../../contexts/SimulationContext';
 import isTouch from '../../hooks/isTouch';
 
+const SAVINGS_RATE = 0.22;
+
 function OperationSavings({width, height}) {
     const isTouchDevice = isTouch();
+    const { rollingAverage, currentIndex } = useSimulationState();
 
-    const { simulationData, rollingAverage, currentIndex } = useSimulationState();
-
-    const operation_savings = 10.00;
-
+    const totalSavings = (
+        (rollingAverage?.[currentIndex]?.pvSum ?? 0) * SAVINGS_RATE +
+        (rollingAverage?.[currentIndex]?.essSum ?? 0) * SAVINGS_RATE
+    );
 
     return (
         <Paper elevation={4} sx={{width: width || '100%'}}>
@@ -27,7 +27,7 @@ function OperationSavings({width, height}) {
                     <Typography variant="h5">Operating <br/> Savings</Typography>
                     <br/>
                     <Tooltip title="Operation Savings" arrow>
-                        <Typography variant="body1">(S)  {operation_savings.toFixed(2)} $</Typography>
+                        <Typography variant="body1">(S) ${totalSavings.toFixed(2)}</Typography>
                     </Tooltip>
                 </Box>
                 <Box>
@@ -37,7 +37,7 @@ function OperationSavings({width, height}) {
                         yAxis={[{}]}
                         xAxis={[{scaleType: 'band', disableLine: true, disableTicks: true, data: [""]}]}
                         series={[
-                            {data: [operation_savings], label: "Savings", valueFormatter: (value) => value ? value.toFixed(2) + " $" : "0 $", stack: 'stack1', color: 'green'},
+                            {data: [totalSavings], label: "Savings", valueFormatter: (value) => value ? "$" + value.toFixed(2) : "$0.00", stack: 'stack1', color: 'green'},
                         ]}
                         slotProps={{ legend: { hidden: true } }}
                         {...(isTouchDevice ? { tooltip: {trigger: 'none'}} : {})}
