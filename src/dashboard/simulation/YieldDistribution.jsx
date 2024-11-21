@@ -38,8 +38,8 @@ function YieldDistribution() {
                         sx={{touchAction: "auto"}}
                     >
                         <Gauge 
-                            width={310}
-                            height={200}
+                            width={250}
+                            height={100}
                             startAngle={-100}
                             endAngle={100}
                             value={instantYieldDistribution * 100} 
